@@ -1,0 +1,14 @@
+﻿Library/
+Temp/
+Logs/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.userprefs
+.vscode/
+.idea/
+Build/
+Builds/
+UserSettings/
