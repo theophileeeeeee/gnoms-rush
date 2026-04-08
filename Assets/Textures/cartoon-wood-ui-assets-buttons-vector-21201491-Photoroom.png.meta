@@ -1,0 +1,572 @@
+fileFormatVersion: 2
+guid: 3630a2a219a71444a92d17c561858fc7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 9151253988144579106
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_0
+  - first:
+      213: 4069532973263548754
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_1
+  - first:
+      213: 1636306043294066005
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_2
+  - first:
+      213: -1947665336464335027
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_3
+  - first:
+      213: -2913097574960404607
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_4
+  - first:
+      213: -7720644985698803957
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_5
+  - first:
+      213: 1730728886615083449
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_6
+  - first:
+      213: 4627604486692210154
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_7
+  - first:
+      213: 5408045642145755557
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_8
+  - first:
+      213: 2687299705829109282
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_9
+  - first:
+      213: 2662249674274826387
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_10
+  - first:
+      213: 3755933189845217318
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_11
+  - first:
+      213: -4934191432555333867
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_12
+  - first:
+      213: -1154187532682389974
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_13
+  - first:
+      213: 298187692151806887
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_14
+  - first:
+      213: -4519305315414295391
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_15
+  - first:
+      213: -8537262131254418015
+    second: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_0
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 133
+        width: 570
+        height: 577
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2220cbc4409cffe70800000000000000
+      internalID: 9151253988144579106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_1
+      rect:
+        serializedVersion: 2
+        x: 652
+        y: 583
+        width: 315
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 251fc198da2e97830800000000000000
+      internalID: 4069532973263548754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_2
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 403
+        width: 176
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5552e564da355b610800000000000000
+      internalID: 1636306043294066005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_3
+      rect:
+        serializedVersion: 2
+        x: 851
+        y: 395
+        width: 126
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4f93b612b088f4e0800000000000000
+      internalID: -1947665336464335027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_4
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 211
+        width: 318
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 187ee6890399297d0800000000000000
+      internalID: -2913097574960404607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_5
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 27
+        width: 25
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0f958e8a42cad490800000000000000
+      internalID: -7720644985698803957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_6
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 26
+        width: 40
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b90339a0c8c40810800000000000000
+      internalID: 1730728886615083449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_7
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 27
+        width: 15
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae50b4633cd883040800000000000000
+      internalID: 4627604486692210154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_8
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 26
+        width: 22
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a17235cbdc3d0b40800000000000000
+      internalID: 5408045642145755557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_9
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 26
+        width: 46
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22ea4f238d43b4520800000000000000
+      internalID: 2687299705829109282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_10
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 26
+        width: 41
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 398ec8a39f532f420800000000000000
+      internalID: 2662249674274826387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_11
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 26
+        width: 18
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 620f2dc1651cf1430800000000000000
+      internalID: 3755933189845217318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_12
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 28
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51773c8d80b368bb0800000000000000
+      internalID: -4934191432555333867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_13
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 28
+        width: 117
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a26184edd808bffe0800000000000000
+      internalID: -1154187532682389974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_14
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 28
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ab1a1b4020632400800000000000000
+      internalID: 298187692151806887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_15
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 24
+        width: 58
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac323b82c33841c0800000000000000
+      internalID: -4519305315414295391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_16
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 28
+        width: 95
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a5af20f25d858980800000000000000
+      internalID: -8537262131254418015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_0: 9151253988144579106
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_1: 4069532973263548754
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_10: 2662249674274826387
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_11: 3755933189845217318
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_12: -4934191432555333867
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_13: -1154187532682389974
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_14: 298187692151806887
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_15: -4519305315414295391
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_16: -8537262131254418015
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_2: 1636306043294066005
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_3: -1947665336464335027
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_4: -2913097574960404607
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_5: -7720644985698803957
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_6: 1730728886615083449
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_7: 4627604486692210154
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_8: 5408045642145755557
+      cartoon-wood-ui-assets-buttons-vector-21201491-Photoroom_9: 2687299705829109282
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

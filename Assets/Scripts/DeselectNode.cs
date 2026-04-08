@@ -2,16 +2,15 @@ using UnityEngine;
 
 public class DeselectOnClick : MonoBehaviour
 {
+    public GameObject gameOverPanel;
     void Update()
     {
-        // PC
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !gameOverPanel.activeSelf)
         {
             TryDeselect(Input.mousePosition);
         }
 
-        // MOBILE
-        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began&& !gameOverPanel.activeSelf)
         {
             TryDeselect(Input.GetTouch(0).position);
         }
@@ -21,8 +20,6 @@ public class DeselectOnClick : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-        // Si on ne touche PAS un Node
         if (hit.collider == null || hit.collider.GetComponent<Node>() == null)
         {
             BuildManager.instance.DeselectNode();

@@ -1,0 +1,1222 @@
+fileFormatVersion: 2
+guid: 49b953755613a1848a3deef443aa7c40
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6650965354561739942
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_0
+  - first:
+      213: 8777841359777252738
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_1
+  - first:
+      213: 7808648461483414300
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_2
+  - first:
+      213: -1138352484379817904
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_3
+  - first:
+      213: -6447962899795983414
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_4
+  - first:
+      213: -2736300901875682727
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_5
+  - first:
+      213: -3819416459186264859
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_6
+  - first:
+      213: -7236697913137723098
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_7
+  - first:
+      213: -2829472202118688670
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_8
+  - first:
+      213: 8704437609603598131
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_9
+  - first:
+      213: 8173332169843562079
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_10
+  - first:
+      213: -2938367202892171740
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_11
+  - first:
+      213: -2920903336360990825
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_12
+  - first:
+      213: -3745320062185665350
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_13
+  - first:
+      213: 3049459942962781877
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_14
+  - first:
+      213: -5671973331678495511
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_15
+  - first:
+      213: -5297045139127711223
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_16
+  - first:
+      213: 1024681639847304893
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_17
+  - first:
+      213: 2522868842078322098
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_18
+  - first:
+      213: -7337266879677598724
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_19
+  - first:
+      213: -7980935047014704499
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_20
+  - first:
+      213: 5312440341008516211
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_21
+  - first:
+      213: 1449250244491981776
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_22
+  - first:
+      213: -62014661762601491
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_23
+  - first:
+      213: 1338822972563727115
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_24
+  - first:
+      213: 658331474750872827
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_25
+  - first:
+      213: 5589933252609796751
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_26
+  - first:
+      213: -5940677713871817511
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_27
+  - first:
+      213: -7106367393136825466
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_28
+  - first:
+      213: -7358291891356098322
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_29
+  - first:
+      213: -5314597005780212851
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_30
+  - first:
+      213: -4465475136128556766
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_31
+  - first:
+      213: 6957454327593277325
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_32
+  - first:
+      213: 3709524197281370451
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_33
+  - first:
+      213: -815837573099051253
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_34
+  - first:
+      213: 2804963813743141323
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_35
+  - first:
+      213: 4080564680800126534
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_36
+  - first:
+      213: -6866028924079970606
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_37
+  - first:
+      213: 7060817334064598864
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_38
+  - first:
+      213: -2706879631419605248
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_39
+  - first:
+      213: 8124701764469006108
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_40
+  - first:
+      213: 3014501920646304677
+    second: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_41
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_0
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 155
+        width: 37
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ac151c60c9fc4c50800000000000000
+      internalID: 6650965354561739942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_1
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 155
+        width: 45
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2854140b53821d970800000000000000
+      internalID: 8777841359777252738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_2
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 155
+        width: 45
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c139e9a5764ed5c60800000000000000
+      internalID: 7808648461483414300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_3
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 155
+        width: 45
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0588b5b5272c330f0800000000000000
+      internalID: -1138352484379817904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_4
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 155
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac343c8c7eb3486a0800000000000000
+      internalID: -6447962899795983414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_5
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 155
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9527e19c3d4b60ad0800000000000000
+      internalID: -2736300901875682727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_6
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 155
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e42cec67f4befac0800000000000000
+      internalID: -3819416459186264859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_7
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 155
+        width: 41
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6298d94f695129b90800000000000000
+      internalID: -7236697913137723098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_8
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 155
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2609fdaf502bbb8d0800000000000000
+      internalID: -2829472202118688670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_9
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 155
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33709f943ef5cc870800000000000000
+      internalID: 8704437609603598131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_10
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 155
+        width: 43
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f565cc6ed428d6170800000000000000
+      internalID: 8173332169843562079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_11
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 155
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42634fbd892d837d0800000000000000
+      internalID: -2938367202892171740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_12
+      rect:
+        serializedVersion: 2
+        x: 695
+        y: 155
+        width: 30
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79723f424edd677d0800000000000000
+      internalID: -2920903336360990825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_13
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 160
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abc874b3f33f50cc0800000000000000
+      internalID: -3745320062185665350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_14
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 84
+        width: 41
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5be541159abd15a20800000000000000
+      internalID: 3049459942962781877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_15
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 84
+        width: 43
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ec70d56e4a1941b0800000000000000
+      internalID: -5671973331678495511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_16
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 84
+        width: 43
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90a451bc28d1d76b0800000000000000
+      internalID: -5297045139127711223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_17
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 84
+        width: 44
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbe96feb586683e00800000000000000
+      internalID: 1024681639847304893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_18
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 84
+        width: 48
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bdbafa58d7030320800000000000000
+      internalID: 2522868842078322098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_19
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 84
+        width: 41
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf3f39eb5aacc2a90800000000000000
+      internalID: -7337266879677598724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_20
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 84
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8a193b0cd50e3190800000000000000
+      internalID: -7980935047014704499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_21
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 84
+        width: 45
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3748448f75499b940800000000000000
+      internalID: 5312440341008516211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_22
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 84
+        width: 45
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d3b79d3b65cc1410800000000000000
+      internalID: 1449250244491981776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_23
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 84
+        width: 44
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ded26c26efda32ff0800000000000000
+      internalID: -62014661762601491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_24
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 84
+        width: 51
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b032bc07664749210800000000000000
+      internalID: 1338822972563727115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_25
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 84
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfc1cf00dfcd22900800000000000000
+      internalID: 658331474750872827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_26
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 84
+        width: 35
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8a63ff2dae639d40800000000000000
+      internalID: 5589933252609796751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_27
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 96
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d4379328197e8da0800000000000000
+      internalID: -5940677713871817511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_28
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 7
+        width: 44
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68b29a0d18c116d90800000000000000
+      internalID: -7106367393136825466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_29
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 7
+        width: 48
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee0251eb28812e990800000000000000
+      internalID: -7358291891356098322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_30
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 7
+        width: 49
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d83ad126e22ce36b0800000000000000
+      internalID: -5314597005780212851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_31
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 7
+        width: 48
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 221e7b5d5027702c0800000000000000
+      internalID: -4465475136128556766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_32
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 8
+        width: 46
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d87933949d7dd8060800000000000000
+      internalID: 6957454327593277325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_33
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 7
+        width: 45
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3511ca08a90ea7330800000000000000
+      internalID: 3709524197281370451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_34
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 8
+        width: 42
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b07a30dbc009da4f0800000000000000
+      internalID: -815837573099051253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_35
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 8
+        width: 45
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc12cfd2abb3de620800000000000000
+      internalID: 2804963813743141323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_36
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 8
+        width: 44
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 646c81a15f311a830800000000000000
+      internalID: 4080564680800126534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_37
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 8
+        width: 44
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d6e7a24217f6b0a0800000000000000
+      internalID: -6866028924079970606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_38
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 8
+        width: 46
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05f47dc94ff0df160800000000000000
+      internalID: 7060817334064598864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_39
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 8
+        width: 43
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00f7e7f115b3f6ad0800000000000000
+      internalID: -2706879631419605248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_40
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 8
+        width: 35
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1f1a21553db0c070800000000000000
+      internalID: 8124701764469006108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_41
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 21
+        width: 25
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a31bda7689a5d920800000000000000
+      internalID: 3014501920646304677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_0: 6650965354561739942
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_1: 8777841359777252738
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_10: 8173332169843562079
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_11: -2938367202892171740
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_12: -2920903336360990825
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_13: -3745320062185665350
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_14: 3049459942962781877
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_15: -5671973331678495511
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_16: -5297045139127711223
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_17: 1024681639847304893
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_18: 2522868842078322098
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_19: -7337266879677598724
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_2: 7808648461483414300
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_20: -7980935047014704499
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_21: 5312440341008516211
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_22: 1449250244491981776
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_23: -62014661762601491
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_24: 1338822972563727115
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_25: 658331474750872827
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_26: 5589933252609796751
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_27: -5940677713871817511
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_28: -7106367393136825466
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_29: -7358291891356098322
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_3: -1138352484379817904
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_30: -5314597005780212851
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_31: -4465475136128556766
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_32: 6957454327593277325
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_33: 3709524197281370451
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_34: -815837573099051253
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_35: 2804963813743141323
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_36: 4080564680800126534
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_37: -6866028924079970606
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_38: 7060817334064598864
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_39: -2706879631419605248
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_4: -6447962899795983414
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_40: 8124701764469006108
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_41: 3014501920646304677
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_5: -2736300901875682727
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_6: -3819416459186264859
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_7: -7236697913137723098
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_8: -2829472202118688670
+      Archer-Tower-2D-Game-Assets2 (1)-Photoroom - Copie_9: 8704437609603598131
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
