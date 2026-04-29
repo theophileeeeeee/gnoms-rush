@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5721303090619325034}
   - component: {fileID: 3576443279535766318}
   m_Layer: 0
-  m_Name: magic tower 1
+  m_Name: magic tower 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 4
-  m_Sprite: {fileID: -4884288821369218832, guid: ca2a47f623687f04e8844119de97c93d, type: 3}
+  m_Sprite: {fileID: -3715857198140180392, guid: ca2a47f623687f04e8844119de97c93d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,9 +102,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  range: 2.1
+  range: 2.5
   enemyTag: Ennemy
-  fireRate: 0.8
+  fireRate: 1.5
   bulletPrefab: {fileID: 1686957837714196607, guid: 5785a35d664b11642a27c66fb8b619ae, type: 3}
   firePoint: {fileID: 2573792287257476574}
 --- !u!1 &3428903289882600523

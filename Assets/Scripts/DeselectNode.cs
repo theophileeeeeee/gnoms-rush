@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class DeselectOnClick : MonoBehaviour
 {
     public GameObject gameOverPanel;

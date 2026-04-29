@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 8959152086295560155}
   - component: {fileID: 5167405848607716274}
   m_Layer: 0
-  m_Name: soldiers tower
+  m_Name: soldiers tower 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,8 +142,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 4
-  m_Sprite: {fileID: 8991892022532853805, guid: 1dc06d68dd96afc4fb1798646cf057c1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 8338500125912512465, guid: 1dc06d68dd96afc4fb1798646cf057c1, type: 3}
+  m_Color: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac4f45e3ef0b484e8fd8e8120a47f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldierPrefab: {fileID: 3157518840505535689, guid: 7ce01098adcf64c4caf51241a3bf8a36, type: 3}
+  soldierPrefab: {fileID: 3157518840505535689, guid: 0927439421b1ce6439cf60028b21ea3c, type: 3}
   offsetsHaut:
   - {x: -0.42, y: 1.24, z: 0}
   - {x: 0.43, y: 1.25, z: 0}
@@ -182,6 +182,7 @@ MonoBehaviour:
   - {x: -1.61, y: 0.42, z: 0}
   - {x: -1.21, y: 0.03, z: 0}
   - {x: -0.95, y: 0.42, z: 0}
+  soldiers: []
 --- !u!1 &7305008380436848355
 GameObject:
   m_ObjectHideFlags: 0
