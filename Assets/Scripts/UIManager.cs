@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions; // Nécessaire pour manipuler le nom de la scène
 
 public class UIManager : MonoBehaviour
 {
@@ -9,6 +10,13 @@ public class UIManager : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject pausePanel;
     public GameObject victoryPanel;
+    public CameraController2D cameraController;
+    public Text earnedMoneyText;
+    public GameObject star1;
+    public GameObject star2;
+    public GameObject star3;
+    public int victoryLevel;
+    public int earnedMoneyWithThisLevel;
 
     [Header("Starting Values")]
     public int startMoney;
@@ -108,16 +116,83 @@ public class UIManager : MonoBehaviour
     private void OnGameOver()
     {
         gameOverPanel.SetActive(true);
+        cameraController.enabled = false;
     }
 
-    private void Victory()
+private void Victory()
+{
+    victoryPanel.SetActive(true);
+    cameraController.enabled = false;
+
+    float healthPercent = (float)CurrentHearts / startHearts;
+
+    if (healthPercent >= 0.75f)
     {
-        victoryPanel.SetActive(true);
+        victoryLevel = 3;
+
+        star1.SetActive(true);
+        star2.SetActive(true);
+        star3.SetActive(true);
     }
+    else if (healthPercent >= 0.5f)
+    {
+        victoryLevel = 2;
+
+        star1.SetActive(true);
+        star2.SetActive(true);
+        star3.SetActive(false);
+    }
+    else
+    {
+        victoryLevel = 1;
+
+        star1.SetActive(true);
+        star2.SetActive(false);
+        star3.SetActive(false);
+    }
+
+    earnedMoneyWithThisLevel =
+        (victoryLevel * 33 + 1) -
+        ((startHearts - CurrentHearts) * 5);
+
+    earnedMoneyText.text = "+ " + earnedMoneyWithThisLevel.ToString();
+}
 
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    /// <summary>
+    /// Récupère le nom de la scène actuelle, incrémente le chiffre à la fin et charge la suivante.
+    /// Exemple : "Niveau1" -> "Niveau2"
+    /// </summary>
+    public void NextLevel()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        // On cherche le nombre à la fin du nom via Regex
+        Match match = Regex.Match(currentSceneName, @"\d+");
+
+        if (match.Success)
+        {
+            // On récupère le texte avant le chiffre (ex: "Niveau")
+            string baseName = currentSceneName.Substring(0, match.Index);
+            
+            // On convertit le chiffre trouvé, on ajoute 1
+            int currentNumber = int.Parse(match.Value);
+            int nextNumber = currentNumber + 1;
+
+            // On recompose et charge (ex: "Niveau" + 2)
+            string nextSceneName = baseName + nextNumber;
+            SceneManager.LoadScene(nextSceneName);
+        }
+        else
+        {
+            // Fail-safe : si pas de chiffre, on utilise l'index par défaut
+            Debug.LogWarning("Aucun chiffre trouvé dans le nom de la scène, utilisation de l'index.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
 
     public void TogglePause()
@@ -126,17 +201,19 @@ public class UIManager : MonoBehaviour
         {
             Time.timeScale = 0;
             pausePanel.SetActive(true);
+            cameraController.enabled = false;
         }
         else
         {
             Time.timeScale = 1;
             pausePanel.SetActive(false);
+            cameraController.enabled = true;
         }
     }
 
     public void QuitToMenu()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Menu");
     }
 }

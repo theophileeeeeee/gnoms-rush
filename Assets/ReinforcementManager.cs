@@ -115,7 +115,7 @@ void SpawnReinforcements()
 
         GameObject knight = Instantiate(knightPrefab, center + offset, Quaternion.identity);
 
-       knight.transform.localScale = new Vector3(0.14f, 0.14f, 0.14f);
+       knight.transform.localScale = new Vector3(0.10f, 0.10f, 0.10f);
        Destroy(knight, 20f);
     }
 
