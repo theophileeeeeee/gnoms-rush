@@ -9,6 +9,8 @@ public class LevelPathLine : MonoBehaviour
     private static readonly Color COLOR_SELECTED = new Color(255f/255f, 255f/255f, 255f/255f, 1f);
 
     public List<GameObject> waypoints = new List<GameObject>();
+    public List<Sprite> levelBackgrounds = new List<Sprite>();
+    public Image backgroundImage;
     public Text levelInfoText;
     public Color lineColor = Color.white;
     public float lineWidth = 10f;
@@ -81,6 +83,9 @@ public class LevelPathLine : MonoBehaviour
         if (levelInfoText != null)
             levelInfoText.text = "JOUER :\nNIVEAU " + number.ToString("D2");
 
+        if (backgroundImage != null && index < levelBackgrounds.Count && levelBackgrounds[index] != null)
+            backgroundImage.sprite = levelBackgrounds[index];
+
         PlayerPrefs.SetInt("LastSelectedLevel", number);
         PlayerPrefs.Save();
     }
@@ -152,7 +157,6 @@ public class LevelPathLine : MonoBehaviour
         for (int i = 0; i < limit; i++)
             pts.Add(GetScreenPos(canvasRect, waypoints[i]));
 
-        // points fantomes pour que la courbe commence et finisse bien
         pts.Insert(0, pts[0] + (pts[0] - pts[1]));
         pts.Add(pts[pts.Count - 1] + (pts[pts.Count - 1] - pts[pts.Count - 2]));
 

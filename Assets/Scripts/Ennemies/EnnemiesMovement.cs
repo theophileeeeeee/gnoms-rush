@@ -67,6 +67,7 @@ public class EnemyMovement : MonoBehaviour
     void Die()
     {
         uiManager.EarnMoney(20);
+        PlayerPrefs.SetInt("EnemiesKilled", PlayerPrefs.GetInt("EnemiesKilled", 0) + 1);
         animator.ResetTrigger("Attack");
         if (opponent != null)
         {

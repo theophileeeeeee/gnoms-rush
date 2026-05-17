@@ -178,6 +178,8 @@ private void UpdatePanelPosition()
 
         Build(electricLvl1, Node.TurretType.Electric);
         uiManager.UseMoney(electricCost);
+        PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
+        PlayerPrefs.Save();
     }
 
     public void BuildSoldiers()
@@ -186,6 +188,8 @@ private void UpdatePanelPosition()
 
         Build(soldiersLvl1, Node.TurretType.Soldiers);
         uiManager.UseMoney(soldiersCost);
+        PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
+        PlayerPrefs.Save();
     }
 
     public void BuildArcher()
@@ -194,6 +198,8 @@ private void UpdatePanelPosition()
 
         Build(archerLvl1, Node.TurretType.Archer);
         uiManager.UseMoney(archerCost);
+        PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
+        PlayerPrefs.Save();
     }
 
     private void Build(GameObject prefab, Node.TurretType type)
