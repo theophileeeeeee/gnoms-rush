@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class EnemyMovement : MonoBehaviour
@@ -17,6 +18,7 @@ public class EnemyMovement : MonoBehaviour
 
     public bool isEngaged = false;
     private bool movementFrozen = false;
+    private bool isFrozen = false;
 
     public Animator animator;
     public Transform opponent;
@@ -80,6 +82,8 @@ public class EnemyMovement : MonoBehaviour
 
     void Attack()
     {
+        if (isFrozen) return;
+
         attackTimer -= Time.deltaTime;
         if (attackTimer <= 0f)
         {
@@ -90,11 +94,45 @@ public class EnemyMovement : MonoBehaviour
 
     public void DealDamage()
     {
+        if (isFrozen) return;
+
         if (opponent != null)
         {
             KnightManager knight = opponent.GetComponent<KnightManager>();
             if (knight != null)
                 knight.TakeDamage(damage);
+        }
+    }
+
+    public void GetFrozen(float duration, float blueIntensity = 0.5f)
+    {
+        if (isFrozen)
+            StopCoroutine(nameof(FreezeCoroutine));
+        StartCoroutine(FreezeCoroutine(duration, blueIntensity));
+    }
+
+    private IEnumerator FreezeCoroutine(float duration, float blueIntensity)
+    {
+        isFrozen = true;
+        movementFrozen = true;
+
+        animator.SetBool("Walk", false);
+        animator.SetBool("Idle", true);
+
+        Color frozenColor = new Color(1f - blueIntensity, 1f - blueIntensity, 1f);
+        spriteRenderer.color = frozenColor;
+
+        yield return new WaitForSeconds(duration);
+
+        isFrozen = false;
+        movementFrozen = false;
+
+        spriteRenderer.color = Color.white;
+
+        if (!isEngaged)
+        {
+            animator.SetBool("Idle", false);
+            animator.SetBool("Walk", true);
         }
     }
 
@@ -124,16 +162,16 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         if (opponent == null && isEngaged)
-{
-    isEngaged = false;
-    movementFrozen = false;
-    animator.ResetTrigger("Attack");
-    animator.SetBool("Idle", false);
-    animator.SetBool("Walk", false);  // ← false au lieu de true
-}
+        {
+            isEngaged = false;
+            movementFrozen = false;
+            animator.ResetTrigger("Attack");
+            animator.SetBool("Idle", false);
+            animator.SetBool("Walk", false);
+        }
 
-    if (!isEngaged && !movementFrozen)
-    animator.SetBool("Walk", true);
+        if (!isEngaged && !movementFrozen)
+            animator.SetBool("Walk", true);
 
         if (!isEngaged)
             TryDetectKnight();

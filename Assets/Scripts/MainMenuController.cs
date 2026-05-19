@@ -104,6 +104,7 @@ void UpdateQuests()
 
     public void ResetStats()
     {
+        PlayerPrefs.DeleteKey("Money");
         PlayerPrefs.DeleteKey("TowersBuilt");
         PlayerPrefs.DeleteKey("EnemiesKilled");
         towerBuiltText.text = "0";

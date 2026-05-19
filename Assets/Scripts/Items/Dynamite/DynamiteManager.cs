@@ -6,7 +6,7 @@ public class DynamiteManager : MonoBehaviour
 {
     public ItemManager itemManager;
     public Camera cam;
-    public GameObject dynamitePrefab;
+    public GameObject itemPrefab;
     public string itemName = "dynamite";
 
     public GameObject visualIndicator;
@@ -83,7 +83,7 @@ public class DynamiteManager : MonoBehaviour
 
         if (itemManager.GetItemAmount(itemName) <= 0)
         {
-            Debug.Log("Plus de dynamite");
+            Debug.Log("Plus de "+ itemName+" en stock !");
             SetActive(false);
             return;
         }
@@ -101,7 +101,7 @@ public class DynamiteManager : MonoBehaviour
         + Vector3.left * entryOffsetX 
         + Vector3.up * entryOffsetY; // arrivée plus haute
 
-        GameObject dyn = Instantiate(dynamitePrefab, startPos, Quaternion.identity);
+        GameObject dyn = Instantiate(itemPrefab, startPos, Quaternion.identity);
 
         StartCoroutine(ArrivalSequence(dyn.transform, startPos, midPos, targetPos));
 

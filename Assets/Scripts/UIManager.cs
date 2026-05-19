@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public GameObject star3;
     public int victoryLevel;
     public int earnedMoneyWithThisLevel;
+    public bool hasTookMoneyFromThisLevel;
 
     [Header("Starting Values")]
     public int startMoney;
@@ -74,7 +75,7 @@ public class UIManager : MonoBehaviour
         if (waveSpawner.hasAllWavesEnded &&
             waveSpawner.enemiesRemainingToSpawn <= 0 &&
             GameObject.FindGameObjectsWithTag("Ennemy").Length == 0 &&
-            !gameOverPanel.activeSelf)
+            !gameOverPanel.activeSelf && !hasTookMoneyFromThisLevel)
         {
             Victory();
         }
@@ -156,6 +157,9 @@ private void Victory()
         ((startHearts - CurrentHearts) * 5);
 
     earnedMoneyText.text = "+ " + earnedMoneyWithThisLevel.ToString();
+    PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + earnedMoneyWithThisLevel);
+    PlayerPrefs.Save();
+    hasTookMoneyFromThisLevel = true;
 }
 
     public void Retry()
