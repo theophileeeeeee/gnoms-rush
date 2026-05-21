@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
+using Unity.VisualScripting;
 
 public class BuildManager : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class BuildManager : MonoBehaviour
     private bool isUpgrading = false;
 
     public UIManager uiManager;
+    public Animator panelTypeChoiceAnimator;
+    public Animator panelModificationChoiceAnimator;
 
     [Header("UI")]
     public GameObject typeChoicePanel;
@@ -29,10 +33,17 @@ public class BuildManager : MonoBehaviour
     public GameObject archerLvl2;
     public GameObject archerLvl3;
 
+    [Header("Bomb Turret Levels")]
+    public GameObject bombLvl1;
+    public GameObject bombLvl2;
+    public GameObject bombLvl3;
+
     [Header("Costs")]
     public int electricCost = 100;
     public int soldiersCost = 75;
     public int archerCost = 50;
+
+    public int bombCost = 125;
 
     public int upgradeCostLevel2 = 100;
     public int upgradeCostLevel3 = 150;
@@ -57,16 +68,27 @@ public class BuildManager : MonoBehaviour
         if (selectedNode.turret != null)
         {
             modificationChoicePanel.SetActive(true);
-            typeChoicePanel.SetActive(false);
+            panelModificationChoiceAnimator.SetBool("Open", true);
         }
         else
         {
             typeChoicePanel.SetActive(true);
-            modificationChoicePanel.SetActive(false);
+            panelTypeChoiceAnimator.SetBool("Open", true);
+          
         }
 
         UpdatePanelPosition();
         UpdatePrices();
+    }
+    IEnumerator WaitForPanelTypeAnimation()
+    {
+        yield return new WaitForSeconds(0.25f);
+        typeChoicePanel.SetActive(false);
+    }
+    IEnumerator WaitForPanelModificationAnimation()
+    {
+        yield return new WaitForSeconds(0.25f);
+        modificationChoicePanel.SetActive(false);
     }
     int CalculateRefund(Node node)
 {
@@ -79,6 +101,7 @@ public class BuildManager : MonoBehaviour
         case Node.TurretType.Electric: baseCost = electricCost; break;
         case Node.TurretType.Soldiers: baseCost = soldiersCost; break;
         case Node.TurretType.Archer: baseCost = archerCost; break;
+        case Node.TurretType.Bomb: baseCost = bombCost; break;
     }
 
     int upgradeCost = 0;
@@ -94,8 +117,10 @@ public class BuildManager : MonoBehaviour
     public void DeselectNode()
     {
         selectedNode = null;
-        typeChoicePanel.SetActive(false);
-        modificationChoicePanel.SetActive(false);
+        panelTypeChoiceAnimator.SetBool("Open", false);
+        StartCoroutine(WaitForPanelTypeAnimation());
+        panelModificationChoiceAnimator.SetBool("Open", false);
+        StartCoroutine(WaitForPanelModificationAnimation());
     }
 public void UpdatePrices()
 {
@@ -188,6 +213,15 @@ private void UpdatePanelPosition()
 
         Build(soldiersLvl1, Node.TurretType.Soldiers);
         uiManager.UseMoney(soldiersCost);
+        PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
+        PlayerPrefs.Save();
+    }
+    public void BuildBomb()
+    {
+        if (uiManager.CurrentMoney < bombCost) return;
+
+        Build(bombLvl1, Node.TurretType.Bomb);
+        uiManager.UseMoney(bombCost);
         PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
         PlayerPrefs.Save();
     }
@@ -286,6 +320,8 @@ void ResetUpgradeLock()
 
             case Node.TurretType.Archer:
                 return level == 2 ? archerLvl2 : archerLvl3;
+            case Node.TurretType.Bomb:
+                return level == 2 ? bombLvl2 : bombLvl3;
         }
 
         return null;

@@ -7,7 +7,7 @@ public class Node : MonoBehaviour
     [Header("Turret")]
     public GameObject turret;
 
-    public enum TurretType { None, Electric, Soldiers, Archer }
+    public enum TurretType { None, Electric, Soldiers, Archer, Bomb }
     public TurretType turretType = TurretType.None;
 
     public int turretLevel = 0;
@@ -74,6 +74,7 @@ int CalculateRefund(TurretType type, int level)
         case TurretType.Electric: baseCost = BuildManager.instance.electricCost; break;
         case TurretType.Soldiers: baseCost = BuildManager.instance.soldiersCost; break;
         case TurretType.Archer: baseCost = BuildManager.instance.archerCost; break;
+        case TurretType.Bomb: baseCost = BuildManager.instance.bombCost; break;
     }
 
     int upgradeCost = 0;

@@ -22,6 +22,9 @@ public class BuildButton : MonoBehaviour
             case "archer":
                 BuildManager.instance.BuildArcher();
                 break;
+            case "bomb":
+                BuildManager.instance.BuildBomb();
+                break;
 
             default:
                 Debug.LogWarning("Type de tour inconnu : " + turretType);
