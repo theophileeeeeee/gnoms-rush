@@ -6,6 +6,10 @@ public class FlecheMovement : MonoBehaviour
     public float damage = 10f;
     private float vitesse;
 
+    [Header("Audio")]
+    public AudioClip hitSound;
+    public float volume = 1f;
+
     public void Init(Transform cible, float vitesse)
     {
         this.cible = cible;
@@ -20,22 +24,22 @@ public class FlecheMovement : MonoBehaviour
             return;
         }
 
-        // Déplacement vers la cible sans physique
         transform.position = Vector2.MoveTowards(
             transform.position,
             cible.position,
             vitesse * Time.deltaTime
         );
 
-        // Rotation vers la cible
         Vector2 direction = (cible.position - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle+180);
+        transform.rotation = Quaternion.Euler(0, 0, angle + 180);
 
-        // Détruit la flèche si elle touche la cible
         if (Vector2.Distance(transform.position, cible.position) < 0.1f)
         {
-            this.cible.GetComponent<EnemyMovement>().TakeDamage(damage);
+            if (hitSound != null)
+                AudioSource.PlayClipAtPoint(hitSound, transform.position, volume);
+
+            cible.GetComponent<EnemyMovement>().TakeDamage(damage);
             Destroy(gameObject);
         }
     }

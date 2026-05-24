@@ -15,7 +15,7 @@ public class DeleteButton : MonoBehaviour
         int refund = node.ClearNode();
 
         BuildManager.instance.uiManager.EarnMoney(refund);
-
+        BuildManager.instance.PlayDeleteSound();
         BuildManager.instance.DeselectNode();
     }
 }

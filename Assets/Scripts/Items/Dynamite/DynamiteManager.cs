@@ -10,7 +10,14 @@ public class DynamiteManager : MonoBehaviour
     public string itemName = "dynamite";
 
     public GameObject visualIndicator;
+    public AudioClip selectSound;
+    [Range(0f, 1f)] public float selectVolume = 1f;
 
+    [Header("Exclusive Selection")]
+    public DynamiteManager otherDynamite;
+    public ReinforcementManager reinforcementManager;
+
+    private AudioSource audioSource;
     private bool isActive = false;
     private bool hasPlacedThisFrame = false;
 
@@ -28,6 +35,10 @@ public class DynamiteManager : MonoBehaviour
     {
         if (cam == null)
             cam = Camera.main;
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
     }
 
     void Update()
@@ -36,14 +47,12 @@ public class DynamiteManager : MonoBehaviour
 
         hasPlacedThisFrame = false;
 
-        // PC
         if (Input.GetMouseButtonDown(0))
         {
             if (IsPointerOverUI()) return;
             PlaceOnce();
         }
 
-        // Mobile
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -70,10 +79,18 @@ public class DynamiteManager : MonoBehaviour
 
         if (visualIndicator != null)
             visualIndicator.SetActive(state);
+
+        if (state && selectSound != null)
+            audioSource.PlayOneShot(selectSound, selectVolume);
     }
 
     public void Toggle()
     {
+        if (!isActive)
+        {
+            if (otherDynamite != null) otherDynamite.SetActive(false);
+            if (reinforcementManager != null) reinforcementManager.SetActive(false);
+        }
         SetActive(!isActive);
     }
 
@@ -95,11 +112,11 @@ public class DynamiteManager : MonoBehaviour
 
         Vector3 midPos = targetPos 
         + Vector3.left * preDropOffsetX 
-        + Vector3.up * (entryOffsetY * 0.5f); // léger offset vertical
+        + Vector3.up * (entryOffsetY * 0.5f);
 
         Vector3 startPos = midPos 
         + Vector3.left * entryOffsetX 
-        + Vector3.up * entryOffsetY; // arrivée plus haute
+        + Vector3.up * entryOffsetY;
 
         GameObject dyn = Instantiate(itemPrefab, startPos, Quaternion.identity);
 
@@ -114,7 +131,6 @@ public class DynamiteManager : MonoBehaviour
     {
         float t = 0f;
 
-        // --- PHASE 1 : arrivée latérale ---
         while (t < entryDuration)
         {
             t += Time.deltaTime;
@@ -126,7 +142,6 @@ public class DynamiteManager : MonoBehaviour
 
         obj.position = mid;
 
-        // --- PHASE 2 : petit arc ---
         t = 0f;
 
         while (t < arcDuration)

@@ -106,6 +106,8 @@ MonoBehaviour:
   enemyTag: Ennemy
   damage: 2
   animationDuration: 0.4
+  explosionSound: {fileID: 8300000, guid: b762dbae9f7ee5d479cfec30d761df91, type: 3}
+  volume: 0.4
 --- !u!95 &4525835223786522699
 Animator:
   serializedVersion: 7

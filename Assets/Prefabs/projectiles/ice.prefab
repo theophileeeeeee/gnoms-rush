@@ -129,5 +129,7 @@ MonoBehaviour:
   animator: {fileID: 6846504525256499943}
   explosionScaleMultiplier: 1
   scaleDuration: 0
-  freezeDuration: 8
-  blueIntensity: 0.6
+  freezeDuration: 9
+  blueIntensity: 0.517
+  explosionSound: {fileID: 8300000, guid: 2d02be682dcb4a142bd99b7a3159d958, type: 3}
+  volume: 1

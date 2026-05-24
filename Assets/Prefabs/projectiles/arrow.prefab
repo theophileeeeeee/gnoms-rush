@@ -102,6 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
+  hitSound: {fileID: 8300000, guid: 26cfa3311a0cc33459980b8026bac325, type: 3}
+  volume: 1
 --- !u!61 &-3687874155876353415
 BoxCollider2D:
   m_ObjectHideFlags: 0

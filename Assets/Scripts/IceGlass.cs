@@ -15,6 +15,10 @@ public class IceGlass : MonoBehaviour
     [Range(0f, 1f)]
     public float blueIntensity = 0.6f;
 
+    [Header("Audio")]
+    public AudioClip explosionSound;
+    public float volume = 1f;
+
     private Vector3 initialScale;
 
     void Start()
@@ -32,21 +36,25 @@ public class IceGlass : MonoBehaviour
     void Explode()
     {
         StartCoroutine(ExplosionEffect());
+        StartCoroutine(WaitBeforeFroze());
 
+        if (explosionSound != null)
+            AudioSource.PlayClipAtPoint(explosionSound, transform.position, volume);
+
+        animator?.SetTrigger("boom");
+        StartCoroutine(DestroyAfterAnimation());
+    }
+
+    IEnumerator WaitBeforeFroze()
+    {
+        yield return new WaitForSeconds(0.2f);
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
-
         foreach (var hit in hits)
         {
             EnemyMovement enemy = hit.GetComponent<EnemyMovement>();
             if (enemy != null)
-            {
                 enemy.GetFrozen(freezeDuration, blueIntensity);
-            }
         }
-
-        animator?.SetTrigger("boom");
-
-        StartCoroutine(DestroyAfterAnimation());
     }
 
     IEnumerator ExplosionEffect()
@@ -66,7 +74,7 @@ public class IceGlass : MonoBehaviour
 
     IEnumerator DestroyAfterAnimation()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.717f);
         Destroy(gameObject);
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
-
+using System.Collections;
+using System.Collections.Generic;
 public class SoldiersTurret : MonoBehaviour
 {
     [Header("Prefab du soldat")]
@@ -30,19 +31,44 @@ public class SoldiersTurret : MonoBehaviour
         {
             Vector3 worldPos = transform.position + offsets[i];
 
-            KnightManager soldier = Instantiate(
-                soldierPrefab,
-                worldPos,
-                Quaternion.identity,
-                transform
-            );
-
             GameObject home = new GameObject($"HomePoint_{i}");
             home.transform.position = worldPos;
             home.transform.SetParent(transform);
 
-            soldier.SetHomePoint(home.transform);
-            soldiers[i] = soldier;
+            SpawnSoldierAt(i, home.transform);
+        }
+    }
+
+private void SpawnSoldierAt(int index, Transform homePoint)
+{
+    KnightManager soldier = Instantiate(
+        soldierPrefab,
+        transform.position,
+        Quaternion.identity,
+        transform
+    );
+
+    soldiers[index] = soldier;
+    StartCoroutine(AssignHomeNextFrame(soldier, homePoint));
+}
+
+private IEnumerator AssignHomeNextFrame(KnightManager soldier, Transform homePoint)
+{
+    yield return null;
+    if (soldier != null)
+        soldier.SetHomePoint(homePoint);
+}
+
+    void Update()
+    {
+        for (int i = 0; i < soldiers.Length; i++)
+        {
+            if (soldiers[i] == null)
+            {
+                Transform homePoint = transform.Find($"HomePoint_{i}");
+                if (homePoint != null)
+                    SpawnSoldierAt(i, homePoint);
+            }
         }
     }
 
@@ -70,38 +96,5 @@ public class SoldiersTurret : MonoBehaviour
             UnityEditor.Handles.Label(worldPos + Vector3.up * 0.3f, $"{label}{i + 1}");
         }
     }
-void Update()
-{
-    // On ne vérifie pas dans l'Update si on est en Editor via #if 
-    // sauf si c'est vraiment ton intention, mais généralement 
-    // la logique de jeu doit tourner partout.
-    
-    for (int i = 0; i < soldiers.Length; i++)
-    {
-        // Si le slot est vide (soldat détruit ou jamais mis)
-        if (soldiers[i] == null)
-        {
-            Debug.Log($"Le soldat à l'index {i} est mort. Respawn en cours...");
-            RespawnSoldier(i);
-        }
-    }
-}
-
-private void RespawnSoldier(int index)
-{
-    Transform homePoint = transform.Find($"HomePoint_{index}");
-
-    if (homePoint != null)
-    {
-        KnightManager newSoldier = Instantiate(
-            soldierPrefab,
-            homePoint.position,
-            Quaternion.identity,
-            transform
-        );
-        newSoldier.SetHomePoint(homePoint);
-        soldiers[index] = newSoldier;
-    }
-}
 #endif
 }

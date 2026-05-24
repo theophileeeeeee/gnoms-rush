@@ -1,4 +1,3 @@
-// KnightManager.cs
 using System.Collections;
 using UnityEngine;
 
@@ -8,6 +7,8 @@ public class KnightManager : MonoBehaviour
     public GameObject healthBar;
     public float maxHealth = 10f;
     public float currentHealth;
+    public AudioSource audioSource;
+    public AudioClip[] swordSounds;
 
     private Transform homePoint;
 
@@ -19,8 +20,14 @@ public class KnightManager : MonoBehaviour
     public float damage = 2f;
     public float attackCooldown = 1f;
 
+    public float idleTimeBeforeRegen = 5f;
+    public float regenPerSecond = 1f;
+
     private float attackTimer;
-    private EnemyMovement target;
+    private float idleTimer;
+    private bool isRegening;
+
+    public EnemyMovement target;
     private Vector2 attackPosition;
     private float lockedSide = 1f;
     private SpriteRenderer spriteRenderer;
@@ -31,12 +38,15 @@ public class KnightManager : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
 
         if (homePoint != null)
             transform.position = homePoint.position;
 
         currentHealth = maxHealth;
         attackTimer = attackCooldown;
+        idleTimer = 0f;
+        isRegening = false;
 
         if (homePoint != null)
             state = KnightState.MovingToHome;
@@ -52,6 +62,28 @@ public class KnightManager : MonoBehaviour
             case KnightState.Combat:       HandleCombat(); break;
             case KnightState.Idle:         SearchForEnemy(); break;
         }
+
+        HandleRegen();
+    }
+
+    void HandleRegen()
+    {
+        bool inCombat = target != null;
+
+        if (inCombat || currentHealth >= maxHealth)
+        {
+            idleTimer = 0f;
+            isRegening = false;
+            return;
+        }
+
+        idleTimer += Time.deltaTime;
+
+        if (idleTimer >= idleTimeBeforeRegen)
+            isRegening = true;
+
+        if (isRegening)
+            currentHealth = Mathf.Min(currentHealth + regenPerSecond * Time.deltaTime, maxHealth);
     }
 
     public void SetHomePoint(Transform point)
@@ -163,7 +195,6 @@ public class KnightManager : MonoBehaviour
         {
             animator.SetBool("isWalking", false);
 
-            // En position : flip vers la cible
             float dx = target.transform.position.x - transform.position.x;
             if (dx != 0f)
                 spriteRenderer.flipX = dx > 0f;
@@ -186,6 +217,12 @@ public class KnightManager : MonoBehaviour
     {
         if (target != null)
             target.TakeDamage(damage);
+
+        if (audioSource != null && swordSounds != null && swordSounds.Length > 0)
+        {
+            audioSource.enabled = true;
+            audioSource.PlayOneShot(swordSounds[Random.Range(0, swordSounds.Length)]);
+        }
     }
 
     public void TakeDamage(float dmg)
@@ -210,13 +247,12 @@ public class KnightManager : MonoBehaviour
         StartCoroutine(DeathSequence());
     }
 
-IEnumerator DeathSequence()
-{
-    healthBar.SetActive(false);
-    yield return new WaitForSeconds(20f);
-    
-    Destroy(gameObject);
-}
+    IEnumerator DeathSequence()
+    {
+        healthBar.SetActive(false);
+        yield return new WaitForSeconds(20f);
+        Destroy(gameObject);
+    }
 
     public void Unlock()
     {

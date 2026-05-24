@@ -11,6 +11,10 @@ public class Dynamite : MonoBehaviour
     public float explosionScaleMultiplier = 2f;
     public float scaleDuration = 0.15f;
 
+    [Header("Audio")]
+    public AudioClip explosionSound;
+    public float volume = 1f;
+
     private Vector3 initialScale;
 
     void Start()
@@ -18,11 +22,12 @@ public class Dynamite : MonoBehaviour
         initialScale = transform.localScale;
         Invoke(nameof(Explode), explosionDelay);
     }
+
     void OnDrawGizmosSelected()
-{
-    Gizmos.color = Color.red;
-    Gizmos.DrawWireSphere(transform.position, radius);
-}
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, radius);
+    }
 
     void Explode()
     {
@@ -34,10 +39,11 @@ public class Dynamite : MonoBehaviour
         {
             EnemyMovement enemy = hit.GetComponent<EnemyMovement>();
             if (enemy != null)
-            {
                 enemy.TakeDamage(damage);
-            }
         }
+
+        if (explosionSound != null)
+            AudioSource.PlayClipAtPoint(explosionSound, transform.position, volume);
 
         animator?.SetTrigger("Boom");
 

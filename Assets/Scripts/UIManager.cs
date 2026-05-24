@@ -2,12 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System.Text.RegularExpressions; // Nécessaire pour manipuler le nom de la scène
+using System.Text.RegularExpressions;
 
 public class UIManager : MonoBehaviour
 {
     [Header("References")]
     public GameObject gameOverPanel;
+    public MusicManager musicManager;
     public GameObject pausePanel;
     public GameObject victoryPanel;
     public CameraController2D cameraController;
@@ -35,10 +36,28 @@ public class UIManager : MonoBehaviour
     public Vector2 boxSize;
     public LayerMask ennemyLayer;
 
+    [Header("Audio")]
+    public AudioClip victorySound;
+    public AudioClip defeatSound;
+    public AudioClip waveStartSound;
+    public AudioClip pauseOpenSound;
+    public AudioClip pauseCloseSound;
+    public float volume = 1f;
+    public float pauseVolume = 0.5f;
+
+    private AudioSource audioSource;
+
     public int CurrentMoney { get; private set; }
     public int CurrentHearts { get; private set; }
 
     private HashSet<Collider2D> trackedEnnemies = new HashSet<Collider2D>();
+
+    void Awake()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+    }
 
     void Start()
     {
@@ -51,6 +70,9 @@ public class UIManager : MonoBehaviour
     {
         waveText.text = current + "/" + waveSpawner.waves.Count;
         currentWave = current;
+
+        if (waveStartSound != null)
+            AudioSource.PlayClipAtPoint(waveStartSound, Camera.main.transform.position, volume);
     }
 
     void Update()
@@ -110,108 +132,101 @@ public class UIManager : MonoBehaviour
         CurrentHearts = Mathf.Max(0, CurrentHearts - 1);
         UpdateUI();
 
-        if (CurrentHearts <= 0)
+        if (CurrentHearts <= 0 && !gameOverPanel.activeSelf)
             OnGameOver();
     }
 
     private void OnGameOver()
     {
+        if (defeatSound != null)
+            AudioSource.PlayClipAtPoint(defeatSound, Camera.main.transform.position, volume);
+
         gameOverPanel.SetActive(true);
         cameraController.enabled = false;
     }
 
-private void Victory()
-{
-    victoryPanel.SetActive(true);
-    cameraController.enabled = false;
-
-    float healthPercent = (float)CurrentHearts / startHearts;
-
-    if (healthPercent >= 0.75f)
+    private void Victory()
     {
-        victoryLevel = 3;
+        victoryPanel.SetActive(true);
+        cameraController.enabled = false;
 
-        star1.SetActive(true);
-        star2.SetActive(true);
-        star3.SetActive(true);
+
+
+        float healthPercent = (float)CurrentHearts / startHearts;
+
+        if (healthPercent >= 0.75f)
+        {
+            victoryLevel = 3;
+            star1.SetActive(true);
+            star2.SetActive(true);
+            star3.SetActive(true);
+        }
+        else if (healthPercent >= 0.5f)
+        {
+            victoryLevel = 2;
+            star1.SetActive(true);
+            star2.SetActive(true);
+            star3.SetActive(false);
+        }
+        else
+        {
+            victoryLevel = 1;
+            star1.SetActive(true);
+            star2.SetActive(false);
+            star3.SetActive(false);
+        }
+
+        earnedMoneyWithThisLevel = Mathf.Max(1, (victoryLevel * 33 + 1) - ((startHearts - CurrentHearts) * 5));
+        if (victorySound != null)
+            AudioSource.PlayClipAtPoint(victorySound, Camera.main.transform.position, volume);
+        earnedMoneyText.text = "+ " + earnedMoneyWithThisLevel.ToString();
+        PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + earnedMoneyWithThisLevel);
+        PlayerPrefs.Save();
+        hasTookMoneyFromThisLevel = true;
     }
-    else if (healthPercent >= 0.5f)
-    {
-        victoryLevel = 2;
-
-        star1.SetActive(true);
-        star2.SetActive(true);
-        star3.SetActive(false);
-    }
-    else
-    {
-        victoryLevel = 1;
-
-        star1.SetActive(true);
-        star2.SetActive(false);
-        star3.SetActive(false);
-    }
-
-    earnedMoneyWithThisLevel =
-        (victoryLevel * 33 + 1) -
-        ((startHearts - CurrentHearts) * 5);
-
-    earnedMoneyText.text = "+ " + earnedMoneyWithThisLevel.ToString();
-    PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + earnedMoneyWithThisLevel);
-    PlayerPrefs.Save();
-    hasTookMoneyFromThisLevel = true;
-}
 
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    /// <summary>
-    /// Récupère le nom de la scène actuelle, incrémente le chiffre à la fin et charge la suivante.
-    /// Exemple : "Niveau1" -> "Niveau2"
-    /// </summary>
     public void NextLevel()
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
-
-        // On cherche le nombre à la fin du nom via Regex
         Match match = Regex.Match(currentSceneName, @"\d+");
 
         if (match.Success)
         {
-            // On récupère le texte avant le chiffre (ex: "Niveau")
             string baseName = currentSceneName.Substring(0, match.Index);
-            
-            // On convertit le chiffre trouvé, on ajoute 1
-            int currentNumber = int.Parse(match.Value);
-            int nextNumber = currentNumber + 1;
-
-            // On recompose et charge (ex: "Niveau" + 2)
-            string nextSceneName = baseName + nextNumber;
-            SceneManager.LoadScene(nextSceneName);
+            int nextNumber = int.Parse(match.Value) + 1;
+            SceneManager.LoadScene(baseName + nextNumber);
         }
         else
         {
-            // Fail-safe : si pas de chiffre, on utilise l'index par défaut
-            Debug.LogWarning("Aucun chiffre trouvé dans le nom de la scène, utilisation de l'index.");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 
     public void TogglePause()
     {
+        
         if (Time.timeScale > 0)
         {
             Time.timeScale = 0;
             pausePanel.SetActive(true);
             cameraController.enabled = false;
+            musicManager.SetPauseEffect(true);
+            if (pauseOpenSound != null)
+                audioSource.PlayOneShot(pauseOpenSound, pauseVolume);
         }
         else
         {
             Time.timeScale = 1;
             pausePanel.SetActive(false);
             cameraController.enabled = true;
+            musicManager.SetPauseEffect(false);
+            if (pauseCloseSound != null)
+                audioSource.PlayOneShot(pauseCloseSound, pauseVolume);
         }
     }
 

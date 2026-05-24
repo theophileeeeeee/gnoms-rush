@@ -1,9 +1,8 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 public class DeselectOnClick : MonoBehaviour
 {
-    public GameObject gameOverPanel;
-    public int time;
-    void Update()
+    public GameObject gameOverPanel;    void Update()
     {
         if (Input.GetMouseButtonDown(0) && !gameOverPanel.activeSelf)
         {
@@ -14,7 +13,6 @@ public class DeselectOnClick : MonoBehaviour
         {
             TryDeselect(Input.GetTouch(0).position);
         }
-        Time.timeScale = time;
     }
 
     void TryDeselect(Vector2 screenPos)

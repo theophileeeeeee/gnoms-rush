@@ -107,6 +107,8 @@ MonoBehaviour:
   animator: {fileID: 6846504525256499943}
   explosionScaleMultiplier: 2
   scaleDuration: 0.15
+  explosionSound: {fileID: 8300000, guid: 5bef7ae40c295b94099c61481b39b8aa, type: 3}
+  volume: 1
 --- !u!95 &6846504525256499943
 Animator:
   serializedVersion: 7
