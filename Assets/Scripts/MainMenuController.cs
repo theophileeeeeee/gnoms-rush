@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 [System.Serializable]
 public struct Quest
@@ -16,7 +17,6 @@ public class MainMenuController : MonoBehaviour
 {
     public GameObject settingsPanel;
     public Slider qualitySlider;
-    public Toggle soundToggle;
     public GameObject shopPanel;
     public GameObject statsPanel;
     public GameObject levelsPanel;
@@ -24,9 +24,23 @@ public class MainMenuController : MonoBehaviour
     public Text killsText;
     public Text[] moneyTexts;
 
+    [Header("Audio Mixer")]
+    public AudioMixer mainMixer;
+
+    [Header("Music UI")]
+    public Image musicButtonImage;
+    public Sprite musicOnSprite;
+    public Sprite musicOffSprite;
+
+    [Header("SFX UI")]
+    public Image sfxButtonImage;
+    public Sprite sfxOnSprite;
+    public Sprite sfxOffSprite;
+
     public Quest[] quests;
 
-    private readonly string[] qualityLabels = { "Bas", "Moyen", "Haut" };
+    private const float normalVolume = 0f;
+    private const float mutedVolume = -80f;
 
     void Start()
     {
@@ -34,32 +48,34 @@ public class MainMenuController : MonoBehaviour
         qualitySlider.value = savedQuality;
         SetQuality(savedQuality);
 
-        bool savedSound = PlayerPrefs.GetInt("Sound", 1) == 1;
-        soundToggle.isOn = savedSound;
-        ToggleSound(savedSound);
+        ApplyMusic(PlayerPrefs.GetInt("MusicMuted", 0) == 0);
+        ApplySFX(PlayerPrefs.GetInt("SFXMuted", 0) == 0);
         UpdateMoneyUI();
     }
-string FormatMoney(int amount)
-{
-    if (amount >= 1000000) return $"{amount / 1000000f:0.#}M";
-    if (amount >= 1000)    return $"{amount / 1000f:0.#}K";
-    return amount.ToString();
-}
-public void LoadScene(string sceneName)
-{
-    SceneManager.LoadScene(sceneName);
-}
 
-void UpdateMoneyUI()
-{
-    string money = FormatMoney(PlayerPrefs.GetInt("Money", 0));
-    foreach (Text t in moneyTexts)
-        t.text = money;
-}
-public void ToggleLevelsPanel()
-{
+    string FormatMoney(int amount)
+    {
+        if (amount >= 1000000) return $"{amount / 1000000f:0.#}M";
+        if (amount >= 1000)    return $"{amount / 1000f:0.#}K";
+        return amount.ToString();
+    }
+
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    void UpdateMoneyUI()
+    {
+        string money = FormatMoney(PlayerPrefs.GetInt("Money", 0));
+        foreach (Text t in moneyTexts)
+            t.text = money;
+    }
+
+    public void ToggleLevelsPanel()
+    {
         levelsPanel.SetActive(!levelsPanel.activeSelf);
-}
+    }
 
     public void ToggleSettings()
     {
@@ -79,23 +95,23 @@ public void ToggleLevelsPanel()
         UpdateQuests();
     }
 
-void UpdateQuests()
-{
-    for (int i = 0; i < quests.Length; i++)
+    void UpdateQuests()
     {
-        Quest q = quests[i];
-        int progress = PlayerPrefs.GetInt(q.key, 0);
-        bool completed = progress >= q.goal;
-        bool claimed = PlayerPrefs.GetInt($"Quest_{q.key}_{q.goal}_Claimed", 0) == 1;
-        q.progressText.color = completed ? Color.green : Color.white;
-        q.claimButton.interactable = completed && !claimed;
-        q.claimButton.gameObject.SetActive(!claimed);
+        for (int i = 0; i < quests.Length; i++)
+        {
+            Quest q = quests[i];
+            int progress = PlayerPrefs.GetInt(q.key, 0);
+            bool completed = progress >= q.goal;
+            bool claimed = PlayerPrefs.GetInt($"Quest_{q.key}_{q.goal}_Claimed", 0) == 1;
+            q.progressText.color = completed ? Color.green : Color.white;
+            q.claimButton.interactable = completed && !claimed;
+            q.claimButton.gameObject.SetActive(!claimed);
 
-        int index = i;
-        q.claimButton.onClick.RemoveAllListeners();
-        q.claimButton.onClick.AddListener(() => ClaimReward(index));
+            int index = i;
+            q.claimButton.onClick.RemoveAllListeners();
+            q.claimButton.onClick.AddListener(() => ClaimReward(index));
+        }
     }
-}
 
     public void ClaimReward(int questIndex)
     {
@@ -121,9 +137,7 @@ void UpdateQuests()
         killsText.text = "0";
 
         foreach (Quest q in quests)
-        {
             PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
-        }
 
         PlayerPrefs.Save();
         UpdateQuests();
@@ -138,10 +152,31 @@ void UpdateQuests()
         PlayerPrefs.Save();
     }
 
-    public void ToggleSound(bool isOn)
+    public void ToggleMusic()
     {
-        AudioListener.volume = isOn ? 1 : 0;
-        PlayerPrefs.SetInt("Sound", isOn ? 1 : 0);
+        bool isOn = PlayerPrefs.GetInt("MusicMuted", 0) == 1;
+        ApplyMusic(isOn);
+        PlayerPrefs.SetInt("MusicMuted", isOn ? 0 : 1);
         PlayerPrefs.Save();
+    }
+
+    public void ToggleSFX()
+    {
+        bool isOn = PlayerPrefs.GetInt("SFXMuted", 0) == 1;
+        ApplySFX(isOn);
+        PlayerPrefs.SetInt("SFXMuted", isOn ? 0 : 1);
+        PlayerPrefs.Save();
+    }
+
+    void ApplyMusic(bool isOn)
+    {
+        if (mainMixer != null) mainMixer.SetFloat("MusicVol", isOn ? normalVolume : mutedVolume);
+        if (musicButtonImage != null) musicButtonImage.sprite = isOn ? musicOnSprite : musicOffSprite;
+    }
+
+    void ApplySFX(bool isOn)
+    {
+        if (mainMixer != null) mainMixer.SetFloat("SFXVol", isOn ? normalVolume : mutedVolume);
+        if (sfxButtonImage != null) sfxButtonImage.sprite = isOn ? sfxOnSprite : sfxOffSprite;
     }
 }

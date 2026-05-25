@@ -53,31 +53,22 @@ public class FlecheMovement : MonoBehaviour
         }
     }
 
-    void ExplodeArrow()
-    {
-        aTouche = true;
+void ExplodeArrow()
+{
+    aTouche = true;
 
-        cible.GetComponent<EnemyMovement>().TakeDamage(damage);
+    EnemyMovement em = cible.GetComponent<EnemyMovement>();
+    if (em != null) em.TakeDamage(damage);
+    else { FlyingEnemyMovement fem = cible.GetComponent<FlyingEnemyMovement>(); if (fem != null) fem.TakeDamage(damage); }
 
-        float delay = 0.1f;
+    float delay = 0.1f;
+    if (hitSound != null) { audioSource.PlayOneShot(hitSound, volume); delay = hitSound.length; }
 
-        if (hitSound != null)
-        {
-            audioSource.PlayOneShot(hitSound, volume);
-            delay = hitSound.length;
-        }
-
-        var renderer = GetComponent<Renderer>();
-        if (renderer != null) renderer.enabled = false;
-
-        var collider = GetComponent<Collider2D>();
-        if (collider != null) collider.enabled = false;
-
-        foreach (Transform child in transform)
-        {
-            child.gameObject.SetActive(false);
-        }
-
-        Destroy(gameObject, delay);
-    }
+    var renderer = GetComponent<Renderer>();
+    if (renderer != null) renderer.enabled = false;
+    var collider = GetComponent<Collider2D>();
+    if (collider != null) collider.enabled = false;
+    foreach (Transform child in transform) child.gameObject.SetActive(false);
+    Destroy(gameObject, delay);
+}
 }

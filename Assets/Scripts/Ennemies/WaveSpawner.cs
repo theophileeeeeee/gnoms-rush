@@ -203,24 +203,37 @@ public class WaveSpawnerAdvanced : MonoBehaviour
             SetButtonAlpha(btn, a);
     }
 
-    IEnumerator SpawnEnemy(SpawnInfo info)
+IEnumerator SpawnEnemy(SpawnInfo info)
+{
+    yield return new WaitForSeconds(info.delay);
+    enemiesRemainingToSpawn--;
+
+    GameObject enemy = Instantiate(info.enemyPrefab, Vector3.zero, Quaternion.identity);
+
+    EnemyMovement em = enemy.GetComponent<EnemyMovement>();
+    FlyingEnemyMovement fem = enemy.GetComponent<FlyingEnemyMovement>();
+
+    if (em != null)
     {
-        yield return new WaitForSeconds(info.delay);
-        enemiesRemainingToSpawn--;
+        if (info.allowedPaths != null && info.allowedPaths.Count > 0)
+            em.SetAllowedPaths(info.allowedPaths);
 
-        GameObject enemy = Instantiate(info.enemyPrefab, Vector3.zero, Quaternion.identity);
-        EnemyMovement em = enemy.GetComponent<EnemyMovement>();
+        if (info.laneIndex >= 0)
+            em.AssignLane(info.laneIndex);
 
-        if (em != null)
-        {
-            if (info.allowedPaths != null && info.allowedPaths.Count > 0)
-                em.SetAllowedPaths(info.allowedPaths);
-
-            if (info.laneIndex >= 0)
-                em.AssignLane(info.laneIndex);
-
-            if (em.allowedPaths != null && em.allowedPaths.Count > 0)
-                em.SetSpawnPosition(em.allowedPaths[0].GetPointAtDistance(0f));
-        }
+        if (em.allowedPaths != null && em.allowedPaths.Count > 0)
+            em.SetSpawnPosition(em.allowedPaths[0].GetPointAtDistance(0f));
     }
+    else if (fem != null)
+    {
+        if (info.allowedPaths != null && info.allowedPaths.Count > 0)
+            fem.SetAllowedPaths(info.allowedPaths);
+
+        if (info.laneIndex >= 0)
+            fem.AssignLane(info.laneIndex);
+
+        if (fem.allowedPaths != null && fem.allowedPaths.Count > 0)
+            fem.SetSpawnPosition(fem.allowedPaths[0].GetPointAtDistance(0f));
+    }
+}
 }

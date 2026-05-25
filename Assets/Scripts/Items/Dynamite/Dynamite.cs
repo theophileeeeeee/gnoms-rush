@@ -38,26 +38,26 @@ public class Dynamite : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, radius);
     }
 
-    void Explode()
+void Explode()
+{
+    StartCoroutine(ExplosionEffect());
+
+    Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
+    foreach (var hit in hits)
     {
-        StartCoroutine(ExplosionEffect());
+        EnemyMovement em = hit.GetComponent<EnemyMovement>();
+        if (em != null) { em.TakeDamage(damage); continue; }
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
-
-        foreach (var hit in hits)
-        {
-            EnemyMovement enemy = hit.GetComponent<EnemyMovement>();
-            if (enemy != null)
-                enemy.TakeDamage(damage);
-        }
-
-        if (explosionSound != null)
-            audioSource.PlayOneShot(explosionSound, volume);
-
-        animator?.SetTrigger("Boom");
-
-        StartCoroutine(DestroyAfterAnimation());
+        FlyingEnemyMovement fem = hit.GetComponent<FlyingEnemyMovement>();
+        if (fem != null) fem.TakeDamage(damage);
     }
+
+    if (explosionSound != null)
+        audioSource.PlayOneShot(explosionSound, volume);
+
+    animator?.SetTrigger("Boom");
+    StartCoroutine(DestroyAfterAnimation());
+}
 
     IEnumerator ExplosionEffect()
     {

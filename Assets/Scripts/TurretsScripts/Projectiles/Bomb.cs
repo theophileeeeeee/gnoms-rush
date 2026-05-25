@@ -87,9 +87,10 @@ public class Bomb2D : MonoBehaviour
                 if (!enemiesDamagedThisExplosion.Contains(enemyGO))
                 {
                     enemiesDamagedThisExplosion.Add(enemyGO);
-                    EnemyMovement enemy = enemyGO.GetComponent<EnemyMovement>();
-                    if (enemy != null)
-                        enemy.TakeDamage(damage);
+                    EnemyMovement em = target.GetComponent<EnemyMovement>();
+                    if (em != null) em.TakeDamage(damage);
+                    else { FlyingEnemyMovement fem = target.GetComponent<FlyingEnemyMovement>(); 
+                    if (fem != null) fem.TakeDamage(damage); }
                 }
             }
         }

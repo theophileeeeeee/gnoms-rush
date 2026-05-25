@@ -23,39 +23,37 @@ public class AudioMenuManager : MonoBehaviour
     private const float normalVolume = 0f;
     private const float mutedVolume = -80f;
 
+    void Start()
+    {
+        isMusicMuted = PlayerPrefs.GetInt("MusicMuted", 0) == 1;
+        isSFXMuted = PlayerPrefs.GetInt("SFXMuted", 0) == 1;
+
+        mainMixer.SetFloat("MusicVol", isMusicMuted ? mutedVolume : normalVolume);
+        mainMixer.SetFloat("SFXVol", isSFXMuted ? mutedVolume : normalVolume);
+
+        if (musicButtonImage != null)
+            musicButtonImage.sprite = isMusicMuted ? musicOffSprite : musicOnSprite;
+        if (sfxButtonImage != null)
+            sfxButtonImage.sprite = isSFXMuted ? sfxOffSprite : sfxOnSprite;
+    }
+
     public void ToggleMusic()
     {
         isMusicMuted = !isMusicMuted;
-
-        if (isMusicMuted)
-        {
-            mainMixer.SetFloat("MusicVol", mutedVolume);
-            if (musicButtonImage != null && musicOffSprite != null)
-                musicButtonImage.sprite = musicOffSprite;
-        }
-        else
-        {
-            mainMixer.SetFloat("MusicVol", normalVolume);
-            if (musicButtonImage != null && musicOnSprite != null)
-                musicButtonImage.sprite = musicOnSprite;
-        }
+        mainMixer.SetFloat("MusicVol", isMusicMuted ? mutedVolume : normalVolume);
+        if (musicButtonImage != null)
+            musicButtonImage.sprite = isMusicMuted ? musicOffSprite : musicOnSprite;
+        PlayerPrefs.SetInt("MusicMuted", isMusicMuted ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public void ToggleSFX()
     {
         isSFXMuted = !isSFXMuted;
-
-        if (isSFXMuted)
-        {
-            mainMixer.SetFloat("SFXVol", mutedVolume);
-            if (sfxButtonImage != null && sfxOffSprite != null)
-                sfxButtonImage.sprite = sfxOffSprite;
-        }
-        else
-        {
-            mainMixer.SetFloat("SFXVol", normalVolume);
-            if (sfxButtonImage != null && sfxOnSprite != null)
-                sfxButtonImage.sprite = sfxOnSprite;
-        }
+        mainMixer.SetFloat("SFXVol", isSFXMuted ? mutedVolume : normalVolume);
+        if (sfxButtonImage != null)
+            sfxButtonImage.sprite = isSFXMuted ? sfxOffSprite : sfxOnSprite;
+        PlayerPrefs.SetInt("SFXMuted", isSFXMuted ? 1 : 0);
+        PlayerPrefs.Save();
     }
 }

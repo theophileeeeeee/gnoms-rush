@@ -56,9 +56,9 @@ public class Bullet : MonoBehaviour
         GameObject effectIns = Instantiate(impactEffect, transform.position, transform.rotation);
         Destroy(effectIns, 1f);
 
-        EnemyMovement enemy = target.GetComponent<EnemyMovement>();
-        if (enemy != null)
-            enemy.TakeDamage(damage);
+        EnemyMovement em = target.GetComponent<EnemyMovement>();
+        if (em != null) em.TakeDamage(damage);
+        else { FlyingEnemyMovement fem = target.GetComponent<FlyingEnemyMovement>(); if (fem != null) fem.TakeDamage(damage); }
 
         float delay = 0.1f;
 

@@ -54,17 +54,19 @@ public class IceGlass : MonoBehaviour
         StartCoroutine(DestroyAfterAnimation());
     }
 
-    IEnumerator WaitBeforeFroze()
+IEnumerator WaitBeforeFroze()
+{
+    yield return new WaitForSeconds(0.2f);
+    Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
+    foreach (var hit in hits)
     {
-        yield return new WaitForSeconds(0.2f);
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
-        foreach (var hit in hits)
-        {
-            EnemyMovement enemy = hit.GetComponent<EnemyMovement>();
-            if (enemy != null)
-                enemy.GetFrozen(freezeDuration, blueIntensity);
-        }
+        EnemyMovement em = hit.GetComponent<EnemyMovement>();
+        if (em != null) { em.GetFrozen(freezeDuration, blueIntensity); continue; }
+
+        FlyingEnemyMovement fem = hit.GetComponent<FlyingEnemyMovement>();
+        if (fem != null) fem.GetFrozen(freezeDuration, blueIntensity);
     }
+}
 
     IEnumerator ExplosionEffect()
     {

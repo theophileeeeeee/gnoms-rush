@@ -12484,7 +12484,7 @@ MonoBehaviour:
   waves:
   - salves:
     - enemies:
-      - enemyPrefab: {fileID: 4880741486600547989, guid: 9a4080af302e14b4087c8fcf4d7a6089, type: 3}
+      - enemyPrefab: {fileID: 6154848677523542535, guid: 3bf4475962be88246b9e007624da3818, type: 3}
         allowedPaths:
         - {fileID: 1643375038}
         laneIndex: 1
