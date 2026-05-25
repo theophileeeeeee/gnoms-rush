@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class DynamiteManager : MonoBehaviour
 {
     public ItemManager itemManager;
@@ -9,7 +10,11 @@ public class DynamiteManager : MonoBehaviour
     public GameObject itemPrefab;
     public string itemName = "dynamite";
 
-    public GameObject visualIndicator;
+    [Header("Selection (Scale)")]
+    public float scaleIncreasePercent = 15f;
+    private Vector3 originalScale;
+
+    [Header("Audio")]
     public AudioClip selectSound;
     [Range(0f, 1f)] public float selectVolume = 1f;
 
@@ -17,7 +22,7 @@ public class DynamiteManager : MonoBehaviour
     public DynamiteManager otherDynamite;
     public ReinforcementManager reinforcementManager;
 
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     private bool isActive = false;
     private bool hasPlacedThisFrame = false;
 
@@ -36,9 +41,10 @@ public class DynamiteManager : MonoBehaviour
         if (cam == null)
             cam = Camera.main;
 
-        audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
+
+        originalScale = transform.localScale;
     }
 
     void Update()
@@ -77,11 +83,18 @@ public class DynamiteManager : MonoBehaviour
     {
         isActive = state;
 
-        if (visualIndicator != null)
-            visualIndicator.SetActive(state);
+        if (state)
+        {
+            float multiplier = 1f + (scaleIncreasePercent / 100f);
+            transform.localScale = originalScale * multiplier;
 
-        if (state && selectSound != null)
-            audioSource.PlayOneShot(selectSound, selectVolume);
+            if (selectSound != null)
+                audioSource.PlayOneShot(selectSound, selectVolume);
+        }
+        else
+        {
+            transform.localScale = originalScale;
+        }
     }
 
     public void Toggle()
@@ -100,7 +113,7 @@ public class DynamiteManager : MonoBehaviour
 
         if (itemManager.GetItemAmount(itemName) <= 0)
         {
-            Debug.Log("Plus de "+ itemName+" en stock !");
+            Debug.Log("Plus de " + itemName + " en stock !");
             SetActive(false);
             return;
         }
@@ -110,12 +123,12 @@ public class DynamiteManager : MonoBehaviour
 
         Vector3 targetPos = cam.ScreenToWorldPoint(mousePos);
 
-        Vector3 midPos = targetPos 
-        + Vector3.left * preDropOffsetX 
+        Vector3 midPos = targetPos
+        + Vector3.left * preDropOffsetX
         + Vector3.up * (entryOffsetY * 0.5f);
 
-        Vector3 startPos = midPos 
-        + Vector3.left * entryOffsetX 
+        Vector3 startPos = midPos
+        + Vector3.left * entryOffsetX
         + Vector3.up * entryOffsetY;
 
         GameObject dyn = Instantiate(itemPrefab, startPos, Quaternion.identity);

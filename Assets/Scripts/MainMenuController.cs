@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public struct Quest
@@ -18,6 +19,7 @@ public class MainMenuController : MonoBehaviour
     public Toggle soundToggle;
     public GameObject shopPanel;
     public GameObject statsPanel;
+    public GameObject levelsPanel;
     public Text towerBuiltText;
     public Text killsText;
     public Text[] moneyTexts;
@@ -43,12 +45,20 @@ string FormatMoney(int amount)
     if (amount >= 1000)    return $"{amount / 1000f:0.#}K";
     return amount.ToString();
 }
+public void LoadScene(string sceneName)
+{
+    SceneManager.LoadScene(sceneName);
+}
 
 void UpdateMoneyUI()
 {
     string money = FormatMoney(PlayerPrefs.GetInt("Money", 0));
     foreach (Text t in moneyTexts)
         t.text = money;
+}
+public void ToggleLevelsPanel()
+{
+        levelsPanel.SetActive(!levelsPanel.activeSelf);
 }
 
     public void ToggleSettings()

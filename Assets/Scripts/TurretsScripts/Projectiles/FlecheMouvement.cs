@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class FlecheMovement : MonoBehaviour
 {
     private Transform cible;
@@ -10,6 +11,16 @@ public class FlecheMovement : MonoBehaviour
     public AudioClip hitSound;
     public float volume = 1f;
 
+    private AudioSource audioSource;
+    private bool aTouche = false;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+    }
+
     public void Init(Transform cible, float vitesse)
     {
         this.cible = cible;
@@ -18,6 +29,8 @@ public class FlecheMovement : MonoBehaviour
 
     void Update()
     {
+        if (aTouche) return;
+
         if (cible == null)
         {
             Destroy(gameObject);
@@ -36,11 +49,35 @@ public class FlecheMovement : MonoBehaviour
 
         if (Vector2.Distance(transform.position, cible.position) < 0.1f)
         {
-            if (hitSound != null)
-                AudioSource.PlayClipAtPoint(hitSound, transform.position, volume);
-
-            cible.GetComponent<EnemyMovement>().TakeDamage(damage);
-            Destroy(gameObject);
+            ExplodeArrow();
         }
+    }
+
+    void ExplodeArrow()
+    {
+        aTouche = true;
+
+        cible.GetComponent<EnemyMovement>().TakeDamage(damage);
+
+        float delay = 0.1f;
+
+        if (hitSound != null)
+        {
+            audioSource.PlayOneShot(hitSound, volume);
+            delay = hitSound.length;
+        }
+
+        var renderer = GetComponent<Renderer>();
+        if (renderer != null) renderer.enabled = false;
+
+        var collider = GetComponent<Collider2D>();
+        if (collider != null) collider.enabled = false;
+
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        Destroy(gameObject, delay);
     }
 }

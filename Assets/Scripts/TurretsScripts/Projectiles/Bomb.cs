@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Bomb2D : MonoBehaviour
 {
     private Transform target;
@@ -20,8 +21,16 @@ public class Bomb2D : MonoBehaviour
     public float volume = 1f;
 
     private Animator anim;
+    private AudioSource audioSource;
     private bool hasExploded = false;
     private bool isFlying = false;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+    }
 
     void Start()
     {
@@ -65,7 +74,7 @@ public class Bomb2D : MonoBehaviour
             anim.SetTrigger("BOOM");
 
         if (explosionSound != null)
-            AudioSource.PlayClipAtPoint(explosionSound, transform.position, volume);
+            audioSource.PlayOneShot(explosionSound, volume);
 
         List<GameObject> enemiesDamagedThisExplosion = new List<GameObject>();
         Collider2D[] collidersInZone = Physics2D.OverlapCircleAll(transform.position, explosionRadius);

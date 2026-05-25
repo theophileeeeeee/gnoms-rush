@@ -36,16 +36,16 @@ public class UIManager : MonoBehaviour
     public Vector2 boxSize;
     public LayerMask ennemyLayer;
 
-    [Header("Audio")]
+    [Header("Audio (SFX)")]
     public AudioClip victorySound;
     public AudioClip defeatSound;
     public AudioClip waveStartSound;
     public AudioClip pauseOpenSound;
     public AudioClip pauseCloseSound;
-    public float volume = 1f;
-    public float pauseVolume = 0.5f;
+    [Range(0f, 1f)] public float volume = 1f;
+    [Range(0f, 1f)] public float pauseVolume = 0.5f;
 
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     public int CurrentMoney { get; private set; }
     public int CurrentHearts { get; private set; }
@@ -54,9 +54,9 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
+
         audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0f;
+        audioSource.spatialBlend = 0f; // Assure un son purement 2D global
     }
 
     void Start()
@@ -71,8 +71,9 @@ public class UIManager : MonoBehaviour
         waveText.text = current + "/" + waveSpawner.waves.Count;
         currentWave = current;
 
+        // Corrigé : Utilise l'AudioSource local au lieu de PlayClipAtPoint
         if (waveStartSound != null)
-            AudioSource.PlayClipAtPoint(waveStartSound, Camera.main.transform.position, volume);
+            audioSource.PlayOneShot(waveStartSound, volume);
     }
 
     void Update()
@@ -138,8 +139,9 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver()
     {
+        // Corrigé : Utilise l'AudioSource local
         if (defeatSound != null)
-            AudioSource.PlayClipAtPoint(defeatSound, Camera.main.transform.position, volume);
+            audioSource.PlayOneShot(defeatSound, volume);
 
         gameOverPanel.SetActive(true);
         cameraController.enabled = false;
@@ -149,8 +151,6 @@ public class UIManager : MonoBehaviour
     {
         victoryPanel.SetActive(true);
         cameraController.enabled = false;
-
-
 
         float healthPercent = (float)CurrentHearts / startHearts;
 
@@ -177,8 +177,11 @@ public class UIManager : MonoBehaviour
         }
 
         earnedMoneyWithThisLevel = Mathf.Max(1, (victoryLevel * 33 + 1) - ((startHearts - CurrentHearts) * 5));
+        
+        // Corrigé : Utilise l'AudioSource local
         if (victorySound != null)
-            AudioSource.PlayClipAtPoint(victorySound, Camera.main.transform.position, volume);
+            audioSource.PlayOneShot(victorySound, volume);
+
         earnedMoneyText.text = "+ " + earnedMoneyWithThisLevel.ToString();
         PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + earnedMoneyWithThisLevel);
         PlayerPrefs.Save();
@@ -209,7 +212,6 @@ public class UIManager : MonoBehaviour
 
     public void TogglePause()
     {
-        
         if (Time.timeScale > 0)
         {
             Time.timeScale = 0;

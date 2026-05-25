@@ -201,7 +201,11 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
-        if (movementFrozen) return;
+        if (movementFrozen) 
+        {
+        animator.SetBool("Idle", true);
+        return;
+        }
 
         distanceTravelled += speed * Time.deltaTime;
 

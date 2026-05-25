@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections;
 using Unity.VisualScripting;
 
+[RequireComponent(typeof(AudioSource))]
 public class BuildManager : MonoBehaviour
 {
     public static BuildManager instance;
@@ -54,7 +55,7 @@ public class BuildManager : MonoBehaviour
     public int upgradeCostLevel3 = 150;
 
     private Node selectedNode;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     void Awake()
     {
@@ -62,7 +63,10 @@ public class BuildManager : MonoBehaviour
         typeChoicePanel.SetActive(false);
         modificationChoicePanel.SetActive(false);
 
-        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
     }
@@ -94,6 +98,7 @@ public class BuildManager : MonoBehaviour
         yield return new WaitForSeconds(0.16f);
         typeChoicePanel.SetActive(false);
     }
+
     public void PlayDeleteSound()
     {
         if (deleteSound != null)
@@ -127,7 +132,7 @@ public class BuildManager : MonoBehaviour
         return Mathf.RoundToInt((baseCost + upgradeCost) * 0.7f);
     }
 
-public void DeselectNode()
+    public void DeselectNode()
     {
         if (selectedNode == null) return;
 

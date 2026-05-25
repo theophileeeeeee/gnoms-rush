@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Bullet : MonoBehaviour
 {
     private Transform target;
@@ -11,6 +12,16 @@ public class Bullet : MonoBehaviour
     public AudioClip hitSound;
     public float volume = 1f;
 
+    private AudioSource audioSource;
+    private bool aTouche = false;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+    }
+
     public void Seek(Transform _target)
     {
         target = _target;
@@ -18,6 +29,8 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+        if (aTouche) return;
+
         if (target == null)
         {
             Destroy(gameObject);
@@ -38,16 +51,34 @@ public class Bullet : MonoBehaviour
 
     void HitTarget()
     {
+        aTouche = true;
+
         GameObject effectIns = Instantiate(impactEffect, transform.position, transform.rotation);
         Destroy(effectIns, 1f);
-
-        if (hitSound != null)
-            AudioSource.PlayClipAtPoint(hitSound, transform.position, volume);
 
         EnemyMovement enemy = target.GetComponent<EnemyMovement>();
         if (enemy != null)
             enemy.TakeDamage(damage);
 
-        Destroy(gameObject);
+        float delay = 0.1f;
+
+        if (hitSound != null)
+        {
+            audioSource.PlayOneShot(hitSound, volume);
+            delay = hitSound.length;
+        }
+
+        var renderer = GetComponent<Renderer>();
+        if (renderer != null) renderer.enabled = false;
+
+        var collider = GetComponent<Collider2D>();
+        if (collider != null) collider.enabled = false;
+
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        Destroy(gameObject, delay);
     }
 }

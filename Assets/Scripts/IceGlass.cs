@@ -1,6 +1,7 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class IceGlass : MonoBehaviour
 {
     public float explosionDelay = 1.5f;
@@ -20,6 +21,14 @@ public class IceGlass : MonoBehaviour
     public float volume = 1f;
 
     private Vector3 initialScale;
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+    }
 
     void Start()
     {
@@ -39,7 +48,7 @@ public class IceGlass : MonoBehaviour
         StartCoroutine(WaitBeforeFroze());
 
         if (explosionSound != null)
-            AudioSource.PlayClipAtPoint(explosionSound, transform.position, volume);
+            audioSource.PlayOneShot(explosionSound, volume);
 
         animator?.SetTrigger("boom");
         StartCoroutine(DestroyAfterAnimation());

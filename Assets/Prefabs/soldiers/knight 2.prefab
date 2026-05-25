@@ -194,6 +194,9 @@ MonoBehaviour:
   speed: 0.5
   damage: 4
   attackCooldown: 1.1
+  idleTimeBeforeRegen: 5
+  regenPerSecond: 1
+  target: {fileID: 0}
 --- !u!50 &5828738165362608027
 Rigidbody2D:
   serializedVersion: 5
@@ -252,7 +255,7 @@ AudioSource:
   m_GameObject: {fileID: 3624436695077011647}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 5081859630318675418, guid: df0b1173ae9738b43881a89e0b889b69, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1

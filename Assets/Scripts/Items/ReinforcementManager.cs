@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class ReinforcementManager : MonoBehaviour
 {
     public Camera cam;
@@ -17,12 +18,13 @@ public class ReinforcementManager : MonoBehaviour
 
     public Image cooldownImage;
 
-    [Header("Selection")]
-    public GameObject visualIndicator;
+    [Header("Selection (Scale)")]
+    public float scaleIncreasePercent = 15f;
+    private Vector3 originalScale;
+
+    [Header("Audio")]
     public AudioClip selectSound;
     [Range(0f, 1f)] public float selectVolume = 1f;
-
-    [Header("Placement")]
     public AudioClip placeSound;
     [Range(0f, 1f)] public float placeVolume = 1f;
 
@@ -30,7 +32,7 @@ public class ReinforcementManager : MonoBehaviour
     public DynamiteManager dynamite1;
     public DynamiteManager dynamite2;
 
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     private bool isActive = false;
     private bool hasPlacedThisFrame = false;
 
@@ -42,11 +44,12 @@ public class ReinforcementManager : MonoBehaviour
         cooldownTimer = cooldown;
 
         if (cooldownImage != null)
-            cooldownImage.fillAmount = 1f;
+            cooldownImage.fillAmount = 0f;
 
-        audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
+
+        originalScale = transform.localScale;
     }
 
     void Update()
@@ -56,7 +59,7 @@ public class ReinforcementManager : MonoBehaviour
             cooldownTimer += Time.deltaTime;
 
             if (cooldownImage != null)
-                cooldownImage.fillAmount = cooldownTimer / cooldown;
+                cooldownImage.fillAmount = 1f - (cooldownTimer / cooldown);
         }
 
         if (!isActive) return;
@@ -140,7 +143,7 @@ public class ReinforcementManager : MonoBehaviour
         cooldownTimer = 0f;
 
         if (cooldownImage != null)
-            cooldownImage.fillAmount = 0f;
+            cooldownImage.fillAmount = 1f;
 
         SetActive(false);
     }
@@ -149,11 +152,18 @@ public class ReinforcementManager : MonoBehaviour
     {
         isActive = state;
 
-        if (visualIndicator != null)
-            visualIndicator.SetActive(state);
+        if (state)
+        {
+            float multiplier = 1f + (scaleIncreasePercent / 100f);
+            transform.localScale = originalScale * multiplier;
 
-        if (state && selectSound != null)
-            audioSource.PlayOneShot(selectSound, selectVolume);
+            if (selectSound != null)
+                audioSource.PlayOneShot(selectSound, selectVolume);
+        }
+        else
+        {
+            transform.localScale = originalScale;
+        }
     }
 
     bool IsPointerOverUI(int fingerId = -1)

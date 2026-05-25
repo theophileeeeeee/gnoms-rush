@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Dynamite : MonoBehaviour
 {
     public float explosionDelay = 1.5f;
@@ -16,6 +17,14 @@ public class Dynamite : MonoBehaviour
     public float volume = 1f;
 
     private Vector3 initialScale;
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+    }
 
     void Start()
     {
@@ -43,7 +52,7 @@ public class Dynamite : MonoBehaviour
         }
 
         if (explosionSound != null)
-            AudioSource.PlayClipAtPoint(explosionSound, transform.position, volume);
+            audioSource.PlayOneShot(explosionSound, volume);
 
         animator?.SetTrigger("Boom");
 

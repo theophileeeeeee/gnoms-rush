@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(AudioLowPassFilter))]
@@ -14,30 +15,25 @@ public class MusicManager : MonoBehaviour
     [Header("Configuration Filtre Pause")]
     [SerializeField] private float normalCutoffFrequency = 22000f;
     [SerializeField] private float pauseCutoffFrequency = 800f;   
-    [SerializeField] private float transitionSpeed = 5f;          
+    [SerializeField] [Tooltip("Durée de la transition en secondes")] private float transitionDuration = 2f;          
 
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     private AudioLowPassFilter lowPassFilter;
     
-    private float targetCutoff;
-    private float targetVolume;
+    private Coroutine transitionCoroutine;
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
         lowPassFilter = GetComponent<AudioLowPassFilter>();
 
         audioSource.spatialBlend = 0f; 
         audioSource.playOnAwake = false;
         audioSource.loop = true;
         
-        // Initialisation des volumes cibles
+        // Initialisation
         audioSource.volume = musicVolume;
-        targetVolume = musicVolume;
-
         audioSource.ignoreListenerPause = true;
 
-        targetCutoff = normalCutoffFrequency;
         lowPassFilter.cutoffFrequency = normalCutoffFrequency;
     }
 
@@ -50,39 +46,47 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        // DeltaTime indépendant de la pause
-        float dt = Time.unscaledDeltaTime;
-
-        // 1. Transition fluide du filtre
-        lowPassFilter.cutoffFrequency = Mathf.MoveTowards(
-            lowPassFilter.cutoffFrequency, 
-            targetCutoff, 
-            transitionSpeed * 2000f * dt
-        );
-
-        // 2. Transition fluide du volume pour compenser la perte des aigus
-        audioSource.volume = Mathf.MoveTowards(
-            audioSource.volume, 
-            targetVolume, 
-            transitionSpeed * dt
-        );
-    }
-
     public void SetPauseEffect(bool isPaused)
     {
-        if (isPaused)
+        // Détermination des valeurs cibles
+        float targetCutoff = isPaused ? pauseCutoffFrequency : normalCutoffFrequency;
+        float targetVolume = isPaused ? Mathf.Min(musicVolume * pauseVolumeMultiplier, 1f) : musicVolume;
+
+        // Si une transition est déjà en cours, on l'arrête pour éviter les conflits
+        if (transitionCoroutine != null)
         {
-            targetCutoff = pauseCutoffFrequency;
-            // On booste le volume pendant la pause (bridé à 1.0f max pour éviter la saturation d'Unity)
-            targetVolume = Mathf.Min(musicVolume * pauseVolumeMultiplier, 1f);
+            StopCoroutine(transitionCoroutine);
         }
-        else
+
+        // On lance la transition douce
+        transitionCoroutine = StartCoroutine(TransitionRoutine(targetCutoff, targetVolume));
+    }
+
+    private IEnumerator TransitionRoutine(float targetCutoff, float targetVolume)
+    {
+        float startCutoff = lowPassFilter.cutoffFrequency;
+        float startVolume = audioSource.volume;
+        float time = 0f;
+
+        while (time < transitionDuration)
         {
-            targetCutoff = normalCutoffFrequency;
-            // On revient au volume initial du jeu
-            targetVolume = musicVolume;
+            // Utilisation de unscaledDeltaTime pour que ça fonctionne même quand le Time.timeScale vaut 0
+            time += Time.unscaledDeltaTime;
+            
+            // Calcul du ratio de progression (0.0f au début, 1.0f à la fin)
+            float progress = Mathf.Clamp01(time / transitionDuration);
+
+            // Évolution fluide avec un lissage (SmoothStep) pour éviter un effet trop linéaire brusque
+            float smoothProgress = Mathf.SmoothStep(0f, 1f, progress);
+
+            lowPassFilter.cutoffFrequency = Mathf.Lerp(startCutoff, targetCutoff, smoothProgress);
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, smoothProgress);
+
+            yield return null;
         }
+
+        // Sécurité pour s'assurer d'atteindre pile la valeur finale
+        lowPassFilter.cutoffFrequency = targetCutoff;
+        audioSource.volume = targetVolume;
     }
 }
