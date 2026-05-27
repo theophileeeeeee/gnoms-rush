@@ -36,6 +36,13 @@ public class ShopManager : MonoBehaviour
     public float notEnoughDisplayTime = 1.5f;
     public Vector2 notEnoughOffset = new Vector2(0f, -10f);
 
+    [Header("Bruitages Shop")]
+    public AudioClip buySuccessClip;
+    public AudioClip notEnoughClip;
+    [Range(0f, 1f)]
+    public float shopVolume = 1f;
+
+    public AudioSource audioSource;
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     private string path;
     private Coroutine notEnoughCoroutine;
@@ -47,12 +54,17 @@ public class ShopManager : MonoBehaviour
 #else
         string directory = System.IO.Path.Combine(Application.persistentDataPath, "JSON");
 #endif
+        // Création du dossier JSON s'il n'existe pas pour éviter les crashs IO
+        if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+        
         path = System.IO.Path.Combine(directory, "items.json");
         LoadInventory();
     }
 
     void Start()
     {
+        audioSource.playOnAwake = false;
+
         RefreshUI();
 
         for (int i = 0; i < shopItems.Length; i++)
@@ -60,6 +72,12 @@ public class ShopManager : MonoBehaviour
             int index = i;
             shopItems[i].buyButton.onClick.AddListener(() => TryBuy(index));
         }
+    }
+
+    void PlayShop(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+            audioSource.PlayOneShot(clip, shopVolume);
     }
 
     void LoadInventory()
@@ -98,19 +116,30 @@ public class ShopManager : MonoBehaviour
 
         if (currentMoney < item.price)
         {
+            PlayShop(notEnoughClip);
             if (notEnoughCoroutine != null) StopCoroutine(notEnoughCoroutine);
             notEnoughCoroutine = StartCoroutine(NotEnoughRoutine(shopItems[index].buyButton.GetComponent<RectTransform>()));
             return;
         }
 
+        // Déduction de l'argent actuel
         PlayerPrefs.SetInt("Money", currentMoney - item.price);
+        
+        // --- LE TRUC DÉPENSIER ---
+        // On récupère le total dépensé jusqu'ici, et on ajoute le prix de l'objet
+        int totalSpent = PlayerPrefs.GetInt("GoldSpentShop", 0);
+        PlayerPrefs.SetInt("GoldSpentShop", totalSpent + item.price);
+        
+        // Sauvegarde des PlayerPrefs
         PlayerPrefs.Save();
 
+        // Ajout à l'inventaire JSON
         if (!inventory.ContainsKey(item.itemName))
             inventory[item.itemName] = 0;
         inventory[item.itemName]++;
 
         SaveInventory();
+        PlayShop(buySuccessClip);
         RefreshUI();
     }
 

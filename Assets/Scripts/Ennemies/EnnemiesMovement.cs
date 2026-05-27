@@ -71,6 +71,7 @@ public class EnemyMovement : MonoBehaviour
         uiManager.EarnMoney(20);
         PlayerPrefs.SetInt("EnemiesKilled", PlayerPrefs.GetInt("EnemiesKilled", 0) + 1);
         animator.ResetTrigger("Attack");
+        animator.speed = 1f;
         if (opponent != null)
         {
             KnightManager knight = opponent.GetComponent<KnightManager>();
@@ -116,8 +117,7 @@ public class EnemyMovement : MonoBehaviour
         isFrozen = true;
         movementFrozen = true;
 
-        animator.SetBool("Walk", false);
-        animator.SetBool("Idle", true);
+        animator.speed = 0f;
 
         Color frozenColor = new Color(1f - blueIntensity, 1f - blueIntensity, 1f);
         spriteRenderer.color = frozenColor;
@@ -126,6 +126,7 @@ public class EnemyMovement : MonoBehaviour
 
         isFrozen = false;
         movementFrozen = false;
+        animator.speed = 1f;
 
         spriteRenderer.color = Color.white;
 
@@ -134,10 +135,17 @@ public class EnemyMovement : MonoBehaviour
             animator.SetBool("Idle", false);
             animator.SetBool("Walk", true);
         }
+        else
+        {
+            animator.SetBool("Idle", false);
+            animator.SetBool("Walk", false);
+        }
     }
 
     void TryDetectKnight()
     {
+        if (isFrozen) return;
+
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, detectionRange, knightLayer);
         float closestDist = float.MaxValue;
         KnightManager closestKnight = null;
@@ -169,6 +177,8 @@ public class EnemyMovement : MonoBehaviour
             animator.SetBool("Idle", false);
             animator.SetBool("Walk", false);
         }
+
+        if (isFrozen) return;
 
         if (!isEngaged && !movementFrozen)
             animator.SetBool("Walk", true);
@@ -203,8 +213,8 @@ public class EnemyMovement : MonoBehaviour
 
         if (movementFrozen) 
         {
-        animator.SetBool("Idle", true);
-        return;
+            animator.SetBool("Idle", true);
+            return;
         }
 
         distanceTravelled += speed * Time.deltaTime;

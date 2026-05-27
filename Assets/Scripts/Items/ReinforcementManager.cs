@@ -124,8 +124,33 @@ public class ReinforcementManager : MonoBehaviour
             return;
         }
 
-        screenPos.z = 10f;
-        Vector3 center = cam.ScreenToWorldPoint(screenPos);
+        Ray ray = cam.ScreenPointToRay(screenPos);
+        Vector3 center = Vector3.zero;
+        bool hitValidPath = false;
+
+        if (Physics.Raycast(ray, out RaycastHit hit3D))
+        {
+            if (hit3D.collider.CompareTag("Path"))
+            {
+                center = hit3D.point;
+                hitValidPath = true;
+            }
+        }
+        else
+        {
+            RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
+            if (hit2D.collider != null && hit2D.collider.CompareTag("Path"))
+            {
+                center = hit2D.point;
+                hitValidPath = true;
+            }
+        }
+
+        if (!hitValidPath)
+        {
+            SetActive(false);
+            return;
+        }
 
         for (int i = 0; i < count; i++)
         {

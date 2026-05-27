@@ -10,22 +10,34 @@ public struct Quest
     public int goal;
     public int reward;
     public Text progressText;
+    public Text rewardText;
+    public Slider progressSlider;
     public Button claimButton;
+    public Text claimButtonText;
+    public string unit;
 }
 
 public class MainMenuController : MonoBehaviour
 {
     public GameObject settingsPanel;
+    [Range(0f, 1f)]
+    public float uiVolume = 1f;
     public Slider qualitySlider;
     public GameObject shopPanel;
     public GameObject statsPanel;
     public GameObject levelsPanel;
-    public Text towerBuiltText;
-    public Text killsText;
+
+    [Header("Progression Globale (Quêtes)")]
+    public Slider completionSlider; 
+    public Text completionText;     
+
     public Text[] moneyTexts;
 
     [Header("Audio Mixer")]
     public AudioMixer mainMixer;
+
+    [Header("Niveaux")]
+    public string[] levelSceneNames;
 
     [Header("Music UI")]
     public Image musicButtonImage;
@@ -37,10 +49,18 @@ public class MainMenuController : MonoBehaviour
     public Sprite sfxOnSprite;
     public Sprite sfxOffSprite;
 
+    [Header("Bruitages UI")]
+    public AudioClip panelOpenClip;
+    public AudioClip panelCloseClip;
+    public AudioClip questClaimClip;
+    public AudioClip sliderTickClip;
+    public AudioClip toggleOffClip;
+
     public Quest[] quests;
 
     private const float normalVolume = 0f;
     private const float mutedVolume = -80f;
+    public AudioSource uiAudioSource;
 
     void Start()
     {
@@ -51,6 +71,14 @@ public class MainMenuController : MonoBehaviour
         ApplyMusic(PlayerPrefs.GetInt("MusicMuted", 0) == 0);
         ApplySFX(PlayerPrefs.GetInt("SFXMuted", 0) == 0);
         UpdateMoneyUI();
+
+        SetupQuestButtons();
+    }
+
+    void PlayUI(AudioClip clip)
+    {
+        if (clip != null && uiAudioSource != null)
+            uiAudioSource.PlayOneShot(clip, uiVolume);
     }
 
     string FormatMoney(int amount)
@@ -74,25 +102,48 @@ public class MainMenuController : MonoBehaviour
 
     public void ToggleLevelsPanel()
     {
-        levelsPanel.SetActive(!levelsPanel.activeSelf);
+        bool opening = !levelsPanel.activeSelf;
+        levelsPanel.SetActive(opening);
+        PlayUI(opening ? panelOpenClip : panelCloseClip);
     }
 
     public void ToggleSettings()
     {
-        settingsPanel.SetActive(!settingsPanel.activeSelf);
+        bool opening = !settingsPanel.activeSelf;
+        settingsPanel.SetActive(opening);
+        PlayUI(opening ? panelOpenClip : panelCloseClip);
     }
 
     public void ToggleShop()
     {
-        shopPanel.SetActive(!shopPanel.activeSelf);
+        bool opening = !shopPanel.activeSelf;
+        shopPanel.SetActive(opening);
+        PlayUI(opening ? panelOpenClip : panelCloseClip);
     }
 
     public void ToggleStats()
     {
-        statsPanel.SetActive(!statsPanel.activeSelf);
-        towerBuiltText.text = PlayerPrefs.GetInt("TowersBuilt", 0).ToString();
-        killsText.text = PlayerPrefs.GetInt("EnemiesKilled", 0).ToString();
-        UpdateQuests();
+        bool opening = !statsPanel.activeSelf;
+        statsPanel.SetActive(opening);
+        PlayUI(opening ? panelOpenClip : panelCloseClip);
+        if (opening)
+        {
+            UpdateQuests();
+            UpdateCompletionPercentage(); 
+        }
+    }
+
+    void SetupQuestButtons()
+    {
+        for (int i = 0; i < quests.Length; i++)
+        {
+            if (quests[i].claimButton != null)
+            {
+                int index = i;
+                quests[i].claimButton.onClick.RemoveAllListeners();
+                quests[i].claimButton.onClick.AddListener(() => ClaimReward(index));
+            }
+        }
     }
 
     void UpdateQuests()
@@ -101,15 +152,32 @@ public class MainMenuController : MonoBehaviour
         {
             Quest q = quests[i];
             int progress = PlayerPrefs.GetInt(q.key, 0);
+            
             bool completed = progress >= q.goal;
             bool claimed = PlayerPrefs.GetInt($"Quest_{q.key}_{q.goal}_Claimed", 0) == 1;
-            q.progressText.color = completed ? Color.green : Color.white;
-            q.claimButton.interactable = completed && !claimed;
-            q.claimButton.gameObject.SetActive(!claimed);
 
-            int index = i;
-            q.claimButton.onClick.RemoveAllListeners();
-            q.claimButton.onClick.AddListener(() => ClaimReward(index));
+            if (q.progressText != null)
+            {
+                string currentFormatted = FormatMoney(Mathf.Min(progress, q.goal));
+                string goalFormatted = FormatMoney(q.goal);
+                q.progressText.text = $"{currentFormatted} / {goalFormatted} {q.unit}";
+            }
+
+            if (q.rewardText != null)
+                q.rewardText.text = $"+{FormatMoney(q.reward)}";
+
+            if (q.progressSlider != null)
+            {
+                q.progressSlider.interactable = false;
+                q.progressSlider.value = Mathf.Clamp01((float)progress / q.goal);
+            }
+
+            if (q.claimButton != null)
+            {
+                q.claimButton.interactable = completed && !claimed;
+                if (q.claimButtonText != null)
+                    q.claimButtonText.text = claimed ? "Récupéré" : "Récupérer";
+            }
         }
     }
 
@@ -120,27 +188,74 @@ public class MainMenuController : MonoBehaviour
 
         if (PlayerPrefs.GetInt(claimedKey, 0) == 1) return;
 
+        int progress = PlayerPrefs.GetInt(q.key, 0);
+        if (progress < q.goal) return;
+
         int currentMoney = PlayerPrefs.GetInt("Money", 0);
         PlayerPrefs.SetInt("Money", currentMoney + q.reward);
         PlayerPrefs.SetInt(claimedKey, 1);
         PlayerPrefs.Save();
+        
+        PlayUI(questClaimClip);
         UpdateMoneyUI();
-        q.claimButton.gameObject.SetActive(false);
+        
+        UpdateQuests(); 
+        UpdateCompletionPercentage(); 
+    }
+
+    void UpdateCompletionPercentage()
+    {
+        if (quests == null || quests.Length == 0)
+        {
+            if (completionSlider != null) completionSlider.value = 0f;
+            if (completionText != null) completionText.text = "0%";
+            return;
+        }
+
+        float totalRatioSum = 0f;
+
+        foreach (Quest q in quests)
+        {
+            if (q.goal > 0)
+            {
+                int progress = PlayerPrefs.GetInt(q.key, 0);
+                float questRatio = Mathf.Clamp01((float)progress / q.goal);
+                totalRatioSum += questRatio;
+            }
+        }
+
+        float finalCompletionRatio = totalRatioSum / quests.Length;
+
+        if (completionSlider != null)
+        {
+            completionSlider.value = finalCompletionRatio;
+        }
+
+        if (completionText != null)
+        {
+            completionText.text = Mathf.RoundToInt(finalCompletionRatio * 100f) + "%";
+        }
     }
 
     public void ResetStats()
     {
         PlayerPrefs.DeleteKey("Money");
-        PlayerPrefs.DeleteKey("TowersBuilt");
+        PlayerPrefs.DeleteKey("GoldSpentShop");
+        PlayerPrefs.DeleteKey("TotalWavesCleared");
+        PlayerPrefs.DeleteKey("QualityLevel");
+        PlayerPrefs.DeleteKey("MusicMuted");
+        PlayerPrefs.DeleteKey("SFXMuted");
         PlayerPrefs.DeleteKey("EnemiesKilled");
-        towerBuiltText.text = "0";
-        killsText.text = "0";
+        PlayerPrefs.DeleteKey("TowersBuilt");
 
         foreach (Quest q in quests)
             PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
 
+        foreach (string scene in levelSceneNames)
+            PlayerPrefs.DeleteKey("Stars_" + scene);
+
         PlayerPrefs.Save();
-        UpdateQuests();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void SetQuality(float qualityIndex)
@@ -152,12 +267,19 @@ public class MainMenuController : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    public void OnSliderChanged(float value)
+    {
+        PlayUI(sliderTickClip);
+        SetQuality(value);
+    }
+
     public void ToggleMusic()
     {
         bool isOn = PlayerPrefs.GetInt("MusicMuted", 0) == 1;
         ApplyMusic(isOn);
         PlayerPrefs.SetInt("MusicMuted", isOn ? 0 : 1);
         PlayerPrefs.Save();
+        PlayUI(isOn ? panelOpenClip : toggleOffClip);
     }
 
     public void ToggleSFX()
@@ -166,6 +288,7 @@ public class MainMenuController : MonoBehaviour
         ApplySFX(isOn);
         PlayerPrefs.SetInt("SFXMuted", isOn ? 0 : 1);
         PlayerPrefs.Save();
+        PlayUI(isOn ? panelOpenClip : toggleOffClip);
     }
 
     void ApplyMusic(bool isOn)

@@ -75,6 +75,12 @@ public class WaveSpawnerAdvanced : MonoBehaviour
 
     IEnumerator SpawnLoop()
     {
+        if (waves == null || waves.Count == 0)
+        {
+            hasAllWavesEnded = true;
+            yield break;
+        }
+
         Wave firstWave = waves[0];
 
         foreach (var btn in launchButtons)
@@ -100,6 +106,10 @@ public class WaveSpawnerAdvanced : MonoBehaviour
 
             if (uiManager != null)
                 uiManager.UpdateWaveUI(currentWaveIndex + 1);
+
+            int totalWaves = PlayerPrefs.GetInt("TotalWavesCleared", 0);
+            PlayerPrefs.SetInt("TotalWavesCleared", totalWaves + 1);
+            PlayerPrefs.Save();
 
             foreach (var salve in wave.salves)
             {
@@ -213,7 +223,7 @@ IEnumerator SpawnEnemy(SpawnInfo info)
     EnemyMovement em = enemy.GetComponent<EnemyMovement>();
     FlyingEnemyMovement fem = enemy.GetComponent<FlyingEnemyMovement>();
 
-    if (em != null)
+        if (em != null)
     {
         if (info.allowedPaths != null && info.allowedPaths.Count > 0)
             em.SetAllowedPaths(info.allowedPaths);
@@ -221,8 +231,8 @@ IEnumerator SpawnEnemy(SpawnInfo info)
         if (info.laneIndex >= 0)
             em.AssignLane(info.laneIndex);
 
-        if (em.allowedPaths != null && em.allowedPaths.Count > 0)
-            em.SetSpawnPosition(em.allowedPaths[0].GetPointAtDistance(0f));
+            if (info.allowedPaths != null && info.allowedPaths.Count > 0)
+                em.SetSpawnPosition(info.allowedPaths[0].GetPointAtDistance(0f));
     }
     else if (fem != null)
     {
@@ -232,8 +242,8 @@ IEnumerator SpawnEnemy(SpawnInfo info)
         if (info.laneIndex >= 0)
             fem.AssignLane(info.laneIndex);
 
-        if (fem.allowedPaths != null && fem.allowedPaths.Count > 0)
-            fem.SetSpawnPosition(fem.allowedPaths[0].GetPointAtDistance(0f));
+            if (info.allowedPaths != null && info.allowedPaths.Count > 0)
+                fem.SetSpawnPosition(info.allowedPaths[0].GetPointAtDistance(0f));
     }
 }
 }

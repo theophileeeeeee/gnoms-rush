@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
     {
 
         audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0f; // Assure un son purement 2D global
+        audioSource.spatialBlend = 0f;
     }
 
     void Start()
@@ -178,7 +178,6 @@ public class UIManager : MonoBehaviour
 
         earnedMoneyWithThisLevel = Mathf.Max(1, (victoryLevel * 33 + 1) - ((startHearts - CurrentHearts) * 5));
         
-        // Corrigé : Utilise l'AudioSource local
         if (victorySound != null)
             audioSource.PlayOneShot(victorySound, volume);
 
@@ -186,6 +185,13 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + earnedMoneyWithThisLevel);
         PlayerPrefs.Save();
         hasTookMoneyFromThisLevel = true;
+        string sceneName = SceneManager.GetActiveScene().name;
+        int savedStars = PlayerPrefs.GetInt("Stars_" + sceneName, 0);
+        if (victoryLevel > savedStars)
+        {
+            PlayerPrefs.SetInt("Stars_" + sceneName, victoryLevel);
+            PlayerPrefs.Save();
+        }
     }
 
     public void Retry()

@@ -118,10 +118,33 @@ public class DynamiteManager : MonoBehaviour
             return;
         }
 
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 10f;
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Vector3 targetPos = Vector3.zero;
+        bool hitValidPath = false;
 
-        Vector3 targetPos = cam.ScreenToWorldPoint(mousePos);
+        if (Physics.Raycast(ray, out RaycastHit hit3D))
+        {
+            if (hit3D.collider.CompareTag("Path"))
+            {
+                targetPos = hit3D.point;
+                hitValidPath = true;
+            }
+        }
+        else
+        {
+            RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
+            if (hit2D.collider != null && hit2D.collider.CompareTag("Path"))
+            {
+                targetPos = hit2D.point;
+                hitValidPath = true;
+            }
+        }
+
+        if (!hitValidPath)
+        {
+            SetActive(false);
+            return;
+        }
 
         Vector3 midPos = targetPos
         + Vector3.left * preDropOffsetX
