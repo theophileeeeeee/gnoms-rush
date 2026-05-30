@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4.75
-  explosionRadius: 0.5
+  explosionRadius: 0.53
   enemyTag: Ennemy
   damage: 2
   animationDuration: 0.8

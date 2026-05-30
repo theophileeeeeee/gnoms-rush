@@ -1,8 +1,8 @@
-using UnityEditor.Rendering;
 using UnityEngine;
 public class DeselectOnClick : MonoBehaviour
 {
-    public GameObject gameOverPanel;    void Update()
+    public GameObject gameOverPanel;
+    void Update()
     {
         if (Input.GetMouseButtonDown(0) && !gameOverPanel.activeSelf)
         {

@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 986254fa0e5772d47bf7d283ce4fa37e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.58
+  speed: 0.67
   laneCount: 3
   laneSpacing: 0.35
   maxHealth: 6

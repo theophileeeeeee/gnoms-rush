@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
 
+[RequireComponent(typeof(AudioSource))]
 public class UIManager : MonoBehaviour
 {
     [Header("References")]
@@ -54,6 +55,9 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
+        // Récupération automatique si non assigné dans l'inspecteur
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
 
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
@@ -64,14 +68,22 @@ public class UIManager : MonoBehaviour
         CurrentMoney = startMoney;
         CurrentHearts = startHearts;
         UpdateUI();
+
+        // --- CORRECTION : Initialisation du texte de la vague dès le lancement du niveau ---
+        if (waveText != null && waveSpawner != null && waveSpawner.waves != null)
+        {
+            waveText.text = currentWave + "/" + waveSpawner.waves.Count;
+        }
     }
 
     public void UpdateWaveUI(int current)
     {
-        waveText.text = current + "/" + waveSpawner.waves.Count;
         currentWave = current;
+        if (waveText != null && waveSpawner != null && waveSpawner.waves != null)
+        {
+            waveText.text = currentWave + "/" + waveSpawner.waves.Count;
+        }
 
-        // Corrigé : Utilise l'AudioSource local au lieu de PlayClipAtPoint
         if (waveStartSound != null)
             audioSource.PlayOneShot(waveStartSound, volume);
     }
@@ -139,7 +151,6 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver()
     {
-        // Corrigé : Utilise l'AudioSource local
         if (defeatSound != null)
             audioSource.PlayOneShot(defeatSound, volume);
 
@@ -196,11 +207,14 @@ public class UIManager : MonoBehaviour
 
     public void Retry()
     {
+        // Correction de sécurité : Reset le Time.timeScale au cas où on recharge depuis la pause
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void NextLevel()
     {
+        Time.timeScale = 1f;
         string currentSceneName = SceneManager.GetActiveScene().name;
         Match match = Regex.Match(currentSceneName, @"\d+");
 
