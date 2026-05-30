@@ -243,9 +243,9 @@ MonoBehaviour:
   speed: 0.25
   laneCount: 3
   laneSpacing: 0.35
-  maxHealth: 6
+  maxHealth: 9
   currentHealth: 0
-  damage: 4
+  damage: 3
   isEngaged: 0
   animator: {fileID: 7304168773769266782}
   opponent: {fileID: 0}

@@ -33,6 +33,8 @@ public class EnemyMovement : MonoBehaviour
     Path currentPath;
     private SpriteRenderer spriteRenderer;
 
+    bool initialized = false;
+
     [System.Obsolete]
     void Start()
     {
@@ -41,18 +43,18 @@ public class EnemyMovement : MonoBehaviour
         if (uiManager == null)
             Debug.LogError("UIManager introuvable dans la scène !");
 
-        if (allowedPaths != null && allowedPaths.Count > 0)
-            currentPath = allowedPaths[Random.Range(0, allowedPaths.Count)];
-
-        if (currentPath == null)
-        {
-            Debug.LogError("EnemyMovement: aucun Path assigné !");
-            enabled = false;
-            return;
-        }
-
         currentHealth = maxHealth;
         attackTimer = attackCooldown;
+    }
+
+    void Init()
+    {
+        if (initialized) return;
+        if (allowedPaths == null || allowedPaths.Count == 0) return;
+
+        currentPath = allowedPaths[Random.Range(0, allowedPaths.Count)];
+        initialized = true;
+
         animator.SetBool("Walk", true);
         animator.SetBool("Idle", false);
     }
@@ -169,6 +171,9 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
+        Init();
+        if (!initialized) return;
+
         if (opponent == null && isEngaged)
         {
             isEngaged = false;
@@ -211,7 +216,7 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
-        if (movementFrozen) 
+        if (movementFrozen)
         {
             animator.SetBool("Idle", true);
             return;

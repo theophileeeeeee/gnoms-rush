@@ -1,7 +1,6 @@
 using UnityEngine;
-using TMPro;
 using System.Collections;
-using Unity.VisualScripting;
+using TMPro;
 
 [RequireComponent(typeof(AudioSource))]
 public class BuildManager : MonoBehaviour
@@ -10,14 +9,13 @@ public class BuildManager : MonoBehaviour
     private bool isUpgrading = false;
 
     public UIManager uiManager;
-    public Animator panelTypeChoiceAnimator;
-    public Animator panelModificationChoiceAnimator;
 
-    [Header("UI")]
-    public GameObject typeChoicePanel;
-    public GameObject modificationChoicePanel;
-    public TextMeshProUGUI sellPriceText;
-    public TextMeshProUGUI upgradePriceText;
+    [Header("UI Canvas Parent")]
+    public Transform canvasTransform; // Glisse ton Canvas de la scène ici !
+
+    [Header("UI Prefabs")]
+    public GameObject typeChoicePrefab; // Glisse ton fichier Prefab ici
+    public GameObject modificationChoicePrefab; // Glisse ton fichier Prefab ici
 
     [Header("Audio")]
     public AudioClip buildSound;
@@ -56,12 +54,11 @@ public class BuildManager : MonoBehaviour
 
     private Node selectedNode;
     public AudioSource audioSource;
+    private GameObject currentPanelInstance;
 
     void Awake()
     {
         instance = this;
-        typeChoicePanel.SetActive(false);
-        modificationChoicePanel.SetActive(false);
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -73,125 +70,105 @@ public class BuildManager : MonoBehaviour
 
     public void SelectNode(Node node)
     {
+        if (selectedNode == node) return;
+
+        if (currentPanelInstance != null)
+        {
+            Destroy(currentPanelInstance);
+        }
+
         selectedNode = node;
 
         if (selectNodeSound != null)
             audioSource.PlayOneShot(selectNodeSound, volume);
 
-        if (selectedNode.turret != null)
+        GameObject prefabToSpawn = (selectedNode.turret != null) ? modificationChoicePrefab : typeChoicePrefab;
+
+        if (prefabToSpawn != null && canvasTransform != null)
         {
-            modificationChoicePanel.SetActive(true);
-            panelModificationChoiceAnimator.SetBool("Open", true);
-        }
-        else
-        {
-            typeChoicePanel.SetActive(true);
-            panelTypeChoiceAnimator.SetBool("Open", true);
+            currentPanelInstance = Instantiate(prefabToSpawn, canvasTransform);
         }
 
         UpdatePanelPosition();
         UpdatePrices();
     }
 
-    IEnumerator WaitForPanelTypeAnimation()
+public void DeselectNode()
+{
+    if (selectedNode == null) return;
+
+    if (deselectNodeSound != null)
+        audioSource.PlayOneShot(deselectNodeSound, volume);
+
+    selectedNode = null;
+
+    if (currentPanelInstance != null)
     {
-        yield return new WaitForSeconds(0.16f);
-        typeChoicePanel.SetActive(false);
-    }
-
-    public void PlayDeleteSound()
-    {
-        if (deleteSound != null)
-            audioSource.PlayOneShot(deleteSound, volume);
-    }
-
-    IEnumerator WaitForPanelModificationAnimation()
-    {
-        yield return new WaitForSeconds(0.16f);
-        modificationChoicePanel.SetActive(false);
-    }
-
-    int CalculateRefund(Node node)
-    {
-        if (node == null || node.turret == null) return 0;
-
-        int baseCost = 0;
-
-        switch (node.turretType)
+        Animator anim = currentPanelInstance.GetComponent<Animator>();
+        if (anim != null)
         {
-            case Node.TurretType.Electric: baseCost = electricCost; break;
-            case Node.TurretType.Soldiers: baseCost = soldiersCost; break;
-            case Node.TurretType.Archer:   baseCost = archerCost;   break;
-            case Node.TurretType.Bomb:     baseCost = bombCost;     break;
+            anim.SetTrigger("TriggerClose");
         }
 
-        int upgradeCost = 0;
-        if (node.turretLevel >= 2) upgradeCost += upgradeCostLevel2;
-        if (node.turretLevel >= 3) upgradeCost += upgradeCostLevel3;
-
-        return Mathf.RoundToInt((baseCost + upgradeCost) * 0.7f);
+        StartCoroutine(WaitAndDestroyPanel(currentPanelInstance, 0.15f));
+        
+        currentPanelInstance = null; 
     }
+}
 
-    public void DeselectNode()
+private IEnumerator WaitAndDestroyPanel(GameObject panel, float delay)
+{
+    yield return new WaitForSeconds(delay);
+    if (panel != null)
     {
-        if (selectedNode == null) return;
-
-        if (deselectNodeSound != null)
-            audioSource.PlayOneShot(deselectNodeSound, volume);
-
-        selectedNode = null;
-        panelTypeChoiceAnimator.SetBool("Open", false);
-        StartCoroutine(WaitForPanelTypeAnimation());
-        panelModificationChoiceAnimator.SetBool("Open", false);
-        StartCoroutine(WaitForPanelModificationAnimation());
+        Destroy(panel);
     }
+}
 
     public void UpdatePrices()
     {
+        if (currentPanelInstance == null) return;
+        
+        PanelReferences panelRefs = currentPanelInstance.GetComponent<PanelReferences>();
+        if (panelRefs == null) return;
+
+        TextMeshProUGUI activeUpgradeText = panelRefs.upgradePriceText;
+        TextMeshProUGUI activeSellText = panelRefs.sellPriceText;
+
         if (selectedNode == null || selectedNode.turret == null)
         {
-            upgradePriceText.text = "";
-            sellPriceText.text = "";
+            if (activeUpgradeText != null) activeUpgradeText.text = "";
+            if (activeSellText != null) activeSellText.text = "";
             return;
         }
 
-        if (selectedNode.turretLevel >= 3)
+        if (activeUpgradeText != null)
         {
-            upgradePriceText.text = "MAX";
-        }
-        else
-        {
-            int cost = (selectedNode.turretLevel == 1) ? upgradeCostLevel2 : upgradeCostLevel3;
-            upgradePriceText.text = cost.ToString();
+            if (selectedNode.turretLevel >= 3)
+                activeUpgradeText.text = "MAX";
+            else
+                activeUpgradeText.text = ((selectedNode.turretLevel == 1) ? upgradeCostLevel2 : upgradeCostLevel3).ToString();
         }
 
-        sellPriceText.text = CalculateRefund(selectedNode).ToString();
-    }
-
-    public Node GetSelectedNode()
-    {
-        return selectedNode;
-    }
-
-    void Update()
-    {
-        if (selectedNode != null)
-            UpdatePanelPosition();
+        if (activeSellText != null)
+        {
+            activeSellText.text = CalculateRefund(selectedNode).ToString();
+        }
     }
 
     private void UpdatePanelPosition()
     {
+        if (currentPanelInstance == null || selectedNode == null) return;
+
         Vector3 offset = new Vector3(0, 1f, 0);
         Vector3 worldPos = selectedNode.transform.position + offset;
 
-        typeChoicePanel.transform.rotation = Camera.main.transform.rotation;
-        modificationChoicePanel.transform.rotation = Camera.main.transform.rotation;
+        currentPanelInstance.transform.rotation = Camera.main.transform.rotation;
 
-        RectTransform activeRect = selectedNode.turret != null
-            ? modificationChoicePanel.GetComponent<RectTransform>()
-            : typeChoicePanel.GetComponent<RectTransform>();
+        RectTransform activeRect = currentPanelInstance.GetComponent<RectTransform>();
+        if (activeRect == null) return;
 
-        float halfW = (activeRect.rect.width  * activeRect.lossyScale.x) / 2f;
+        float halfW = (activeRect.rect.width * activeRect.lossyScale.x) / 2f;
         float halfH = (activeRect.rect.height * activeRect.lossyScale.y) / 2f;
 
         float camH = Camera.main.orthographicSize;
@@ -204,8 +181,7 @@ public class BuildManager : MonoBehaviour
             worldPos.z
         );
 
-        typeChoicePanel.transform.position = clampedPos;
-        modificationChoicePanel.transform.position = clampedPos;
+        currentPanelInstance.transform.position = clampedPos;
     }
 
     public void BuildElectric()
@@ -213,8 +189,7 @@ public class BuildManager : MonoBehaviour
         if (uiManager.CurrentMoney < electricCost) return;
         Build(electricLvl1, Node.TurretType.Electric);
         uiManager.UseMoney(electricCost);
-        PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
-        PlayerPrefs.Save();
+        UpdateTowerCount();
     }
 
     public void BuildSoldiers()
@@ -222,8 +197,7 @@ public class BuildManager : MonoBehaviour
         if (uiManager.CurrentMoney < soldiersCost) return;
         Build(soldiersLvl1, Node.TurretType.Soldiers);
         uiManager.UseMoney(soldiersCost);
-        PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
-        PlayerPrefs.Save();
+        UpdateTowerCount();
     }
 
     public void BuildBomb()
@@ -231,8 +205,7 @@ public class BuildManager : MonoBehaviour
         if (uiManager.CurrentMoney < bombCost) return;
         Build(bombLvl1, Node.TurretType.Bomb);
         uiManager.UseMoney(bombCost);
-        PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
-        PlayerPrefs.Save();
+        UpdateTowerCount();
     }
 
     public void BuildArcher()
@@ -240,6 +213,11 @@ public class BuildManager : MonoBehaviour
         if (uiManager.CurrentMoney < archerCost) return;
         Build(archerLvl1, Node.TurretType.Archer);
         uiManager.UseMoney(archerCost);
+        UpdateTowerCount();
+    }
+
+    private void UpdateTowerCount()
+    {
         PlayerPrefs.SetInt("TowersBuilt", PlayerPrefs.GetInt("TowersBuilt", 0) + 1);
         PlayerPrefs.Save();
     }
@@ -254,7 +232,11 @@ public class BuildManager : MonoBehaviour
         if (buildSound != null)
             audioSource.PlayOneShot(buildSound, volume);
 
-        typeChoicePanel.SetActive(false);
+        if (currentPanelInstance != null)
+        {
+            Destroy(currentPanelInstance);
+        }
+
         selectedNode = null;
         UpdatePrices();
     }
@@ -271,7 +253,6 @@ public class BuildManager : MonoBehaviour
         }
 
         int currentLevel = selectedNode.turretLevel;
-
         if (currentLevel >= 3)
         {
             isUpgrading = false;
@@ -279,7 +260,6 @@ public class BuildManager : MonoBehaviour
         }
 
         int cost = (currentLevel == 1) ? upgradeCostLevel2 : upgradeCostLevel3;
-
         if (uiManager.CurrentMoney < cost)
         {
             isUpgrading = false;
@@ -287,7 +267,6 @@ public class BuildManager : MonoBehaviour
         }
 
         GameObject nextPrefab = GetNextPrefab(selectedNode.turretType, currentLevel + 1);
-
         if (nextPrefab == null)
         {
             isUpgrading = false;
@@ -337,5 +316,42 @@ public class BuildManager : MonoBehaviour
         SoldiersTurret soldiers = turret.GetComponent<SoldiersTurret>();
         if (soldiers != null)
             soldiers.Init(selectedNode.roadPosition);
+    }
+
+    public void PlayDeleteSound()
+    {
+        if (deleteSound != null)
+            audioSource.PlayOneShot(deleteSound, volume);
+    }
+
+    int CalculateRefund(Node node)
+    {
+        if (node == null || node.turret == null) return 0;
+
+        int baseCost = 0;
+        switch (node.turretType)
+        {
+            case Node.TurretType.Electric: baseCost = electricCost; break;
+            case Node.TurretType.Soldiers: baseCost = soldiersCost; break;
+            case Node.TurretType.Archer:   baseCost = archerCost;   break;
+            case Node.TurretType.Bomb:     baseCost = bombCost;     break;
+        }
+
+        int upgradeCost = 0;
+        if (node.turretLevel >= 2) upgradeCost += upgradeCostLevel2;
+        if (node.turretLevel >= 3) upgradeCost += upgradeCostLevel3;
+
+        return Mathf.RoundToInt((baseCost + upgradeCost) * 0.7f);
+    }
+
+    public Node GetSelectedNode()
+    {
+        return selectedNode;
+    }
+
+    void Update()
+    {
+        if (selectedNode != null)
+            UpdatePanelPosition();
     }
 }
