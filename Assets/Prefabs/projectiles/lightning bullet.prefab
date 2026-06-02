@@ -103,7 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   impactEffect: {fileID: 6630193071077013460, guid: 4d26efb6cf3da5f4ead7e18e99e7bfcd, type: 3}
-  damage: 0.5
+  damage: 0.8
   hitSound: {fileID: 8300000, guid: 792eddaa19133e64582b7b4b601262e5, type: 3}
   volume: 0.19
 --- !u!82 &4506596151925393681

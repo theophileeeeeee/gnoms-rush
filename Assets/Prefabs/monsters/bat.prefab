@@ -242,7 +242,7 @@ MonoBehaviour:
   speed: 0.56
   laneCount: 3
   laneSpacing: 0.35
-  maxHealth: 6
+  maxHealth: 4
   currentHealth: 0
   animator: {fileID: 7304168773769266782}
   allowedPaths: []

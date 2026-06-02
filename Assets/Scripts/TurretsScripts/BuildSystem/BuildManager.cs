@@ -11,11 +11,11 @@ public class BuildManager : MonoBehaviour
     public UIManager uiManager;
 
     [Header("UI Canvas Parent")]
-    public Transform canvasTransform; // Glisse ton Canvas de la scène ici !
+    public Transform canvasTransform;
 
     [Header("UI Prefabs")]
-    public GameObject typeChoicePrefab; // Glisse ton fichier Prefab ici
-    public GameObject modificationChoicePrefab; // Glisse ton fichier Prefab ici
+    public GameObject typeChoicePrefab;
+    public GameObject modificationChoicePrefab;
 
     [Header("Audio")]
     public AudioClip buildSound;
@@ -93,42 +93,42 @@ public class BuildManager : MonoBehaviour
         UpdatePrices();
     }
 
-public void DeselectNode()
-{
-    if (selectedNode == null) return;
-
-    if (deselectNodeSound != null)
-        audioSource.PlayOneShot(deselectNodeSound, volume);
-
-    selectedNode = null;
-
-    if (currentPanelInstance != null)
+    public void DeselectNode()
     {
-        Animator anim = currentPanelInstance.GetComponent<Animator>();
-        if (anim != null)
+        if (selectedNode == null) return;
+
+        if (deselectNodeSound != null)
+            audioSource.PlayOneShot(deselectNodeSound, volume);
+
+        selectedNode = null;
+
+        if (currentPanelInstance != null)
         {
-            anim.SetTrigger("TriggerClose");
+            Animator anim = currentPanelInstance.GetComponent<Animator>();
+            if (anim != null)
+            {
+                anim.SetTrigger("TriggerClose");
+            }
+
+            StartCoroutine(WaitAndDestroyPanel(currentPanelInstance, 0.15f));
+
+            currentPanelInstance = null;
         }
-
-        StartCoroutine(WaitAndDestroyPanel(currentPanelInstance, 0.15f));
-        
-        currentPanelInstance = null; 
     }
-}
 
-private IEnumerator WaitAndDestroyPanel(GameObject panel, float delay)
-{
-    yield return new WaitForSeconds(delay);
-    if (panel != null)
+    private IEnumerator WaitAndDestroyPanel(GameObject panel, float delay)
     {
-        Destroy(panel);
+        yield return new WaitForSeconds(delay);
+        if (panel != null)
+        {
+            Destroy(panel);
+        }
     }
-}
 
     public void UpdatePrices()
     {
         if (currentPanelInstance == null) return;
-        
+
         PanelReferences panelRefs = currentPanelInstance.GetComponent<PanelReferences>();
         if (panelRefs == null) return;
 
@@ -156,33 +156,33 @@ private IEnumerator WaitAndDestroyPanel(GameObject panel, float delay)
         }
     }
 
-    private void UpdatePanelPosition()
-    {
-        if (currentPanelInstance == null || selectedNode == null) return;
+private void UpdatePanelPosition()
+{
+    if (currentPanelInstance == null || selectedNode == null) return;
 
-        Vector3 offset = new Vector3(0, 1f, 0);
-        Vector3 worldPos = selectedNode.transform.position + offset;
+    RectTransform activeRect = currentPanelInstance.GetComponent<RectTransform>();
+    if (activeRect == null) return;
 
-        currentPanelInstance.transform.rotation = Camera.main.transform.rotation;
+    float halfW = (activeRect.rect.width * activeRect.lossyScale.x) / 2f;
+    float halfH = (activeRect.rect.height * activeRect.lossyScale.y) / 2f;
 
-        RectTransform activeRect = currentPanelInstance.GetComponent<RectTransform>();
-        if (activeRect == null) return;
+    float verticalOffset = selectedNode.spawnAbove ? 1f : -halfH;
+    Vector3 worldPos = selectedNode.transform.position + new Vector3(0, verticalOffset, 0);
 
-        float halfW = (activeRect.rect.width * activeRect.lossyScale.x) / 2f;
-        float halfH = (activeRect.rect.height * activeRect.lossyScale.y) / 2f;
+    currentPanelInstance.transform.rotation = Camera.main.transform.rotation;
 
-        float camH = Camera.main.orthographicSize;
-        float camW = camH * Camera.main.aspect;
-        Vector3 camPos = Camera.main.transform.position;
+    float camH = Camera.main.orthographicSize;
+    float camW = camH * Camera.main.aspect;
+    Vector3 camPos = Camera.main.transform.position;
 
-        Vector3 clampedPos = new Vector3(
-            Mathf.Clamp(worldPos.x, camPos.x - camW + halfW, camPos.x + camW - halfW),
-            Mathf.Clamp(worldPos.y, camPos.y - camH + halfH, camPos.y + camH - halfH),
-            worldPos.z
-        );
+    Vector3 clampedPos = new Vector3(
+        Mathf.Clamp(worldPos.x, camPos.x - camW + halfW, camPos.x + camW - halfW),
+        Mathf.Clamp(worldPos.y, camPos.y - camH + halfH, camPos.y + camH - halfH),
+        worldPos.z
+    );
 
-        currentPanelInstance.transform.position = clampedPos;
-    }
+    currentPanelInstance.transform.position = clampedPos;
+}
 
     public void BuildElectric()
     {

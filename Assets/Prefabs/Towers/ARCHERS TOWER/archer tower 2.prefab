@@ -195,7 +195,7 @@ MonoBehaviour:
   prefabFleche: {fileID: 6239313909020765423, guid: 1da04d07af0cb8647b10ee353636f212, type: 3}
   pointDeTir: {fileID: 719563274448362991}
   vitesseFleche: 3
-  fireRate: 0.7
+  fireRate: 0.4
 --- !u!95 &1759758640891339126
 Animator:
   serializedVersion: 7

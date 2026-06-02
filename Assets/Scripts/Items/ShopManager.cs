@@ -54,9 +54,7 @@ public class ShopManager : MonoBehaviour
 #else
         string directory = System.IO.Path.Combine(Application.persistentDataPath, "JSON");
 #endif
-        // Création du dossier JSON s'il n'existe pas pour éviter les crashs IO
         if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-        
         path = System.IO.Path.Combine(directory, "items.json");
         LoadInventory();
     }
@@ -64,7 +62,6 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
         audioSource.playOnAwake = false;
-
         RefreshUI();
 
         for (int i = 0; i < shopItems.Length; i++)
@@ -78,6 +75,20 @@ public class ShopManager : MonoBehaviour
     {
         if (clip != null && audioSource != null)
             audioSource.PlayOneShot(clip, shopVolume);
+    }
+
+    public void WatchAdForDiamonds()
+    {
+        if (AdsManager.Instance == null || !AdsManager.Instance.IsRewardedReady())
+            return;
+
+        AdsManager.Instance.ShowRewarded(() =>
+        {
+            int current = PlayerPrefs.GetInt("Money", 0);
+            PlayerPrefs.SetInt("Money", current + 100);
+            PlayerPrefs.Save();
+            RefreshUI();
+        });
     }
 
     void LoadInventory()
@@ -122,18 +133,13 @@ public class ShopManager : MonoBehaviour
             return;
         }
 
-        // Déduction de l'argent actuel
         PlayerPrefs.SetInt("Money", currentMoney - item.price);
-        
-        // --- LE TRUC DÉPENSIER ---
-        // On récupère le total dépensé jusqu'ici, et on ajoute le prix de l'objet
+
         int totalSpent = PlayerPrefs.GetInt("GoldSpentShop", 0);
         PlayerPrefs.SetInt("GoldSpentShop", totalSpent + item.price);
-        
-        // Sauvegarde des PlayerPrefs
+
         PlayerPrefs.Save();
 
-        // Ajout à l'inventaire JSON
         if (!inventory.ContainsKey(item.itemName))
             inventory[item.itemName] = 0;
         inventory[item.itemName]++;

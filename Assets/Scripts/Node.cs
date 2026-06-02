@@ -21,6 +21,9 @@ public class Node : MonoBehaviour
     public Vector3 positionOffset;
     public RoadPosition roadPosition;
 
+    [Header("Panel Spawn")]
+    public bool spawnAbove = true;
+
     void OnMouseDown()
     {
         if (!pausePanel.activeSelf && !gameOverPanel.activeSelf && !victoryPanel.activeSelf)
@@ -28,10 +31,6 @@ public class Node : MonoBehaviour
             BuildManager.instance.SelectNode(this);
         }
     }
-
-    // =========================
-    // BUILD
-    // =========================
 
     public void BuildTurret(GameObject turretPrefab, TurretType type)
     {
@@ -50,43 +49,42 @@ public class Node : MonoBehaviour
         turretType = type;
         turretLevel = 1;
     }
-public int ClearNode()
-{
-    if (turret == null) return 0;
 
-    Destroy(turret);
-
-    int level = turretLevel;
-    TurretType type = turretType;
-
-    turret = null;
-    turretType = TurretType.None;
-    turretLevel = 0;
-
-    return CalculateRefund(type, level);
-}
-int CalculateRefund(TurretType type, int level)
-{
-    int baseCost = 0;
-
-    switch (type)
+    public int ClearNode()
     {
-        case TurretType.Electric: baseCost = BuildManager.instance.electricCost; break;
-        case TurretType.Soldiers: baseCost = BuildManager.instance.soldiersCost; break;
-        case TurretType.Archer: baseCost = BuildManager.instance.archerCost; break;
-        case TurretType.Bomb: baseCost = BuildManager.instance.bombCost; break;
+        if (turret == null) return 0;
+
+        Destroy(turret);
+
+        int level = turretLevel;
+        TurretType type = turretType;
+
+        turret = null;
+        turretType = TurretType.None;
+        turretLevel = 0;
+
+        return CalculateRefund(type, level);
     }
 
-    int upgradeCost = 0;
+    int CalculateRefund(TurretType type, int level)
+    {
+        int baseCost = 0;
 
-    if (level >= 2) upgradeCost += BuildManager.instance.upgradeCostLevel2;
-    if (level >= 3) upgradeCost += BuildManager.instance.upgradeCostLevel3;
+        switch (type)
+        {
+            case TurretType.Electric: baseCost = BuildManager.instance.electricCost; break;
+            case TurretType.Soldiers: baseCost = BuildManager.instance.soldiersCost; break;
+            case TurretType.Archer: baseCost = BuildManager.instance.archerCost; break;
+            case TurretType.Bomb: baseCost = BuildManager.instance.bombCost; break;
+        }
 
-    int totalSpent = baseCost + upgradeCost;
+        int upgradeCost = 0;
 
-    // Exemple : remboursement 70%
-    return Mathf.RoundToInt(totalSpent * 0.7f);
-}
+        if (level >= 2) upgradeCost += BuildManager.instance.upgradeCostLevel2;
+        if (level >= 3) upgradeCost += BuildManager.instance.upgradeCostLevel3;
+
+        return Mathf.RoundToInt((baseCost + upgradeCost) * 0.7f);
+    }
 }
 
 public enum RoadPosition

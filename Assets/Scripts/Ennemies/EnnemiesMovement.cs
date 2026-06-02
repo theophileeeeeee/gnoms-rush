@@ -13,6 +13,7 @@ public class EnemyMovement : MonoBehaviour
     float laneOffset = 0f;
 
     public float maxHealth = 10f;
+    public int moneyReward = 20;
     public float currentHealth;
     public float damage = 2f;
 
@@ -70,7 +71,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Die()
     {
-        uiManager.EarnMoney(20);
+        uiManager.EarnMoney(moneyReward);
         PlayerPrefs.SetInt("EnemiesKilled", PlayerPrefs.GetInt("EnemiesKilled", 0) + 1);
         animator.ResetTrigger("Attack");
         animator.speed = 1f;

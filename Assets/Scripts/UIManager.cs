@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Starting Values")]
     public int startMoney;
-    public int startHearts;
+    public int startHearts = 20;
     public int currentWave;
     public Text moneyText;
     public Text heartsText;
@@ -55,7 +55,6 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        // Récupération automatique si non assigné dans l'inspecteur
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
@@ -69,7 +68,6 @@ public class UIManager : MonoBehaviour
         CurrentHearts = startHearts;
         UpdateUI();
 
-        // --- CORRECTION : Initialisation du texte de la vague dès le lancement du niveau ---
         if (waveText != null && waveSpawner != null && waveSpawner.waves != null)
         {
             waveText.text = currentWave + "/" + waveSpawner.waves.Count;
@@ -165,6 +163,7 @@ public class UIManager : MonoBehaviour
 
         float healthPercent = (float)CurrentHearts / startHearts;
 
+        // --- Attribution des étoiles selon la vie restante ---
         if (healthPercent >= 0.75f)
         {
             victoryLevel = 3;
@@ -187,14 +186,32 @@ public class UIManager : MonoBehaviour
             star3.SetActive(false);
         }
 
-        earnedMoneyWithThisLevel = Mathf.Max(1, (victoryLevel * 33 + 1) - ((startHearts - CurrentHearts) * 5));
-        
+        // ==========================================
+        //   NOUVELLE FORMULE ÉCONOMIQUE ÉQUILIBRÉE
+        // ==========================================
+        // Base fixe par étoile (cohérent avec les prix de la boutique : fiole à 300, dynamite à 600)
+        int baseMoney = 0;
+        switch (victoryLevel)
+        {
+            case 3: baseMoney = 500; break; // Un sans-faute (ou presque) permet presque d'acheter une dynamite
+            case 2: baseMoney = 350; break; // Permet d'acheter une fiole de glace
+            case 1: default: baseMoney = 200; break; // Récompense minimale d'encouragement
+        }
+
+        // Bonus de santé proportionnel (Pourcentage de vie restante * 150 pièces max)
+        int healthBonus = Mathf.RoundToInt(healthPercent * 150);
+
+        // Somme totale des gains pour ce niveau
+        earnedMoneyWithThisLevel = baseMoney + healthBonus;
+        // ==========================================
+
         if (victorySound != null)
             audioSource.PlayOneShot(victorySound, volume);
 
         earnedMoneyText.text = "+ " + earnedMoneyWithThisLevel.ToString();
         PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + earnedMoneyWithThisLevel);
         PlayerPrefs.Save();
+        
         hasTookMoneyFromThisLevel = true;
         string sceneName = SceneManager.GetActiveScene().name;
         int savedStars = PlayerPrefs.GetInt("Stars_" + sceneName, 0);
@@ -207,7 +224,6 @@ public class UIManager : MonoBehaviour
 
     public void Retry()
     {
-        // Correction de sécurité : Reset le Time.timeScale au cas où on recharge depuis la pause
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

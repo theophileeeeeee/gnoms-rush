@@ -388,8 +388,9 @@ MonoBehaviour:
   laneCount: 3
   laneSpacing: 0.35
   maxHealth: 16
+  moneyReward: 25
   currentHealth: 0
-  damage: 4.5
+  damage: 2.25
   isEngaged: 0
   animator: {fileID: 7304168773769266782}
   opponent: {fileID: 0}

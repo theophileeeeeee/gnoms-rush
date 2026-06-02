@@ -314,12 +314,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiManager: {fileID: 8339732782413726003}
-  panelTypeChoiceAnimator: {fileID: 0}
-  panelModificationChoiceAnimator: {fileID: 0}
-  typeChoicePanel: {fileID: 0}
-  modificationChoicePanel: {fileID: 0}
-  sellPriceText: {fileID: 0}
-  upgradePriceText: {fileID: 0}
+  canvasTransform: {fileID: 0}
+  typeChoicePrefab: {fileID: 0}
+  modificationChoicePrefab: {fileID: 0}
   buildSound: {fileID: 8300000, guid: 0bccb7ed91942804db41719302ebb6f2, type: 3}
   selectNodeSound: {fileID: 8300000, guid: a251d46874bfc064cae7290143008d6b, type: 3}
   deselectNodeSound: {fileID: 8300000, guid: a251d46874bfc064cae7290143008d6b, type: 3}
@@ -357,6 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverPanel: {fileID: 0}
+  time: 0
 --- !u!114 &8339732782413726003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -430,9 +428,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772ab14243aee9c4d80ea5b78ddc8e70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundMusic: {fileID: 8300000, guid: 1b8893a029b6b244c8553b2a2a2bd51b, type: 3}
-  musicVolume: 0.074
-  pauseVolumeMultiplier: 1.4
+  backgroundMusic: {fileID: 8300000, guid: d317bfa7229f6a64a8c5c0135bd8fda3, type: 3}
+  musicVolume: 0.167
+  pauseVolumeMultiplier: 1.236
   normalCutoffFrequency: 22000
   pauseCutoffFrequency: 3000
   transitionDuration: 0.5

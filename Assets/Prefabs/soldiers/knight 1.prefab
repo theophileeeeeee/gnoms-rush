@@ -192,7 +192,7 @@ MonoBehaviour:
   detectionRadius: 0.98
   attackRadius: 0.37
   speed: 0.5
-  damage: 2
+  damage: 1
   attackCooldown: 1.1
   idleTimeBeforeRegen: 5
   regenPerSecond: 1
