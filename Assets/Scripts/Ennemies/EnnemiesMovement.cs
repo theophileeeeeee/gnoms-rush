@@ -5,9 +5,15 @@ using System.Collections.Generic;
 public class EnemyMovement : MonoBehaviour
 {
     public float speed = 1f;
+    public bool isABoss = false;
+    public bool isExplosive = false;
     public int laneCount = 3;
     public float laneSpacing = 0.35f;
     private UIManager uiManager;
+
+    public float explosionRadius = 1f;
+    public float explosionDamage = 5f;
+    public GameObject explosionVFX;
 
     float distanceTravelled = 0f;
     float laneOffset = 0f;
@@ -60,7 +66,7 @@ public class EnemyMovement : MonoBehaviour
         animator.SetBool("Idle", false);
     }
 
-    public void StopMovement()   => movementFrozen = true;
+    public void StopMovement() => movementFrozen = true;
     public void ResumeMovement() => movementFrozen = false;
 
     public void TakeDamage(float dmg)
@@ -81,8 +87,27 @@ public class EnemyMovement : MonoBehaviour
             if (knight != null)
                 knight.Unlock();
         }
+        if (isExplosive)
+            Explode();
         Destroy(gameObject);
     }
+
+void Explode()
+{
+    if (explosionVFX != null)
+    {
+        GameObject vfx = Instantiate(explosionVFX, transform.position, Quaternion.identity);
+        Destroy(vfx, 0.67f);
+    }
+
+    Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+    foreach (var hit in hits)
+    {
+        KnightManager knight = hit.GetComponent<KnightManager>();
+        if (knight != null)
+            knight.TakeDamage(explosionDamage);
+    }
+}
 
     void Attack()
     {
@@ -247,5 +272,13 @@ public class EnemyMovement : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        if (isExplosive)
+        {
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.4f);
+            Gizmos.DrawWireSphere(transform.position, explosionRadius);
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.15f);
+            Gizmos.DrawSphere(transform.position, explosionRadius);
+        }
     }
 }

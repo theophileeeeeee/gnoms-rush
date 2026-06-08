@@ -2489,7 +2489,7 @@ Transform:
   m_GameObject: {fileID: 586939003}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.36, y: -1.55, z: 0}
+  m_LocalPosition: {x: 7.29, y: -1.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3641,8 +3641,8 @@ Transform:
   m_Children:
   - {fileID: 1981027268}
   - {fileID: 586939004}
-  - {fileID: 1143365888}
   - {fileID: 1431505072}
+  - {fileID: 1143365888}
   - {fileID: 1675507681}
   - {fileID: 1199309921}
   - {fileID: 1899163962}
@@ -5612,7 +5612,7 @@ Transform:
   m_GameObject: {fileID: 1431505071}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.93, y: -2.71, z: 0}
+  m_LocalPosition: {x: 4.25, y: -2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7259,7 +7259,7 @@ Transform:
   m_GameObject: {fileID: 1981027267}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.38, y: 6.41, z: 0}
+  m_LocalPosition: {x: 7.46, y: 6.41, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7959,6 +7959,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2546523051216254649, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: backgroundMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 603e3c2824ebd404899a7e80c124d0be, type: 3}
     - target: {fileID: 2563686843905358372, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: sfxButtonImage
       value: 

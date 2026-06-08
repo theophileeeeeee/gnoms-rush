@@ -97,7 +97,17 @@ public class UIManager : MonoBehaviour
         {
             if (!trackedEnnemies.Contains(ennemy))
             {
-                LoseHeart();
+                if (ennemy.TryGetComponent<EnemyMovement>(out EnemyMovement em))
+                {
+                    if (!em.isABoss)
+                        LoseHeart();
+                    else
+                        OnGameOver();
+                }
+                else if (ennemy.TryGetComponent<FlyingEnemyMovement>(out FlyingEnemyMovement fem))
+                {
+                    LoseHeart();
+                }
                 Destroy(ennemy.gameObject);
             }
         }

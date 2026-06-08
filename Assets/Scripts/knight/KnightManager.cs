@@ -232,20 +232,23 @@ public class KnightManager : MonoBehaviour
         if (currentHealth <= 0) Die();
     }
 
-    void Die()
+void Die()
+{
+    animator.SetBool("isWalking", false);
+    GetComponent<Renderer>().enabled = false;
+    GetComponent<Collider2D>().enabled = false;
+
+    if (target != null)
     {
-        animator.SetBool("isWalking", false);
-        GetComponent<Renderer>().enabled = false;
-
-        if (target != null)
-        {
-            target.isEngaged = false;
-            target.opponent = null;
-            target.ResumeMovement();
-        }
-
-        StartCoroutine(DeathSequence());
+        target.isEngaged = false;
+        target.opponent = null;
+        target.ResumeMovement();
     }
+
+    target = null;
+
+    StartCoroutine(DeathSequence());
+}
 
     IEnumerator DeathSequence()
     {

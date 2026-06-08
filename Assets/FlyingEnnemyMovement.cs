@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class FlyingEnemyMovement : MonoBehaviour
 {
     public float speed = 1.5f;
+    public int reward = 20;
     public int laneCount = 3;
     public float laneSpacing = 0.35f;
     private UIManager uiManager;
@@ -14,6 +15,11 @@ public class FlyingEnemyMovement : MonoBehaviour
 
     public float maxHealth = 6f;
     public float currentHealth;
+
+    public bool isExplosive = false;
+    public float explosionRadius = 1f;
+    public float explosionDamage = 5f;
+    public GameObject explosionVFX;
 
     private bool movementFrozen = false;
     private bool isFrozen = false;
@@ -47,7 +53,7 @@ public class FlyingEnemyMovement : MonoBehaviour
         animator.SetBool("Idle", false);
     }
 
-    public void StopMovement()   => movementFrozen = true;
+    public void StopMovement() => movementFrozen = true;
     public void ResumeMovement() => movementFrozen = false;
 
     public void TakeDamage(float dmg)
@@ -58,9 +64,47 @@ public class FlyingEnemyMovement : MonoBehaviour
 
     void Die()
     {
-        uiManager.EarnMoney(20);
+        uiManager.EarnMoney(reward);
         PlayerPrefs.SetInt("EnemiesKilled", PlayerPrefs.GetInt("EnemiesKilled", 0) + 1);
+        if (isExplosive)
+            Explode();
         Destroy(gameObject);
+    }
+
+    void Explode()
+    {
+        Debug.Log("FlyingEnemy Explode() appelé à : " + transform.position);
+
+        if (explosionVFX != null)
+        {
+            GameObject vfx = Instantiate(explosionVFX, transform.position, Quaternion.identity);
+            Destroy(vfx, 0.67f);
+            Debug.Log("VFX instancié !");
+        }
+        else
+        {
+            Debug.LogWarning("explosionVFX est null !");
+        }
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+        Debug.Log("Colliders détectés : " + hits.Length);
+
+        foreach (var hit in hits)
+        {
+            Debug.Log("Collider : " + hit.gameObject.name + " | Layer : " + LayerMask.LayerToName(hit.gameObject.layer));
+            KnightManager knight = hit.GetComponent<KnightManager>();
+            if (knight != null)
+            {
+                Debug.Log("KnightManager trouvé → " + explosionDamage + " dégâts sur " + hit.gameObject.name);
+                knight.TakeDamage(explosionDamage);
+            }
+            else
+            {
+                Debug.Log("Pas de KnightManager sur : " + hit.gameObject.name);
+            }
+        }
+
+        Debug.Log("Explode() terminé");
     }
 
     public void GetFrozen(float duration, float blueIntensity = 0.5f)
@@ -122,4 +166,15 @@ public class FlyingEnemyMovement : MonoBehaviour
 
     public void SetAllowedPaths(List<Path> paths) => allowedPaths = paths;
     public void SetSpawnPosition(Vector2 pos) => transform.position = pos;
+
+    void OnDrawGizmosSelected()
+    {
+        if (isExplosive)
+        {
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.4f);
+            Gizmos.DrawWireSphere(transform.position, explosionRadius);
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.15f);
+            Gizmos.DrawSphere(transform.position, explosionRadius);
+        }
+    }
 }
