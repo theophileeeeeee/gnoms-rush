@@ -7894,10 +7894,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1661069340387147141, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+      propertyPath: m_Text
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 2131613588946763456, guid: 72b837f313f23154081b19662ca96cab, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1649448846}
+    - target: {fileID: 2412800535581396708, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+      propertyPath: m_Text
+      value: 1/7
+      objectReference: {fileID: 0}
     - target: {fileID: 3802810411727373389, guid: 72b837f313f23154081b19662ca96cab, type: 3}
       propertyPath: m_Name
       value: UI Canvas

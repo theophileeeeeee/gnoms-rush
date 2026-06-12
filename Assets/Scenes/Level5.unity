@@ -7409,7 +7409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1661069340387147141, guid: 72b837f313f23154081b19662ca96cab, type: 3}
       propertyPath: m_Text
-      value: 999
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 2131613588946763456, guid: 72b837f313f23154081b19662ca96cab, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

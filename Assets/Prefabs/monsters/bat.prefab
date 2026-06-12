@@ -240,11 +240,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.56
-  reward: 8
+  reward: 5
   laneCount: 3
   laneSpacing: 0.35
-  maxHealth: 4
+  maxHealth: 5.5
   currentHealth: 0
+  isExplosive: 0
+  explosionRadius: 1
+  explosionDamage: 5
+  explosionVFX: {fileID: 0}
   animator: {fileID: 7304168773769266782}
   allowedPaths: []
 --- !u!95 &7304168773769266782

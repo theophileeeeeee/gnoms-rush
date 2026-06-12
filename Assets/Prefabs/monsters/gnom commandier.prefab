@@ -385,10 +385,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.3
+  isABoss: 0
+  isExplosive: 0
   laneCount: 3
   laneSpacing: 0.35
+  explosionRadius: 1
+  explosionDamage: 5
+  explosionVFX: {fileID: 0}
   maxHealth: 16
-  moneyReward: 20
+  moneyReward: 15
   currentHealth: 0
   damage: 2.25
   isEngaged: 0

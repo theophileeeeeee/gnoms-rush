@@ -216,7 +216,7 @@ MonoBehaviour:
   explosionDamage: 3
   explosionVFX: {fileID: 7971229391645358450, guid: 6b7e2b6de7b06cd42a67a5c3eef3ecad, type: 3}
   maxHealth: 11
-  moneyReward: 10
+  moneyReward: 8
   currentHealth: 0
   damage: 1.5
   isEngaged: 0
