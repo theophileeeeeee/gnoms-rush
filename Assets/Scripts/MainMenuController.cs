@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
+using TMPro;
 
 [System.Serializable]
 public struct Quest
@@ -17,6 +18,14 @@ public struct Quest
     public string unit;
 }
 
+[System.Serializable]
+public struct LevelData
+{
+    public string sceneName;
+    public string displayName;
+    public Sprite previewSprite;
+}
+
 public class MainMenuController : MonoBehaviour
 {
     public GameObject settingsPanel;
@@ -27,9 +36,16 @@ public class MainMenuController : MonoBehaviour
     public GameObject statsPanel;
     public GameObject levelsPanel;
 
+    [Header("Level Preview Panel")]
+    public GameObject levelLaunchWindow;
+    public TextMeshProUGUI levelNameText;
+    public Image levelPreviewImage;
+    public Button launchButton;
+    public LevelStarDisplay launchStarDisplay;
+
     [Header("Progression Globale (Quêtes)")]
-    public Slider completionSlider; 
-    public Text completionText;     
+    public Slider completionSlider;
+    public Text completionText;
 
     public Text[] moneyTexts;
 
@@ -37,7 +53,7 @@ public class MainMenuController : MonoBehaviour
     public AudioMixer mainMixer;
 
     [Header("Niveaux")]
-    public string[] levelSceneNames;
+    public LevelData[] levels;
 
     [Header("Music UI")]
     public Image musicButtonImage;
@@ -62,6 +78,8 @@ public class MainMenuController : MonoBehaviour
     private const float mutedVolume = -80f;
     public AudioSource uiAudioSource;
 
+    private string pendingSceneName;
+
     void Start()
     {
         int savedQuality = PlayerPrefs.GetInt("QualityLevel", 0);
@@ -73,6 +91,12 @@ public class MainMenuController : MonoBehaviour
         UpdateMoneyUI();
 
         SetupQuestButtons();
+
+        if (levelLaunchWindow != null)
+            levelLaunchWindow.SetActive(false);
+
+        if (launchButton != null)
+            launchButton.onClick.AddListener(LaunchPendingLevel);
     }
 
     void PlayUI(AudioClip clip)
@@ -86,6 +110,46 @@ public class MainMenuController : MonoBehaviour
         if (amount >= 1000000) return $"{amount / 1000000f:0.#}M";
         if (amount >= 1000)    return $"{amount / 1000f:0.#}K";
         return amount.ToString();
+    }
+
+    public void OpenLevelPreview(int levelIndex)
+    {
+        if (levelIndex < 0 || levelIndex >= levels.Length) return;
+
+        LevelData data = levels[levelIndex];
+        pendingSceneName = data.sceneName;
+
+        if (levelNameText != null)
+            levelNameText.text = data.displayName;
+
+        if (levelPreviewImage != null && data.previewSprite != null)
+            levelPreviewImage.sprite = data.previewSprite;
+
+        if (launchStarDisplay != null)
+        {
+            launchStarDisplay.sceneName = data.sceneName;
+            launchStarDisplay.Refresh();
+        }
+
+        if (levelLaunchWindow != null)
+            levelLaunchWindow.SetActive(true);
+
+        PlayUI(panelOpenClip);
+    }
+
+    public void CloseLevelPreview()
+    {
+        if (levelLaunchWindow != null)
+            levelLaunchWindow.SetActive(false);
+
+        pendingSceneName = null;
+        PlayUI(panelCloseClip);
+    }
+
+    void LaunchPendingLevel()
+    {
+        if (!string.IsNullOrEmpty(pendingSceneName))
+            SceneManager.LoadScene(pendingSceneName);
     }
 
     public void LoadScene(string sceneName)
@@ -129,7 +193,7 @@ public class MainMenuController : MonoBehaviour
         if (opening)
         {
             UpdateQuests();
-            UpdateCompletionPercentage(); 
+            UpdateCompletionPercentage();
         }
     }
 
@@ -152,7 +216,7 @@ public class MainMenuController : MonoBehaviour
         {
             Quest q = quests[i];
             int progress = PlayerPrefs.GetInt(q.key, 0);
-            
+
             bool completed = progress >= q.goal;
             bool claimed = PlayerPrefs.GetInt($"Quest_{q.key}_{q.goal}_Claimed", 0) == 1;
 
@@ -195,12 +259,12 @@ public class MainMenuController : MonoBehaviour
         PlayerPrefs.SetInt("Money", currentMoney + q.reward);
         PlayerPrefs.SetInt(claimedKey, 1);
         PlayerPrefs.Save();
-        
+
         PlayUI(questClaimClip);
         UpdateMoneyUI();
-        
-        UpdateQuests(); 
-        UpdateCompletionPercentage(); 
+
+        UpdateQuests();
+        UpdateCompletionPercentage();
     }
 
     void UpdateCompletionPercentage()
@@ -227,14 +291,10 @@ public class MainMenuController : MonoBehaviour
         float finalCompletionRatio = totalRatioSum / quests.Length;
 
         if (completionSlider != null)
-        {
             completionSlider.value = finalCompletionRatio;
-        }
 
         if (completionText != null)
-        {
             completionText.text = Mathf.RoundToInt(finalCompletionRatio * 100f) + "%";
-        }
     }
 
     public void ResetStats()
@@ -251,8 +311,8 @@ public class MainMenuController : MonoBehaviour
         foreach (Quest q in quests)
             PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
 
-        foreach (string scene in levelSceneNames)
-            PlayerPrefs.DeleteKey("Stars_" + scene);
+        foreach (LevelData l in levels)
+            PlayerPrefs.DeleteKey("Stars_" + l.sceneName);
 
         PlayerPrefs.Save();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

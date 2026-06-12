@@ -731,7 +731,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 13.94, y: 333}
+  m_AnchoredPosition: {x: 13.94, y: 324.29}
   m_SizeDelta: {x: 604.1199, y: 179.0809}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &112870853
@@ -765,13 +765,13 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
+  m_enableVertexGradient: 1
+  m_colorMode: 2
   m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+    topLeft: {r: 0.9803922, g: 0.91372555, b: 0.058823533, a: 1}
+    topRight: {r: 0.9803922, g: 0.91372555, b: 0.058823533, a: 1}
+    bottomLeft: {r: 0.9686275, g: 0.73333335, b: 0.11764707, a: 1}
+    bottomRight: {r: 0.9686275, g: 0.73333335, b: 0.11764707, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
@@ -1098,12 +1098,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 7
           m_FloatArgument: 0
           m_StringArgument: Level8
           m_BoolArgument: 0
@@ -2950,12 +2950,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: Level6
           m_BoolArgument: 0
@@ -3543,18 +3543,18 @@ RectTransform:
   m_GameObject: {fileID: 506544021}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.84088, y: 0.84088, z: 0.84088}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 512785097}
   - {fileID: 112870852}
   - {fileID: 1033661084}
-  - {fileID: 1486357842}
+  - {fileID: 1650445672}
   m_Father: {fileID: 1084704379}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000029325, y: 0.000019073}
+  m_AnchoredPosition: {x: -11, y: 21}
   m_SizeDelta: {x: 811.6027, y: 869.5846}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &506544023
@@ -3570,14 +3570,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.9618447, b: 0.8632076, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1457689949933816326, guid: 49352933bd8bfa949bbe7b53015eefea, type: 3}
+  m_Sprite: {fileID: -8841490917199087839, guid: 8b3ce8bfbba1f0042ac3c0696d2acb33, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3679,7 +3679,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: ToggleLevelsPanel
+        m_MethodName: CloseLevelPreview
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4602,12 +4602,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: Level2
           m_BoolArgument: 0
@@ -4896,12 +4896,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: Level5
           m_BoolArgument: 0
@@ -6977,12 +6977,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: Level7
           m_BoolArgument: 0
@@ -7059,8 +7059,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 13.94, y: -286}
-  m_SizeDelta: {x: 458.6974, y: 117.8522}
+  m_AnchoredPosition: {x: -0.000025749, y: -264.1}
+  m_SizeDelta: {x: 417.625, y: 182.2611}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1033661085
 MonoBehaviour:
@@ -7119,15 +7119,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
+  m_Color: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 7106435770673211724, guid: 123135ccbb832ff46a413f0516caef3c, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7381,7 +7381,7 @@ GameObject:
   - component: {fileID: 1084704381}
   - component: {fileID: 1084704380}
   m_Layer: 5
-  m_Name: LevelPanel
+  m_Name: LevelLauchWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7937,21 +7937,41 @@ MonoBehaviour:
   shopPanel: {fileID: 965693650}
   statsPanel: {fileID: 966392135}
   levelsPanel: {fileID: 747199862}
+  levelLaunchWindow: {fileID: 1084704378}
+  levelNameText: {fileID: 112870853}
+  levelPreviewImage: {fileID: 1486357843}
+  launchButton: {fileID: 1033661085}
   completionSlider: {fileID: 1943918197}
   completionText: {fileID: 704626421}
   moneyTexts:
   - {fileID: 1735725192}
   - {fileID: 1532632904}
   mainMixer: {fileID: 24100000, guid: df0b1173ae9738b43881a89e0b889b69, type: 2}
-  levelSceneNames:
-  - Level1
-  - Level2
-  - Level3
-  - Level4
-  - Level5
-  - Level6
-  - Level7
-  - Level8
+  levels:
+  - sceneName: Level1
+    displayName: Niveau 1
+    previewSprite: {fileID: -4273390502887601663, guid: f0ad6bbf36c9c6b489b27156bbd91a3e, type: 3}
+  - sceneName: Level2
+    displayName: Niveau 2
+    previewSprite: {fileID: -6003888883876168029, guid: eba493d539335ae498f620405a8eaed8, type: 3}
+  - sceneName: Level3
+    displayName: Niveau 3
+    previewSprite: {fileID: -5370126020132886647, guid: 96809d5dc1852a647ab47010c3acfa80, type: 3}
+  - sceneName: Level4
+    displayName: Niveau 4
+    previewSprite: {fileID: -553103373973805023, guid: 739a47b2855855744a18b58f5a30245e, type: 3}
+  - sceneName: Level5
+    displayName: Niveau 5
+    previewSprite: {fileID: -8356736323658377392, guid: 0fa1239a2bba3cc41ab6327d3f4e0cf9, type: 3}
+  - sceneName: Level6
+    displayName: Niveau 6
+    previewSprite: {fileID: 2999467500436095745, guid: 5506f48984956be419b4176f685265ad, type: 3}
+  - sceneName: Level7
+    displayName: Niveau 7
+    previewSprite: {fileID: -2966531696079097459, guid: d4cb0653b4eeddf4ea0a1dc08e1f678d, type: 3}
+  - sceneName: Level8
+    displayName: Niveau 8
+    previewSprite: {fileID: -2966531696079097459, guid: d4cb0653b4eeddf4ea0a1dc08e1f678d, type: 3}
   musicButtonImage: {fileID: 2087875888}
   musicOnSprite: {fileID: 6023167766478336058, guid: 5254966c3adc13742835a05de0100889, type: 3}
   musicOffSprite: {fileID: -1197317344785566424, guid: 61110c2fca7c27d4daf3b76003aadfbf, type: 3}
@@ -9374,16 +9394,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1486357841}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 506544022}
+  m_Father: {fileID: 1650445672}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00001812, y: 60}
+  m_AnchoredPosition: {x: -0.00006866455, y: 0.000034332275}
   m_SizeDelta: {x: 632.3842, y: 349.5001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1486357843
@@ -9406,7 +9426,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -4364034832326165938, guid: 8e687ae301bba6f4281b42b41b9c4d54, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9736,6 +9756,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643178990}
   m_CullTransparentMesh: 1
+--- !u!1 &1650445671
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1650445672}
+  - component: {fileID: 1650445673}
+  m_Layer: 5
+  m_Name: demoPicture
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1650445672
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650445671}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1486357842}
+  m_Father: {fileID: 506544022}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 7.0000916, y: 59.999004}
+  m_SizeDelta: {x: 632.3842, y: 349.5001}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1650445673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650445671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Softness: {x: 48, y: 64}
 --- !u!1 &1685791525
 GameObject:
   m_ObjectHideFlags: 0
@@ -9859,8 +9930,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11036,12 +11107,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: Level4
           m_BoolArgument: 0
@@ -11506,12 +11577,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1179402760}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: OpenLevelPreview
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: Level3
           m_BoolArgument: 0
@@ -11577,7 +11648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
