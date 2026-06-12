@@ -157,13 +157,24 @@ public class UIManager : MonoBehaviour
             OnGameOver();
     }
 
-    private void OnGameOver()
+private void OnGameOver()
     {
         if (defeatSound != null)
             audioSource.PlayOneShot(defeatSound, volume);
 
         gameOverPanel.SetActive(true);
         cameraController.enabled = false;
+
+        if (waveSpawner != null)
+        {
+            waveSpawner.StopSpawner();
+        }
+
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Ennemy");
+        foreach (GameObject enemy in enemies)
+        {
+            Destroy(enemy);
+        }
     }
 
     private void Victory()
@@ -173,7 +184,6 @@ public class UIManager : MonoBehaviour
 
         float healthPercent = (float)CurrentHearts / startHearts;
 
-        // --- Attribution des étoiles selon la vie restante ---
         if (healthPercent >= 0.75f)
         {
             victoryLevel = 3;
@@ -196,24 +206,16 @@ public class UIManager : MonoBehaviour
             star3.SetActive(false);
         }
 
-        // ==========================================
-        //   NOUVELLE FORMULE ÉCONOMIQUE ÉQUILIBRÉE
-        // ==========================================
-        // Base fixe par étoile (cohérent avec les prix de la boutique : fiole à 300, dynamite à 600)
         int baseMoney = 0;
         switch (victoryLevel)
         {
-            case 3: baseMoney = 500; break; // Un sans-faute (ou presque) permet presque d'acheter une dynamite
-            case 2: baseMoney = 350; break; // Permet d'acheter une fiole de glace
-            case 1: default: baseMoney = 200; break; // Récompense minimale d'encouragement
+            case 3: baseMoney = 500; break;
+            case 2: baseMoney = 350; break;
+            case 1: default: baseMoney = 200; break;
         }
 
-        // Bonus de santé proportionnel (Pourcentage de vie restante * 150 pièces max)
         int healthBonus = Mathf.RoundToInt(healthPercent * 150);
-
-        // Somme totale des gains pour ce niveau
         earnedMoneyWithThisLevel = baseMoney + healthBonus;
-        // ==========================================
 
         if (victorySound != null)
             audioSource.PlayOneShot(victorySound, volume);

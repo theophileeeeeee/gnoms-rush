@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 7210899161145293739}
   - component: {fileID: 165426369027331833}
   - component: {fileID: -6488802614493540354}
+  - component: {fileID: 7262339205505561557}
   m_Layer: 0
   m_Name: reinforcement knight
   m_TagString: Untagged
@@ -407,6 +408,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3.02, y: 3.84}
   m_EdgeRadius: 0
+--- !u!114 &7262339205505561557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3624436695077011647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260130b7c85be14c9cd006b7f992a78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseOrder: 5000
 --- !u!1 &5194235674208614070
 GameObject:
   m_ObjectHideFlags: 0

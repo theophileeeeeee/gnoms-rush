@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 7304168773769266782}
   - component: {fileID: 3689412166891570434}
   - component: {fileID: 7097497459814801774}
+  - component: {fileID: -425722870886771481}
   m_Layer: 0
   m_Name: wizard
   m_TagString: Ennemy
@@ -336,6 +337,19 @@ MonoBehaviour:
   regenVFXPrefab: {fileID: 831766330763243015, guid: 4c7ee3ce9fcb9414795390ca0927e8d2, type: 3}
   spawnPoint: {fileID: 276538554822641277}
   vfxDuration: 1
+--- !u!114 &-425722870886771481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6154848677523542535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260130b7c85be14c9cd006b7f992a78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseOrder: 5000
 --- !u!1 &7142171586614611905
 GameObject:
   m_ObjectHideFlags: 0

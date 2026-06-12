@@ -213,37 +213,54 @@ public class WaveSpawnerAdvanced : MonoBehaviour
             SetButtonAlpha(btn, a);
     }
 
-IEnumerator SpawnEnemy(SpawnInfo info)
-{
-    yield return new WaitForSeconds(info.delay);
-    enemiesRemainingToSpawn--;
+    IEnumerator SpawnEnemy(SpawnInfo info)
+    {
+        yield return new WaitForSeconds(info.delay);
+        enemiesRemainingToSpawn--;
 
-    GameObject enemy = Instantiate(info.enemyPrefab, Vector3.zero, Quaternion.identity);
+        GameObject enemy = Instantiate(info.enemyPrefab, Vector3.zero, Quaternion.identity);
 
-    EnemyMovement em = enemy.GetComponent<EnemyMovement>();
-    FlyingEnemyMovement fem = enemy.GetComponent<FlyingEnemyMovement>();
+        EnemyMovement em = enemy.GetComponent<EnemyMovement>();
+        FlyingEnemyMovement fem = enemy.GetComponent<FlyingEnemyMovement>();
 
         if (em != null)
-    {
-        if (info.allowedPaths != null && info.allowedPaths.Count > 0)
-            em.SetAllowedPaths(info.allowedPaths);
+        {
+            if (info.allowedPaths != null && info.allowedPaths.Count > 0)
+                em.SetAllowedPaths(info.allowedPaths);
 
-        if (info.laneIndex >= 0)
-            em.AssignLane(info.laneIndex);
+            if (info.laneIndex >= 0)
+                em.AssignLane(info.laneIndex);
 
             if (info.allowedPaths != null && info.allowedPaths.Count > 0)
                 em.SetSpawnPosition(info.allowedPaths[0].GetPointAtDistance(0f));
-    }
-    else if (fem != null)
-    {
-        if (info.allowedPaths != null && info.allowedPaths.Count > 0)
-            fem.SetAllowedPaths(info.allowedPaths);
+        }
+        else if (fem != null)
+        {
+            if (info.allowedPaths != null && info.allowedPaths.Count > 0)
+                fem.SetAllowedPaths(info.allowedPaths);
 
-        if (info.laneIndex >= 0)
-            fem.AssignLane(info.laneIndex);
+            if (info.laneIndex >= 0)
+                fem.AssignLane(info.laneIndex);
 
             if (info.allowedPaths != null && info.allowedPaths.Count > 0)
                 fem.SetSpawnPosition(info.allowedPaths[0].GetPointAtDistance(0f));
+        }
     }
-}
+
+    public void StopSpawner()
+    {
+        StopAllCoroutines();
+        countdownActive = false;
+        waveReady = false;
+
+        foreach (var btn in launchButtons)
+        {
+            SetButtonAlpha(btn, 0f);
+            if (btn.image1 != null && btn.image1.gameObject != null)
+            {
+                Button b = btn.image1.GetComponentInParent<Button>();
+                if (b != null) b.interactable = false;
+            }
+        }
+    }
 }
