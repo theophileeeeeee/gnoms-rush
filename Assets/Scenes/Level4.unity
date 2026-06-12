@@ -11876,35 +11876,35 @@ PrefabInstance:
       objectReference: {fileID: 1046251583}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[0].delayAfterWave
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[1].delayAfterWave
-      value: 15
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[2].delayAfterWave
-      value: 30
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[3].delayAfterWave
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[4].delayAfterWave
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[5].delayAfterWave
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[6].delayAfterWave
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[7].delayAfterWave
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: launchButtons.Array.data[0].fillImage
@@ -14784,7 +14784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: startHearts
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: victoryPanel

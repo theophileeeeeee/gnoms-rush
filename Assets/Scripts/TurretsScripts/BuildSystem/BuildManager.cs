@@ -6,6 +6,7 @@ using TMPro;
 public class BuildManager : MonoBehaviour
 {
     public static BuildManager instance;
+    public static event System.Action<Node> OnTurretBuilt;
     private bool isUpgrading = false;
 
     public UIManager uiManager;
@@ -59,11 +60,9 @@ public class BuildManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
-
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
     }
@@ -71,11 +70,8 @@ public class BuildManager : MonoBehaviour
     public void SelectNode(Node node)
     {
         if (selectedNode == node) return;
-
         if (currentPanelInstance != null)
-        {
             Destroy(currentPanelInstance);
-        }
 
         selectedNode = node;
 
@@ -83,11 +79,8 @@ public class BuildManager : MonoBehaviour
             audioSource.PlayOneShot(selectNodeSound, volume);
 
         GameObject prefabToSpawn = (selectedNode.turret != null) ? modificationChoicePrefab : typeChoicePrefab;
-
         if (prefabToSpawn != null && canvasTransform != null)
-        {
             currentPanelInstance = Instantiate(prefabToSpawn, canvasTransform);
-        }
 
         UpdatePanelPosition();
         UpdatePrices();
@@ -106,12 +99,9 @@ public class BuildManager : MonoBehaviour
         {
             Animator anim = currentPanelInstance.GetComponent<Animator>();
             if (anim != null)
-            {
                 anim.SetTrigger("TriggerClose");
-            }
 
             StartCoroutine(WaitAndDestroyPanel(currentPanelInstance, 0.15f));
-
             currentPanelInstance = null;
         }
     }
@@ -120,9 +110,7 @@ public class BuildManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         if (panel != null)
-        {
             Destroy(panel);
-        }
     }
 
     public void UpdatePrices()
@@ -151,38 +139,36 @@ public class BuildManager : MonoBehaviour
         }
 
         if (activeSellText != null)
-        {
             activeSellText.text = CalculateRefund(selectedNode).ToString();
-        }
     }
 
-private void UpdatePanelPosition()
-{
-    if (currentPanelInstance == null || selectedNode == null) return;
+    private void UpdatePanelPosition()
+    {
+        if (currentPanelInstance == null || selectedNode == null) return;
 
-    RectTransform activeRect = currentPanelInstance.GetComponent<RectTransform>();
-    if (activeRect == null) return;
+        RectTransform activeRect = currentPanelInstance.GetComponent<RectTransform>();
+        if (activeRect == null) return;
 
-    float halfW = (activeRect.rect.width * activeRect.lossyScale.x) / 2f;
-    float halfH = (activeRect.rect.height * activeRect.lossyScale.y) / 2f;
+        float halfW = (activeRect.rect.width * activeRect.lossyScale.x) / 2f;
+        float halfH = (activeRect.rect.height * activeRect.lossyScale.y) / 2f;
 
-    float verticalOffset = selectedNode.spawnAbove ? 1f : -halfH;
-    Vector3 worldPos = selectedNode.transform.position + new Vector3(0, verticalOffset, 0);
+        float verticalOffset = selectedNode.spawnAbove ? 1f : -halfH;
+        Vector3 worldPos = selectedNode.transform.position + new Vector3(0, verticalOffset, 0);
 
-    currentPanelInstance.transform.rotation = Camera.main.transform.rotation;
+        currentPanelInstance.transform.rotation = Camera.main.transform.rotation;
 
-    float camH = Camera.main.orthographicSize;
-    float camW = camH * Camera.main.aspect;
-    Vector3 camPos = Camera.main.transform.position;
+        float camH = Camera.main.orthographicSize;
+        float camW = camH * Camera.main.aspect;
+        Vector3 camPos = Camera.main.transform.position;
 
-    Vector3 clampedPos = new Vector3(
-        Mathf.Clamp(worldPos.x, camPos.x - camW + halfW, camPos.x + camW - halfW),
-        Mathf.Clamp(worldPos.y, camPos.y - camH + halfH, camPos.y + camH - halfH),
-        worldPos.z
-    );
+        Vector3 clampedPos = new Vector3(
+            Mathf.Clamp(worldPos.x, camPos.x - camW + halfW, camPos.x + camW - halfW),
+            Mathf.Clamp(worldPos.y, camPos.y - camH + halfH, camPos.y + camH - halfH),
+            worldPos.z
+        );
 
-    currentPanelInstance.transform.position = clampedPos;
-}
+        currentPanelInstance.transform.position = clampedPos;
+    }
 
     public void BuildElectric()
     {
@@ -226,16 +212,17 @@ private void UpdatePanelPosition()
     {
         if (selectedNode == null) return;
 
+        Node builtNode = selectedNode;
         selectedNode.BuildTurret(prefab, type);
         InitSpecialTurret(selectedNode.turret);
+
+        OnTurretBuilt?.Invoke(builtNode);
 
         if (buildSound != null)
             audioSource.PlayOneShot(buildSound, volume);
 
         if (currentPanelInstance != null)
-        {
             Destroy(currentPanelInstance);
-        }
 
         selectedNode = null;
         UpdatePrices();
@@ -246,32 +233,16 @@ private void UpdatePanelPosition()
         if (isUpgrading) return;
         isUpgrading = true;
 
-        if (selectedNode == null || selectedNode.turret == null)
-        {
-            isUpgrading = false;
-            return;
-        }
+        if (selectedNode == null || selectedNode.turret == null) { isUpgrading = false; return; }
 
         int currentLevel = selectedNode.turretLevel;
-        if (currentLevel >= 3)
-        {
-            isUpgrading = false;
-            return;
-        }
+        if (currentLevel >= 3) { isUpgrading = false; return; }
 
         int cost = (currentLevel == 1) ? upgradeCostLevel2 : upgradeCostLevel3;
-        if (uiManager.CurrentMoney < cost)
-        {
-            isUpgrading = false;
-            return;
-        }
+        if (uiManager.CurrentMoney < cost) { isUpgrading = false; return; }
 
         GameObject nextPrefab = GetNextPrefab(selectedNode.turretType, currentLevel + 1);
-        if (nextPrefab == null)
-        {
-            isUpgrading = false;
-            return;
-        }
+        if (nextPrefab == null) { isUpgrading = false; return; }
 
         uiManager.UseMoney(cost);
         ReplaceTurret(nextPrefab);
@@ -284,10 +255,7 @@ private void UpdatePanelPosition()
         Invoke(nameof(ResetUpgradeLock), 0.1f);
     }
 
-    void ResetUpgradeLock()
-    {
-        isUpgrading = false;
-    }
+    void ResetUpgradeLock() => isUpgrading = false;
 
     GameObject GetNextPrefab(Node.TurretType type, int level)
     {
@@ -305,7 +273,6 @@ private void UpdatePanelPosition()
     {
         Vector3 pos = selectedNode.turret.transform.position;
         Quaternion rot = selectedNode.turret.transform.rotation;
-
         Destroy(selectedNode.turret);
         selectedNode.turret = Instantiate(newPrefab, pos, rot);
         InitSpecialTurret(selectedNode.turret);
@@ -318,7 +285,7 @@ private void UpdatePanelPosition()
             soldiers.Init(selectedNode.roadPosition);
     }
 
-    public void PlayDeleteSound()
+    public void PlayDeleteSound() 
     {
         if (deleteSound != null)
             audioSource.PlayOneShot(deleteSound, volume);
@@ -344,10 +311,7 @@ private void UpdatePanelPosition()
         return Mathf.RoundToInt((baseCost + upgradeCost) * 0.7f);
     }
 
-    public Node GetSelectedNode()
-    {
-        return selectedNode;
-    }
+    public Node GetSelectedNode() => selectedNode;
 
     void Update()
     {

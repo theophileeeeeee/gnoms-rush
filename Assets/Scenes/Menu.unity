@@ -5559,7 +5559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &747199863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8385,7 +8385,7 @@ MonoBehaviour:
     displayName: Niveau 5
     previewSprite: {fileID: -8356736323658377392, guid: 0fa1239a2bba3cc41ab6327d3f4e0cf9, type: 3}
     levelButton: {fileID: 654633254}
-    buttonImage: {fileID: 2100057789}
+    buttonImage: {fileID: 315213662}
     starsImage: {fileID: 512843502}
     numberImage: {fileID: 2001197114}
     lockOverlay: {fileID: 1280646067}
@@ -8393,7 +8393,7 @@ MonoBehaviour:
     displayName: Niveau 6
     previewSprite: {fileID: 2999467500436095745, guid: 5506f48984956be419b4176f685265ad, type: 3}
     levelButton: {fileID: 430057460}
-    buttonImage: {fileID: 1199284621}
+    buttonImage: {fileID: 798407554}
     starsImage: {fileID: 527358526}
     numberImage: {fileID: 2130042080}
     lockOverlay: {fileID: 463869200}
@@ -8401,15 +8401,15 @@ MonoBehaviour:
     displayName: Niveau 7
     previewSprite: {fileID: -2966531696079097459, guid: d4cb0653b4eeddf4ea0a1dc08e1f678d, type: 3}
     levelButton: {fileID: 1019706986}
-    buttonImage: {fileID: 798407554}
+    buttonImage: {fileID: 1199284621}
     starsImage: {fileID: 1854013298}
     numberImage: {fileID: 1276474534}
     lockOverlay: {fileID: 824373087}
   - sceneName: Level8
     displayName: Niveau 8
-    previewSprite: {fileID: -2966531696079097459, guid: d4cb0653b4eeddf4ea0a1dc08e1f678d, type: 3}
+    previewSprite: {fileID: -4270282721187192620, guid: f57e686e8b234ba418665a83ba911291, type: 3}
     levelButton: {fileID: 134574575}
-    buttonImage: {fileID: 315213662}
+    buttonImage: {fileID: 2100057789}
     starsImage: {fileID: 1043562662}
     numberImage: {fileID: 502114787}
     lockOverlay: {fileID: 435452880}
