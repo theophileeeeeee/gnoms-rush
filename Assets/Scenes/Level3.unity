@@ -10549,7 +10549,7 @@ PrefabInstance:
       objectReference: {fileID: 896605516}
     - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: startMoney
-      value: 500
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: boxOffset.x

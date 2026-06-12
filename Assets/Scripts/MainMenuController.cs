@@ -24,6 +24,11 @@ public struct LevelData
     public string sceneName;
     public string displayName;
     public Sprite previewSprite;
+    public Button levelButton;
+    public Image buttonImage; 
+    public Image starsImage;  // <- AJOUTÉ : Pour griser l'affichage/fond des étoiles
+    public Image numberImage; // <- AJOUTÉ : Pour griser l'icône/fond du chiffre de niveau
+    public GameObject lockOverlay;
 }
 
 public class MainMenuController : MonoBehaviour
@@ -97,6 +102,8 @@ public class MainMenuController : MonoBehaviour
 
         if (launchButton != null)
             launchButton.onClick.AddListener(LaunchPendingLevel);
+
+        RefreshLevelButtons();
     }
 
     void PlayUI(AudioClip clip)
@@ -112,9 +119,43 @@ public class MainMenuController : MonoBehaviour
         return amount.ToString();
     }
 
+    void RefreshLevelButtons()
+    {
+        for (int i = 0; i < levels.Length; i++)
+        {
+            LevelData data = levels[i];
+            bool unlocked = i == 0 || PlayerPrefs.GetInt("Stars_" + levels[i - 1].sceneName, 0) > 0;
+
+            // Couleur cible : Blanc si débloqué, Gris foncé si verrouillé
+            Color targetColor = unlocked ? Color.white : new Color(0.3f, 0.3f, 0.3f, 1f);
+
+            // Rendre le bouton cliquable ou non
+            if (data.levelButton != null)
+                data.levelButton.interactable = unlocked;
+
+            // Griser le fond du bouton
+            if (data.buttonImage != null)
+                data.buttonImage.color = targetColor;
+
+            // AJOUTÉ : Griser l'image des étoiles
+            if (data.starsImage != null)
+                data.starsImage.color = targetColor;
+
+            // AJOUTÉ : Griser l'image du chiffre
+            if (data.numberImage != null)
+                data.numberImage.color = targetColor;
+
+            if (data.lockOverlay != null)
+                data.lockOverlay.SetActive(!unlocked);
+        }
+    }
+
     public void OpenLevelPreview(int levelIndex)
     {
         if (levelIndex < 0 || levelIndex >= levels.Length) return;
+
+        bool unlocked = levelIndex == 0 || PlayerPrefs.GetInt("Stars_" + levels[levelIndex - 1].sceneName, 0) > 0;
+        if (!unlocked) return;
 
         LevelData data = levels[levelIndex];
         pendingSceneName = data.sceneName;
@@ -168,6 +209,7 @@ public class MainMenuController : MonoBehaviour
     {
         bool opening = !levelsPanel.activeSelf;
         levelsPanel.SetActive(opening);
+        if (opening) RefreshLevelButtons();
         PlayUI(opening ? panelOpenClip : panelCloseClip);
     }
 
