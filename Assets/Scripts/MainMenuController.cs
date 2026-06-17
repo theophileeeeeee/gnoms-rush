@@ -26,13 +26,15 @@ public struct LevelData
     public Sprite previewSprite;
     public Button levelButton;
     public Image buttonImage; 
-    public Image starsImage;  // <- AJOUTÉ : Pour griser l'affichage/fond des étoiles
-    public Image numberImage; // <- AJOUTÉ : Pour griser l'icône/fond du chiffre de niveau
+    public Image starsImage;  
+    public Image numberImage; 
     public GameObject lockOverlay;
 }
 
 public class MainMenuController : MonoBehaviour
 {
+    public static MainMenuController Instance { get; private set; }
+
     public GameObject settingsPanel;
     [Range(0f, 1f)]
     public float uiVolume = 1f;
@@ -77,6 +79,10 @@ public class MainMenuController : MonoBehaviour
     public AudioClip sliderTickClip;
     public AudioClip toggleOffClip;
 
+    [Header("Fin de Jeu & Mode Hardcore")]
+    public GameObject victoryPanel;
+    public Button enableHardcoreButton;
+
     public Quest[] quests;
 
     private const float normalVolume = 0f;
@@ -85,26 +91,42 @@ public class MainMenuController : MonoBehaviour
 
     private string pendingSceneName;
 
-    void Start()
+    void Awake()
     {
-        int savedQuality = PlayerPrefs.GetInt("QualityLevel", 0);
-        qualitySlider.value = savedQuality;
-        SetQuality(savedQuality);
-
-        ApplyMusic(PlayerPrefs.GetInt("MusicMuted", 0) == 0);
-        ApplySFX(PlayerPrefs.GetInt("SFXMuted", 0) == 0);
-        UpdateMoneyUI();
-
-        SetupQuestButtons();
-
-        if (levelLaunchWindow != null)
-            levelLaunchWindow.SetActive(false);
-
-        if (launchButton != null)
-            launchButton.onClick.AddListener(LaunchPendingLevel);
-
-        RefreshLevelButtons();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
+
+void Start()
+{
+    int savedQuality = PlayerPrefs.GetInt("QualityLevel", 0);
+    qualitySlider.value = savedQuality;
+    SetQuality(savedQuality);
+
+    ApplyMusic(PlayerPrefs.GetInt("MusicMuted", 0) == 0);
+    ApplySFX(PlayerPrefs.GetInt("SFXMuted", 0) == 0);
+    UpdateMoneyUI();
+
+    SetupQuestButtons();
+
+    if (levelLaunchWindow != null)
+        levelLaunchWindow.SetActive(false);
+
+    if (launchButton != null)
+        launchButton.onClick.AddListener(LaunchPendingLevel);
+
+    if (enableHardcoreButton != null)
+        enableHardcoreButton.onClick.AddListener(ToggleHardcoreMode);
+
+    RefreshLevelButtons();
+    CheckGameCompletion();
+}
 
     void PlayUI(AudioClip clip)
     {
@@ -126,28 +148,73 @@ public class MainMenuController : MonoBehaviour
             LevelData data = levels[i];
             bool unlocked = i == 0 || PlayerPrefs.GetInt("Stars_" + levels[i - 1].sceneName, 0) > 0;
 
-            // Couleur cible : Blanc si débloqué, Gris foncé si verrouillé
             Color targetColor = unlocked ? Color.white : new Color(0.3f, 0.3f, 0.3f, 1f);
 
-            // Rendre le bouton cliquable ou non
             if (data.levelButton != null)
                 data.levelButton.interactable = unlocked;
 
-            // Griser le fond du bouton
             if (data.buttonImage != null)
                 data.buttonImage.color = targetColor;
 
-            // AJOUTÉ : Griser l'image des étoiles
             if (data.starsImage != null)
                 data.starsImage.color = targetColor;
 
-            // AJOUTÉ : Griser l'image du chiffre
             if (data.numberImage != null)
                 data.numberImage.color = targetColor;
 
             if (data.lockOverlay != null)
                 data.lockOverlay.SetActive(!unlocked);
         }
+    }
+
+    void CheckGameCompletion()
+    {
+        if (levels != null && levels.Length > 0)
+        {
+            string lastLevelScene = levels[levels.Length - 1].sceneName; 
+            bool lastLevelBeaten = PlayerPrefs.GetInt("Stars_" + lastLevelScene, 0) > 0;
+            bool totalVictoryShown = PlayerPrefs.GetInt("GameCompleted_Shown", 0) == 1;
+
+            if (lastLevelBeaten)
+            {
+                PlayerPrefs.SetInt("HardcoreUnlocked", 1);
+
+                if (!totalVictoryShown && victoryPanel != null)
+                {
+                    victoryPanel.SetActive(true);
+                    PlayerPrefs.SetInt("GameCompleted_Shown", 1);
+                    PlayerPrefs.Save();
+                    PlayUI(panelOpenClip);
+                }
+            }
+        }
+    }
+
+    public void CloseVictoryPanel()
+    {
+        if (victoryPanel != null)
+            victoryPanel.SetActive(false);
+        PlayUI(panelCloseClip);
+    }
+
+    public void ToggleHardcoreMode()
+    {
+        PlayerPrefs.SetInt("HardcoreMode", 1);
+        PlayerPrefs.Save();
+
+        CloseVictoryPanel();
+
+        HardcoreToggleController toggle = FindObjectOfType<HardcoreToggleController>(true);
+        if (toggle != null)
+        {
+            toggle.NotifyUnlockAndRefresh();
+        }
+    }
+
+    public void SetHardcoreModeDirect(bool active)
+    {
+        PlayerPrefs.SetInt("HardcoreMode", active ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public void OpenLevelPreview(int levelIndex)
@@ -339,26 +406,30 @@ public class MainMenuController : MonoBehaviour
             completionText.text = Mathf.RoundToInt(finalCompletionRatio * 100f) + "%";
     }
 
-    public void ResetStats()
-    {
-        PlayerPrefs.DeleteKey("Money");
-        PlayerPrefs.DeleteKey("GoldSpentShop");
-        PlayerPrefs.DeleteKey("TotalWavesCleared");
-        PlayerPrefs.DeleteKey("QualityLevel");
-        PlayerPrefs.DeleteKey("MusicMuted");
-        PlayerPrefs.DeleteKey("SFXMuted");
-        PlayerPrefs.DeleteKey("EnemiesKilled");
-        PlayerPrefs.DeleteKey("TowersBuilt");
+public void ResetStats()
+{
+    PlayerPrefs.DeleteKey("Money");
+    PlayerPrefs.DeleteKey("GoldSpentShop");
+    PlayerPrefs.DeleteKey("TotalWavesCleared");
+    PlayerPrefs.DeleteKey("QualityLevel");
+    PlayerPrefs.DeleteKey("MusicMuted");
+    PlayerPrefs.DeleteKey("SFXMuted");
+    PlayerPrefs.DeleteKey("EnemiesKilled");
+    PlayerPrefs.DeleteKey("TowersBuilt");
+    PlayerPrefs.DeleteKey("TutorialDone");
+    PlayerPrefs.DeleteKey("GameCompleted_Shown");
+    PlayerPrefs.DeleteKey("HardcoreMode");
+    PlayerPrefs.DeleteKey("HardcoreUnlocked");
 
-        foreach (Quest q in quests)
-            PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
+    foreach (Quest q in quests)
+        PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
 
-        foreach (LevelData l in levels)
-            PlayerPrefs.DeleteKey("Stars_" + l.sceneName);
+    foreach (LevelData l in levels)
+        PlayerPrefs.DeleteKey("Stars_" + l.sceneName);
 
-        PlayerPrefs.Save();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+    PlayerPrefs.Save();
+    SceneManager.LoadScene("LoadingScene");
+}
 
     public void SetQuality(float qualityIndex)
     {

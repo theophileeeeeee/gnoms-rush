@@ -26,6 +26,11 @@ public class Node : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (TutorialManager.Instance != null && !TutorialManager.Instance.Phase1Done)
+        {
+            Debug.Log("Action impossible : le tuto n'est pas encore terminé!");
+            return;
+        }
         if (!pausePanel.activeSelf && !gameOverPanel.activeSelf && !victoryPanel.activeSelf)
         {
             BuildManager.instance.SelectNode(this);

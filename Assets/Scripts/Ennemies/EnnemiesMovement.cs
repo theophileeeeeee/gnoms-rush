@@ -48,7 +48,13 @@ public class EnemyMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         uiManager = FindObjectOfType<UIManager>();
         if (uiManager == null)
-            Debug.LogError("UIManager introuvable dans la scène !");
+            Debug.Log("UIManager introuvable dans la scène !");
+      
+
+        if (PlayerPrefs.GetInt("HardcoreMode", 0) == 1)
+        {
+            maxHealth *= 1.5f;
+        }
 
         currentHealth = maxHealth;
         attackTimer = attackCooldown;

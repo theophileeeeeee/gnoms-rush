@@ -48,6 +48,11 @@ public class FlyingEnemyMovement : MonoBehaviour
             return;
         }
 
+        if (PlayerPrefs.GetInt("HardcoreMode", 0) == 1)
+        {
+            maxHealth *= 1.5f;
+        }
+
         currentHealth = maxHealth;
         animator.SetBool("Walk", true);
         animator.SetBool("Idle", false);

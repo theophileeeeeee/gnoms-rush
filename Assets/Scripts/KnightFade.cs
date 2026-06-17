@@ -10,8 +10,10 @@ public class KnightFade : MonoBehaviour
     public Image bar;
     public Image fill;
     
-    private float lifetime = 20f;
+    [Header("Lifetime Settings")]
+    public float lifetime = 30f;
     public float fadeDuration = 1f;
+    public float timer = 0f;
 
     void Start()
     {
@@ -25,8 +27,6 @@ public class KnightFade : MonoBehaviour
         Color originalSpriteColor = spriteRenderer != null ? spriteRenderer.color : Color.white;
         Color originalBarColor = bar != null ? bar.color : Color.white;
         Color originalFillColor = fill != null ? fill.color : Color.white;
-
-        float timer = 0f;
 
         while (timer < fadeDuration)
         {

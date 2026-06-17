@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System;
 
 [RequireComponent(typeof(AudioSource))]
 public class ReinforcementManager : MonoBehaviour
 {
+    public static Action OnReinforcementsPlaced;
+
     public Camera cam;
 
     [Header("Units")]
@@ -13,8 +16,8 @@ public class ReinforcementManager : MonoBehaviour
     public float spacing = 0.5f;
 
     [Header("Cooldown")]
-    public float cooldown = 20f;
-    private float cooldownTimer;
+    public float cooldown = 30f;
+    public float cooldownTimer;
 
     public Image cooldownImage;
 
@@ -87,6 +90,12 @@ public class ReinforcementManager : MonoBehaviour
 
     public void OnClickButton()
     {
+        if (TutorialManager.Instance != null && TutorialManager.Instance.Phase1Done && !TutorialManager.Instance.TurretPlaced)
+        {
+            Debug.Log("Action impossible : Vous devez d'abord construire la tour !");
+            return;
+        }
+
         if (cooldownTimer < cooldown)
             return;
 
@@ -159,8 +168,9 @@ public class ReinforcementManager : MonoBehaviour
             GameObject knight = Instantiate(knightPrefab, center + offset, Quaternion.identity);
 
             knight.transform.localScale = new Vector3(0.10f, 0.10f, 0.10f);
-            Destroy(knight, 20f);
         }
+
+        OnReinforcementsPlaced?.Invoke();
 
         if (placeSound != null)
             audioSource.PlayOneShot(placeSound, placeVolume);

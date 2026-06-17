@@ -2,11 +2,11 @@
     "items": [
         {
             "itemName": "dynamite",
-            "amount": 6
+            "amount": 5
         },
         {
             "itemName": "ice",
-            "amount": 49
+            "amount": 46
         }
     ]
 }

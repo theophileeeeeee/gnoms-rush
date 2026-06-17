@@ -173,6 +173,11 @@ public class WaveSpawnerAdvanced : MonoBehaviour
 
     public void LaunchWave()
     {
+        if (TutorialManager.Instance != null && !TutorialManager.Instance.ReinforcementsPlaced)
+        {
+        Debug.Log("Action impossible : Vous devez d'abord placer les renforts !");
+        return; 
+        }
         if (countdownActive && !waveReady)
             waveReady = true;
     }

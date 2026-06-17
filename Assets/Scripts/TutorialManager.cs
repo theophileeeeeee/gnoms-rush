@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class TutorialManager : MonoBehaviour
 {
+    public static TutorialManager Instance { get; private set; }
+
     [System.Serializable]
     public class TutorialStep
     {
@@ -21,12 +23,14 @@ public class TutorialManager : MonoBehaviour
     public Image highlightImage;
     public TextMeshProUGUI bubbleText;
     public Button nextButton;
+    public Text nextButtonText;
     public GameObject bubblePhase1Object; 
     public List<TutorialStep> steps;
 
     [Header("Phase 2 - World Space")]
     public Canvas worldSpaceCanvas;
     public GameObject bubblePrefab;
+    public GameObject reinforcementsBubblePrefab;
     public Node tutorialNode;
     public Transform waveButtonTarget;
     public Transform reinforcementsTarget;
@@ -38,13 +42,30 @@ public class TutorialManager : MonoBehaviour
     public CameraController2D cameraMovementScript;
 
     int currentStep = 0;
-    bool phase1Done = false;
+    
+    public bool Phase1Done { get; private set; } = false;
+    public bool TurretPlaced { get; private set; } = false;
+    public bool ReinforcementsPlaced { get; private set; } = false;
+    
     bool waveLaunched = false;
     GameObject currentWorldBubble;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
         BuildManager.OnTurretBuilt += OnTurretPlaced;
+        ReinforcementManager.OnReinforcementsPlaced += OnReinforcementsDeployed;
         nextButton.onClick.AddListener(NextStep);
         
         if (skipButton != null)
@@ -59,6 +80,7 @@ public class TutorialManager : MonoBehaviour
     void OnDestroy()
     {
         BuildManager.OnTurretBuilt -= OnTurretPlaced;
+        ReinforcementManager.OnReinforcementsPlaced -= OnReinforcementsDeployed;
     }
 
     void ShowStep(int index)
@@ -74,6 +96,18 @@ public class TutorialManager : MonoBehaviour
         
         bubbleText.text = step.message;
         bubbleText.fontSize = step.fontSize;
+
+        if (nextButtonText != null)
+        {
+            if (index == steps.Count - 1)
+            {
+                nextButtonText.text = "TERMINER";
+            }
+            else
+            {
+                nextButtonText.text = "SUIVANT";
+            }
+        }
 
         if (step.highlightTarget != null)
         {
@@ -94,33 +128,55 @@ public class TutorialManager : MonoBehaviour
 
     void EndPhase1()
     {
-        phase1Done = true;
+        Phase1Done = true;
 
         if (overlayImage != null) overlayImage.gameObject.SetActive(false);
         if (highlightImage != null) highlightImage.gameObject.SetActive(false);
         if (nextButton != null) nextButton.gameObject.SetActive(false);
         if (bubblePhase1Object != null) bubblePhase1Object.gameObject.SetActive(false);
 
-        // La Phase 1 est finie, on redonne IMMÉDIATEMENT le contrôle de la caméra au joueur
         SetCameraMovement(true);
 
-        ShowWorldBubble(tutorialNode.transform.position, "Construisez votre première tour ici !");
+        ShowWorldBubble(tutorialNode.transform.position, "Construis ta première tour ici !", bubblePrefab);
     }
 
     void OnTurretPlaced(Node node)
     {
-        if (!phase1Done) return;
+        if (!Phase1Done) return;
         if (node != tutorialNode) return;
+
+        TurretPlaced = true;
 
         if (currentWorldBubble != null)
             Destroy(currentWorldBubble);
 
-        ShowWorldBubble(waveButtonTarget.position, "Lancez la première vague !");
+        GameObject selectedPrefab = reinforcementsBubblePrefab != null ? reinforcementsBubblePrefab : bubblePrefab;
+
+        if (reinforcementsTarget != null)
+        {
+            ShowWorldBubble(reinforcementsTarget.position, "Clique ici puis sur le chemin pour déployer des renforts!", selectedPrefab);
+        }
+        else
+        {
+            ShowWorldBubble(Vector3.zero, "Déploie tes renforts sur le chemin !", selectedPrefab);
+        }
+    }
+
+    void OnReinforcementsDeployed()
+    {
+        if (!Phase1Done || ReinforcementsPlaced) return;
+
+        ReinforcementsPlaced = true;
+
+        if (currentWorldBubble != null)
+            Destroy(currentWorldBubble);
+
+        ShowWorldBubble(waveButtonTarget.position, "Parfait ! Lance maintenant la première vague !", bubblePrefab);
     }
 
     public void OnFirstWaveLaunched()
     {
-        if (!phase1Done || waveLaunched) return;
+        if (!Phase1Done || !ReinforcementsPlaced || waveLaunched) return;
 
         waveLaunched = true;
 
@@ -129,17 +185,21 @@ public class TutorialManager : MonoBehaviour
             Destroy(currentWorldBubble);
         }
 
-        if (skipButton != null) skipButton.gameObject.SetActive(false);
+        if (skipButton != null)
+        {
+            skipButton.gameObject.SetActive(false);
+        }
 
-        // Sécurité : On s'assure qu'elle est bien active ici aussi
         SetCameraMovement(true);
 
-        Debug.Log("Tutoriel complété : Première vague validée !");
+        Debug.Log("Tutoriel complété : Renforts et première vague validés !");
     }
 
     public void SkipTutorial()
     {
-        phase1Done = true;
+        Phase1Done = true;
+        TurretPlaced = true;
+        ReinforcementsPlaced = true;
         waveLaunched = true;
 
         if (overlayImage != null) overlayImage.gameObject.SetActive(false);
@@ -162,18 +222,25 @@ public class TutorialManager : MonoBehaviour
         Debug.Log("Tutoriel passé par le joueur.");
     }
 
-    void ShowWorldBubble(Vector3 worldPosition, string message)
-    {
-        if (currentWorldBubble != null)
-            Destroy(currentWorldBubble);
+void ShowWorldBubble(Vector3 worldPosition, string message, GameObject prefabToUse)
+{
+    if (currentWorldBubble != null)
+        Destroy(currentWorldBubble);
 
-        currentWorldBubble = Instantiate(bubblePrefab, worldPosition + Vector3.up * 0.5f, Quaternion.identity, worldSpaceCanvas.transform);
+    // 1. On sauvegarde l'échelle locale d'origine définie sur le préfabriqué
+    Vector3 originalScale = prefabToUse.transform.localScale;
 
-        TextMeshProUGUI tmp = currentWorldBubble.GetComponentInChildren<TextMeshProUGUI>();
-        if (tmp != null)
-            tmp.text = message;
-    }
+    // 2. On instancie la bulle dans le canvas
+    currentWorldBubble = Instantiate(prefabToUse, worldPosition + Vector3.up * 0.5f, Quaternion.identity, worldSpaceCanvas.transform);
 
+    // 3. On lui réapplique SA PROPRE ÉCHELLE d'origine (fini l'écrasement ou le (1,1,1) forcé)
+    currentWorldBubble.transform.localScale = originalScale;
+
+    // 4. On applique le texte
+    TextMeshProUGUI tmp = currentWorldBubble.GetComponentInChildren<TextMeshProUGUI>();
+    if (tmp != null)
+        tmp.text = message;
+}
     void SetCameraMovement(bool state)
     {
         if (cameraMovementScript != null)
