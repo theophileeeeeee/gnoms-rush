@@ -1,26 +1,34 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+
 public class DeselectOnClick : MonoBehaviour
 {
     public GameObject gameOverPanel;
-    public int time;
+    public int time = 1;
+
+    void Start()
+    {
+        Time.timeScale = time;
+    }
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !gameOverPanel.activeSelf)
-        {
-            TryDeselect(Input.mousePosition);
-        }
+        if (gameOverPanel.activeSelf) return;
 
-        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began&& !gameOverPanel.activeSelf)
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
+        if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
-            TryDeselect(Input.GetTouch(0).position);
+            TryDeselect(Pointer.current.position.ReadValue());
         }
-        Time.timeScale = time;
     }
 
     void TryDeselect(Vector2 screenPos)
     {
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
         if (hit.collider == null || hit.collider.GetComponent<Node>() == null)
         {
             BuildManager.instance.DeselectNode();

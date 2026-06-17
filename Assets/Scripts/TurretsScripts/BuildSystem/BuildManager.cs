@@ -74,6 +74,7 @@ public class BuildManager : MonoBehaviour
             Destroy(currentPanelInstance);
 
         selectedNode = node;
+        Debug.Log("[BuildManager] Node sélectionnée : " + node.name);
 
         if (selectNodeSound != null)
             audioSource.PlayOneShot(selectNodeSound, volume);
@@ -89,6 +90,8 @@ public class BuildManager : MonoBehaviour
     public void DeselectNode()
     {
         if (selectedNode == null) return;
+
+        Debug.Log("[BuildManager] Désélection de la Node : " + selectedNode.name);
 
         if (deselectNodeSound != null)
             audioSource.PlayOneShot(deselectNodeSound, volume);
@@ -172,34 +175,26 @@ public class BuildManager : MonoBehaviour
 
     public void BuildElectric()
     {
-        if (uiManager.CurrentMoney < electricCost) return;
-        Build(electricLvl1, Node.TurretType.Electric);
-        uiManager.UseMoney(electricCost);
-        UpdateTowerCount();
+        Debug.Log("[BuildManager] Clic reçu : BuildElectric");
+        Build(electricLvl1, Node.TurretType.Electric, electricCost);
     }
 
     public void BuildSoldiers()
     {
-        if (uiManager.CurrentMoney < soldiersCost) return;
-        Build(soldiersLvl1, Node.TurretType.Soldiers);
-        uiManager.UseMoney(soldiersCost);
-        UpdateTowerCount();
+        Debug.Log("[BuildManager] Clic reçu : BuildSoldiers");
+        Build(soldiersLvl1, Node.TurretType.Soldiers, soldiersCost);
     }
 
     public void BuildBomb()
     {
-        if (uiManager.CurrentMoney < bombCost) return;
-        Build(bombLvl1, Node.TurretType.Bomb);
-        uiManager.UseMoney(bombCost);
-        UpdateTowerCount();
+        Debug.Log("[BuildManager] Clic reçu : BuildBomb");
+        Build(bombLvl1, Node.TurretType.Bomb, bombCost);
     }
 
     public void BuildArcher()
     {
-        if (uiManager.CurrentMoney < archerCost) return;
-        Build(archerLvl1, Node.TurretType.Archer);
-        uiManager.UseMoney(archerCost);
-        UpdateTowerCount();
+        Debug.Log("[BuildManager] Clic reçu : BuildArcher");
+        Build(archerLvl1, Node.TurretType.Archer, archerCost);
     }
 
     private void UpdateTowerCount()
@@ -208,9 +203,24 @@ public class BuildManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    private void Build(GameObject prefab, Node.TurretType type)
+    private void Build(GameObject prefab, Node.TurretType type, int cost)
     {
-        if (selectedNode == null) return;
+        if (selectedNode == null)
+        {
+            Debug.LogError("[BuildManager] ERREUR : La fonction Build a été coupée car 'selectedNode' est NULL !");
+            return;
+        }
+
+        if (uiManager.CurrentMoney < cost)
+        {
+            Debug.LogWarning("[BuildManager] Construction annulée : Argent insuffisant ! Requis: " + cost + ", Actuel: " + uiManager.CurrentMoney);
+            return;
+        }
+
+        Debug.Log("[BuildManager] Succès : Lancement du build sur la node " + selectedNode.name + ". Coût : " + cost);
+
+        uiManager.UseMoney(cost);
+        UpdateTowerCount();
 
         Node builtNode = selectedNode;
         selectedNode.BuildTurret(prefab, type);
@@ -251,6 +261,18 @@ public class BuildManager : MonoBehaviour
             audioSource.PlayOneShot(buildSound, volume);
 
         selectedNode.turretLevel = currentLevel + 1;
+
+        if (currentPanelInstance != null)
+        {
+            Animator anim = currentPanelInstance.GetComponent<Animator>();
+            if (anim != null)
+                anim.SetTrigger("TriggerClose");
+
+            StartCoroutine(WaitAndDestroyPanel(currentPanelInstance, 0.15f));
+            currentPanelInstance = null;
+        }
+
+        selectedNode = null;
         UpdatePrices();
         Invoke(nameof(ResetUpgradeLock), 0.1f);
     }

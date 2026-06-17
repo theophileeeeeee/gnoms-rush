@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using System;
 
 [RequireComponent(typeof(AudioSource))]
 public class ReinforcementManager : MonoBehaviour
 {
     public static Action OnReinforcementsPlaced;
-
     public Camera cam;
 
     [Header("Units")]
@@ -18,7 +18,6 @@ public class ReinforcementManager : MonoBehaviour
     [Header("Cooldown")]
     public float cooldown = 30f;
     public float cooldownTimer;
-
     public Image cooldownImage;
 
     [Header("Selection (Scale)")]
@@ -37,7 +36,6 @@ public class ReinforcementManager : MonoBehaviour
 
     public AudioSource audioSource;
     private bool isActive = false;
-    private bool hasPlacedThisFrame = false;
 
     void Awake()
     {
@@ -68,23 +66,12 @@ public class ReinforcementManager : MonoBehaviour
         if (!isActive) return;
         if (cooldownTimer < cooldown) return;
 
-        hasPlacedThisFrame = false;
-
-        if (Input.GetMouseButtonDown(0))
+        if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
             if (IsPointerOverUI()) return;
-            SpawnOnce();
-        }
 
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                if (IsPointerOverUI(touch.fingerId)) return;
-                SpawnOnce();
-            }
+            Vector2 clickPosition = Pointer.current.position.ReadValue();
+            SpawnReinforcements(clickPosition);
         }
     }
 
@@ -108,31 +95,8 @@ public class ReinforcementManager : MonoBehaviour
         SetActive(!isActive);
     }
 
-    void SpawnOnce()
+    void SpawnReinforcements(Vector2 screenPos)
     {
-        if (hasPlacedThisFrame) return;
-
-        hasPlacedThisFrame = true;
-        SpawnReinforcements();
-    }
-
-    void SpawnReinforcements()
-    {
-        Vector3 screenPos;
-
-        if (Input.mousePresent)
-        {
-            screenPos = Input.mousePosition;
-        }
-        else if (Input.touchCount > 0)
-        {
-            screenPos = Input.GetTouch(0).position;
-        }
-        else
-        {
-            return;
-        }
-
         Ray ray = cam.ScreenPointToRay(screenPos);
         Vector3 center = Vector3.zero;
         bool hitValidPath = false;
@@ -164,9 +128,7 @@ public class ReinforcementManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Vector3 offset = new Vector3((i - (count - 1) / 2f) * spacing, 0, 0);
-
             GameObject knight = Instantiate(knightPrefab, center + offset, Quaternion.identity);
-
             knight.transform.localScale = new Vector3(0.10f, 0.10f, 0.10f);
         }
 
@@ -201,15 +163,9 @@ public class ReinforcementManager : MonoBehaviour
         }
     }
 
-    bool IsPointerOverUI(int fingerId = -1)
+    bool IsPointerOverUI()
     {
         if (EventSystem.current == null) return false;
-
-#if UNITY_ANDROID || UNITY_IOS
-        if (fingerId >= 0)
-            return EventSystem.current.IsPointerOverGameObject(fingerId);
-#endif
-
         return EventSystem.current.IsPointerOverGameObject();
     }
 }

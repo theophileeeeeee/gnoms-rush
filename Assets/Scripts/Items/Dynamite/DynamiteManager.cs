@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
@@ -24,7 +25,6 @@ public class DynamiteManager : MonoBehaviour
 
     public AudioSource audioSource;
     private bool isActive = false;
-    private bool hasPlacedThisFrame = false;
 
     [Header("Arrival Settings")]
     public float entryOffsetX = 2f;
@@ -51,32 +51,13 @@ public class DynamiteManager : MonoBehaviour
     {
         if (!isActive) return;
 
-        hasPlacedThisFrame = false;
-
-        if (Input.GetMouseButtonDown(0))
+        if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
             if (IsPointerOverUI()) return;
-            PlaceOnce();
+
+            Vector2 clickPosition = Pointer.current.position.ReadValue();
+            PlaceDynamite(clickPosition);
         }
-
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                if (IsPointerOverUI(touch.fingerId)) return;
-                PlaceOnce();
-            }
-        }
-    }
-
-    void PlaceOnce()
-    {
-        if (hasPlacedThisFrame) return;
-
-        hasPlacedThisFrame = true;
-        PlaceAtMouse();
     }
 
     public void SetActive(bool state)
@@ -107,7 +88,7 @@ public class DynamiteManager : MonoBehaviour
         SetActive(!isActive);
     }
 
-    void PlaceAtMouse()
+    void PlaceDynamite(Vector2 screenPos)
     {
         if (itemManager == null) return;
 
@@ -118,7 +99,7 @@ public class DynamiteManager : MonoBehaviour
             return;
         }
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(screenPos);
         Vector3 targetPos = Vector3.zero;
         bool hitValidPath = false;
 
@@ -146,20 +127,13 @@ public class DynamiteManager : MonoBehaviour
             return;
         }
 
-        Vector3 midPos = targetPos
-        + Vector3.left * preDropOffsetX
-        + Vector3.up * (entryOffsetY * 0.5f);
-
-        Vector3 startPos = midPos
-        + Vector3.left * entryOffsetX
-        + Vector3.up * entryOffsetY;
+        Vector3 midPos = targetPos + Vector3.left * preDropOffsetX + Vector3.up * (entryOffsetY * 0.5f);
+        Vector3 startPos = midPos + Vector3.left * entryOffsetX + Vector3.up * entryOffsetY;
 
         GameObject dyn = Instantiate(itemPrefab, startPos, Quaternion.identity);
-
         StartCoroutine(ArrivalSequence(dyn.transform, startPos, midPos, targetPos));
 
         itemManager.UseItem(itemName, 1);
-
         SetActive(false);
     }
 
@@ -171,42 +145,30 @@ public class DynamiteManager : MonoBehaviour
         {
             t += Time.deltaTime;
             float p = t / entryDuration;
-
             obj.position = Vector3.Lerp(start, mid, p);
             yield return null;
         }
 
         obj.position = mid;
-
         t = 0f;
 
         while (t < arcDuration)
         {
             t += Time.deltaTime;
             float p = t / arcDuration;
-
             Vector3 pos = Vector3.Lerp(mid, target, p);
-
             float arc = arcHeight * 4 * (p - p * p);
             pos.y += arc;
-
             obj.position = pos;
-
             yield return null;
         }
 
         obj.position = target;
     }
 
-    bool IsPointerOverUI(int fingerId = -1)
+    bool IsPointerOverUI()
     {
         if (EventSystem.current == null) return false;
-
-#if UNITY_ANDROID || UNITY_IOS
-        if (fingerId >= 0)
-            return EventSystem.current.IsPointerOverGameObject(fingerId);
-#endif
-
         return EventSystem.current.IsPointerOverGameObject();
     }
 }

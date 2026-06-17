@@ -91,6 +91,9 @@ public class MainMenuController : MonoBehaviour
 
     private string pendingSceneName;
 
+    private int devClickCount = 0;
+    private float devClickTimer = 0f;
+
     void Awake()
     {
         if (Instance == null)
@@ -103,30 +106,40 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-void Start()
-{
-    int savedQuality = PlayerPrefs.GetInt("QualityLevel", 0);
-    qualitySlider.value = savedQuality;
-    SetQuality(savedQuality);
+    void Start()
+    {
+        if (qualitySlider != null)
+        {
+            qualitySlider.minValue = 0f;
+            qualitySlider.maxValue = 2f;
+            qualitySlider.wholeNumbers = true;
+        }
 
-    ApplyMusic(PlayerPrefs.GetInt("MusicMuted", 0) == 0);
-    ApplySFX(PlayerPrefs.GetInt("SFXMuted", 0) == 0);
-    UpdateMoneyUI();
+        int savedQuality = PlayerPrefs.GetInt("QualityLevel", 0);
+        
+        if (qualitySlider != null)
+            qualitySlider.value = savedQuality;
 
-    SetupQuestButtons();
+        SetQuality(savedQuality);
 
-    if (levelLaunchWindow != null)
-        levelLaunchWindow.SetActive(false);
+        ApplyMusic(PlayerPrefs.GetInt("MusicMuted", 0) == 0);
+        ApplySFX(PlayerPrefs.GetInt("SFXMuted", 0) == 0);
+        UpdateMoneyUI();
 
-    if (launchButton != null)
-        launchButton.onClick.AddListener(LaunchPendingLevel);
+        SetupQuestButtons();
 
-    if (enableHardcoreButton != null)
-        enableHardcoreButton.onClick.AddListener(ToggleHardcoreMode);
+        if (levelLaunchWindow != null)
+            levelLaunchWindow.SetActive(false);
 
-    RefreshLevelButtons();
-    CheckGameCompletion();
-}
+        if (launchButton != null)
+            launchButton.onClick.AddListener(LaunchPendingLevel);
+
+        if (enableHardcoreButton != null)
+            enableHardcoreButton.onClick.AddListener(ToggleHardcoreMode);
+
+        RefreshLevelButtons();
+        CheckGameCompletion();
+    }
 
     void PlayUI(AudioClip clip)
     {
@@ -141,7 +154,7 @@ void Start()
         return amount.ToString();
     }
 
-    void RefreshLevelButtons()
+    public void RefreshLevelButtons()
     {
         for (int i = 0; i < levels.Length; i++)
         {
@@ -265,7 +278,7 @@ void Start()
         SceneManager.LoadScene(sceneName);
     }
 
-    void UpdateMoneyUI()
+    public void UpdateMoneyUI()
     {
         string money = FormatMoney(PlayerPrefs.GetInt("Money", 0));
         foreach (Text t in moneyTexts)
@@ -406,30 +419,30 @@ void Start()
             completionText.text = Mathf.RoundToInt(finalCompletionRatio * 100f) + "%";
     }
 
-public void ResetStats()
-{
-    PlayerPrefs.DeleteKey("Money");
-    PlayerPrefs.DeleteKey("GoldSpentShop");
-    PlayerPrefs.DeleteKey("TotalWavesCleared");
-    PlayerPrefs.DeleteKey("QualityLevel");
-    PlayerPrefs.DeleteKey("MusicMuted");
-    PlayerPrefs.DeleteKey("SFXMuted");
-    PlayerPrefs.DeleteKey("EnemiesKilled");
-    PlayerPrefs.DeleteKey("TowersBuilt");
-    PlayerPrefs.DeleteKey("TutorialDone");
-    PlayerPrefs.DeleteKey("GameCompleted_Shown");
-    PlayerPrefs.DeleteKey("HardcoreMode");
-    PlayerPrefs.DeleteKey("HardcoreUnlocked");
+    public void ResetStats()
+    {
+        PlayerPrefs.DeleteKey("Money");
+        PlayerPrefs.DeleteKey("GoldSpentShop");
+        PlayerPrefs.DeleteKey("TotalWavesCleared");
+        PlayerPrefs.DeleteKey("QualityLevel");
+        PlayerPrefs.DeleteKey("MusicMuted");
+        PlayerPrefs.DeleteKey("SFXMuted");
+        PlayerPrefs.DeleteKey("EnemiesKilled");
+        PlayerPrefs.DeleteKey("TowersBuilt");
+        PlayerPrefs.DeleteKey("TutorialDone");
+        PlayerPrefs.DeleteKey("GameCompleted_Shown");
+        PlayerPrefs.DeleteKey("HardcoreMode");
+        PlayerPrefs.DeleteKey("HardcoreUnlocked");
 
-    foreach (Quest q in quests)
-        PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
+        foreach (Quest q in quests)
+            PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
 
-    foreach (LevelData l in levels)
-        PlayerPrefs.DeleteKey("Stars_" + l.sceneName);
+        foreach (LevelData l in levels)
+            PlayerPrefs.DeleteKey("Stars_" + l.sceneName);
 
-    PlayerPrefs.Save();
-    SceneManager.LoadScene("LoadingScene");
-}
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("LoadingScene");
+    }
 
     public void SetQuality(float qualityIndex)
     {
@@ -474,5 +487,51 @@ public void ResetStats()
     {
         if (mainMixer != null) mainMixer.SetFloat("SFXVol", isOn ? normalVolume : mutedVolume);
         if (sfxButtonImage != null) sfxButtonImage.sprite = isOn ? sfxOnSprite : sfxOffSprite;
+    }
+
+    public void TriggerDevCode()
+    {
+        if (devClickCount == 0 || Time.time - devClickTimer > 1.5f)
+        {
+            devClickCount = 1;
+            devClickTimer = Time.time;
+        }
+        else
+        {
+            devClickCount++;
+        }
+
+        if (devClickCount >= 3)
+        {
+            devClickCount = 0;
+            ActivateDevMode();
+        }
+    }
+
+    void ActivateDevMode()
+    {
+        PlayerPrefs.SetInt("Money", 1000000);
+
+        foreach (LevelData l in levels)
+        {
+            if (!string.IsNullOrEmpty(l.sceneName))
+            {
+                PlayerPrefs.SetInt("Stars_" + l.sceneName, 3);
+            }
+        }
+
+        PlayerPrefs.SetInt("HardcoreUnlocked", 1);
+        PlayerPrefs.Save();
+
+        UpdateMoneyUI();
+        RefreshLevelButtons();
+
+        DevMode devScript = FindObjectOfType<DevMode>();
+        if (devScript != null)
+        {
+            devScript.OnDevModeActivated();
+        }
+
+        Debug.Log("[DevMode] 1M diamants ajoutés et tous les niveaux débloqués !");
     }
 }

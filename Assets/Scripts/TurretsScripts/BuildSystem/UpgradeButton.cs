@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class UpgradeButton : MonoBehaviour
 {
-    void OnMouseDown()
+    public void ExecuteUpgrade()
     {
-        BuildManager.instance.UpgradeTurret();
+        if (BuildManager.instance != null)
+        {
+            BuildManager.instance.UpgradeTurret();
+        }
     }
 }

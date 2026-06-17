@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class SpriteSorter : MonoBehaviour
 {
-    public int baseOrder = 5000;
+    public int baseOrder = 2000;
+    public float yMultiplier = 100f;
     private SpriteRenderer spriteRenderer;
 
     void Awake()
@@ -14,10 +15,8 @@ public class SpriteSorter : MonoBehaviour
     {
         if (spriteRenderer != null)
         {
-            int yOrder = Mathf.RoundToInt(transform.position.y * 1000);
-            int uniqueIdOffset = Mathf.Abs(gameObject.GetInstanceID()) % 10;
-            
-            spriteRenderer.sortingOrder = baseOrder - yOrder + uniqueIdOffset;
+            int yOrder = Mathf.RoundToInt(transform.position.y * yMultiplier);
+            spriteRenderer.sortingOrder = baseOrder - yOrder;
         }
     }
 }

@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Camera))]
 public class CameraController2D : MonoBehaviour
@@ -21,19 +23,18 @@ public class CameraController2D : MonoBehaviour
     public float edgeSoftness = 8f;
 
     private Camera cam;
-
     private Vector3 targetPosition;
     private Vector3 dragVelocity;
-
     private float targetZoom;
-
     private Vector2 lastInputPos;
+    private bool isDragging;
+    private float lastTouchDistance;
+    private bool isPinching;
 
     void Awake()
     {
         cam = GetComponent<Camera>();
         cam.orthographic = true;
-
         targetPosition = transform.position;
         targetZoom = cam.orthographicSize;
     }
@@ -46,40 +47,158 @@ public class CameraController2D : MonoBehaviour
         ApplyFinalTransform();
     }
 
-    // ================= INPUT =================
-
     void HandleInput()
     {
-        HandleDrag();
-        HandleZoom();
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            isDragging = false;
+            return;
+        }
+
+        if (Touchscreen.current != null && Touchscreen.current.touches.Count > 0)
+        {
+            HandleDragAndZoomMobile();
+        }
+        
+        if (!isPinching)
+        {
+            HandleDragPC();
+            HandleZoomPC();
+        }
     }
 
-    void HandleDrag()
+    void HandleDragAndZoomMobile()
     {
-        // MOBILE
-        if (Input.touchCount == 1)
+        var touches = Touchscreen.current.touches;
+        int activeTouches = 0;
+
+        for (int i = 0; i < touches.Count; i++)
         {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-                lastInputPos = touch.position;
-
-            if (touch.phase == TouchPhase.Moved)
+            if (touches[i].press.isPressed)
             {
-                ApplyMove(touch.position - lastInputPos);
-                lastInputPos = touch.position;
+                activeTouches++;
             }
         }
-        // PC
-        else if (Input.GetMouseButton(0) || Input.GetMouseButton(2))
+
+        if (activeTouches == 1)
         {
-            Vector2 mousePos = Input.mousePosition;
+            isPinching = false;
+            UnityEngine.InputSystem.Controls.TouchControl activeTouch = null;
 
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(2))
+            for (int i = 0; i < touches.Count; i++)
+            {
+                if (touches[i].press.isPressed)
+                {
+                    activeTouch = touches[i];
+                    break;
+                }
+            }
+
+            if (activeTouch != null)
+            {
+                if (activeTouch.press.wasPressedThisFrame)
+                {
+                    if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(activeTouch.touchId.ReadValue()))
+                    {
+                        isDragging = false;
+                        return;
+                    }
+                    lastInputPos = activeTouch.position.ReadValue();
+                    isDragging = true;
+                }
+                else if (activeTouch.press.isPressed && isDragging)
+                {
+                    Vector2 currentPos = activeTouch.position.ReadValue();
+                    ApplyMove(currentPos - lastInputPos);
+                    lastInputPos = currentPos;
+                }
+            }
+        }
+        else if (activeTouches >= 2)
+        {
+            isDragging = false;
+            
+            UnityEngine.InputSystem.Controls.TouchControl touch0 = null;
+            UnityEngine.InputSystem.Controls.TouchControl touch1 = null;
+
+            for (int i = 0; i < touches.Count; i++)
+            {
+                if (touches[i].press.isPressed)
+                {
+                    if (touch0 == null) touch0 = touches[i];
+                    else if (touch1 == null) { touch1 = touches[i]; break; }
+                }
+            }
+
+            if (touch0 != null && touch1 != null)
+            {
+                Vector2 t0 = touch0.position.ReadValue();
+                Vector2 t1 = touch1.position.ReadValue();
+                float currentDistance = Vector2.Distance(t0, t1);
+
+                if (!isPinching)
+                {
+                    lastTouchDistance = currentDistance;
+                    isPinching = true;
+                }
+                else
+                {
+                    float zoomDelta = (lastTouchDistance - currentDistance) * 0.01f * zoomSensitivity;
+                    Vector3 zoomCenter = (t0 + t1) * 0.5f;
+                    ApplyZoom(zoomDelta, zoomCenter);
+                    lastTouchDistance = currentDistance;
+                }
+            }
+        }
+        else
+        {
+            isDragging = false;
+            isPinching = false;
+        }
+    }
+
+    void HandleDragPC()
+    {
+        if (Mouse.current == null) return;
+
+        bool isLeftPressed = Mouse.current.leftButton.isPressed;
+        bool isMiddlePressed = Mouse.current.middleButton.isPressed;
+
+        if (isLeftPressed || isMiddlePressed)
+        {
+            Vector2 mousePos = Mouse.current.position.ReadValue();
+
+            if (Mouse.current.leftButton.wasPressedThisFrame || Mouse.current.middleButton.wasPressedThisFrame)
+            {
                 lastInputPos = mousePos;
+                isDragging = true;
+            }
+            else if (isDragging)
+            {
+                Vector2 delta = mousePos - lastInputPos;
+                if (delta.sqrMagnitude > 1f)
+                {
+                    ApplyMove(delta);
+                    lastInputPos = mousePos;
+                }
+            }
+        }
+        else
+        {
+            isDragging = false;
+        }
+    }
 
-            ApplyMove(mousePos - lastInputPos);
-            lastInputPos = mousePos;
+    void HandleZoomPC()
+    {
+        if (Mouse.current == null) return;
+
+        Vector2 scrollValue = Mouse.current.scroll.ReadValue();
+        if (Mathf.Abs(scrollValue.y) > 0.001f)
+        {
+            float zoomDelta = -scrollValue.y * 0.001f * zoomSensitivity * 2f;
+            Vector3 zoomCenter = Mouse.current.position.ReadValue();
+            ApplyZoom(zoomDelta, zoomCenter);
         }
     }
 
@@ -87,59 +206,28 @@ public class CameraController2D : MonoBehaviour
     {
         Vector3 move = new Vector3(-delta.x, -delta.y, 0f)
                        * dragSpeed
-                       * cam.orthographicSize
+                       * targetZoom
+                       * 2f
                        / Screen.height;
 
         dragVelocity += move * inertia;
     }
 
-    void HandleZoom()
+    void ApplyZoom(float zoomDelta, Vector3 zoomCenter)
     {
-        float zoomDelta = 0f;
-        Vector3 zoomCenter = Input.mousePosition;
-
-        // MOBILE PINCH
-        if (Input.touchCount == 2)
-        {
-            Touch t0 = Input.GetTouch(0);
-            Touch t1 = Input.GetTouch(1);
-
-            Vector2 t0Prev = t0.position - t0.deltaPosition;
-            Vector2 t1Prev = t1.position - t1.deltaPosition;
-
-            float prevDist = Vector2.Distance(t0Prev, t1Prev);
-            float currDist = Vector2.Distance(t0.position, t1.position);
-
-            zoomDelta = (prevDist - currDist) * 0.01f * zoomSensitivity;
-
-            zoomCenter = (t0.position + t1.position) * 0.5f;
-        }
-        // PC SCROLL
-        else
-        {
-            float scroll = Input.mouseScrollDelta.y;
-            if (Mathf.Abs(scroll) > 0.001f)
-            {
-                zoomDelta = -scroll * zoomSensitivity * 2f;
-                zoomCenter = Input.mousePosition;
-            }
-        }
-
         if (Mathf.Abs(zoomDelta) > 0.0001f)
         {
-            Vector3 beforeZoom = cam.ScreenToWorldPoint(zoomCenter);
-
+            float previousZoom = targetZoom;
             targetZoom += zoomDelta;
             targetZoom = Mathf.Clamp(targetZoom, minZoom, GetMaxAllowedZoom());
 
-            Vector3 afterZoom = cam.ScreenToWorldPoint(zoomCenter);
-            Vector3 offset = beforeZoom - afterZoom;
+            float currentZoomRatio = targetZoom / previousZoom;
+            Vector3 rayStart = cam.ScreenToWorldPoint(zoomCenter);
+            rayStart.z = targetPosition.z;
 
-            targetPosition += offset;
+            targetPosition = rayStart + (targetPosition - rayStart) * currentZoomRatio;
         }
     }
-
-    // ================= PHYSICS FEEL =================
 
     void ApplyInertia()
     {
@@ -151,8 +239,6 @@ public class CameraController2D : MonoBehaviour
             damping * Time.deltaTime
         );
     }
-
-    // ================= LIMITES =================
 
     void ClampTargetPosition()
     {
@@ -180,7 +266,6 @@ public class CameraController2D : MonoBehaviour
         else
             clamped.y = bounds.center.y;
 
-        // Soft clamp (évite effet mur)
         targetPosition = Vector3.Lerp(
             targetPosition,
             clamped,
@@ -201,8 +286,6 @@ public class CameraController2D : MonoBehaviour
 
         return Mathf.Min(maxZoom, maxZoomX, maxZoomY);
     }
-
-    // ================= RENDER =================
 
     void ApplyFinalTransform()
     {

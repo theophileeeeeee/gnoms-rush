@@ -48,6 +48,7 @@ public class TutorialManager : MonoBehaviour
     public bool ReinforcementsPlaced { get; private set; } = false;
     
     bool waveLaunched = false;
+    bool isSkipped = false;
     GameObject currentWorldBubble;
 
     void Awake()
@@ -85,6 +86,8 @@ public class TutorialManager : MonoBehaviour
 
     void ShowStep(int index)
     {
+        if (isSkipped) return;
+
         if (index >= steps.Count)
         {
             EndPhase1();
@@ -128,6 +131,8 @@ public class TutorialManager : MonoBehaviour
 
     void EndPhase1()
     {
+        if (isSkipped) return;
+
         Phase1Done = true;
 
         if (overlayImage != null) overlayImage.gameObject.SetActive(false);
@@ -142,7 +147,7 @@ public class TutorialManager : MonoBehaviour
 
     void OnTurretPlaced(Node node)
     {
-        if (!Phase1Done) return;
+        if (isSkipped || !Phase1Done) return;
         if (node != tutorialNode) return;
 
         TurretPlaced = true;
@@ -164,7 +169,7 @@ public class TutorialManager : MonoBehaviour
 
     void OnReinforcementsDeployed()
     {
-        if (!Phase1Done || ReinforcementsPlaced) return;
+        if (isSkipped || !Phase1Done || ReinforcementsPlaced) return;
 
         ReinforcementsPlaced = true;
 
@@ -176,7 +181,7 @@ public class TutorialManager : MonoBehaviour
 
     public void OnFirstWaveLaunched()
     {
-        if (!Phase1Done || !ReinforcementsPlaced || waveLaunched) return;
+        if (isSkipped || !Phase1Done || !ReinforcementsPlaced || waveLaunched) return;
 
         waveLaunched = true;
 
@@ -197,10 +202,14 @@ public class TutorialManager : MonoBehaviour
 
     public void SkipTutorial()
     {
+        isSkipped = true;
         Phase1Done = true;
         TurretPlaced = true;
         ReinforcementsPlaced = true;
         waveLaunched = true;
+
+        BuildManager.OnTurretBuilt -= OnTurretPlaced;
+        ReinforcementManager.OnReinforcementsPlaced -= OnReinforcementsDeployed;
 
         if (overlayImage != null) overlayImage.gameObject.SetActive(false);
         if (highlightImage != null) highlightImage.gameObject.SetActive(false);
@@ -222,25 +231,24 @@ public class TutorialManager : MonoBehaviour
         Debug.Log("Tutoriel passé par le joueur.");
     }
 
-void ShowWorldBubble(Vector3 worldPosition, string message, GameObject prefabToUse)
-{
-    if (currentWorldBubble != null)
-        Destroy(currentWorldBubble);
+    void ShowWorldBubble(Vector3 worldPosition, string message, GameObject prefabToUse)
+    {
+        if (isSkipped) return;
 
-    // 1. On sauvegarde l'échelle locale d'origine définie sur le préfabriqué
-    Vector3 originalScale = prefabToUse.transform.localScale;
+        if (currentWorldBubble != null)
+            Destroy(currentWorldBubble);
 
-    // 2. On instancie la bulle dans le canvas
-    currentWorldBubble = Instantiate(prefabToUse, worldPosition + Vector3.up * 0.5f, Quaternion.identity, worldSpaceCanvas.transform);
+        Vector3 originalScale = prefabToUse.transform.localScale;
 
-    // 3. On lui réapplique SA PROPRE ÉCHELLE d'origine (fini l'écrasement ou le (1,1,1) forcé)
-    currentWorldBubble.transform.localScale = originalScale;
+        currentWorldBubble = Instantiate(prefabToUse, worldPosition + Vector3.up * 0.5f, Quaternion.identity, worldSpaceCanvas.transform);
 
-    // 4. On applique le texte
-    TextMeshProUGUI tmp = currentWorldBubble.GetComponentInChildren<TextMeshProUGUI>();
-    if (tmp != null)
-        tmp.text = message;
-}
+        currentWorldBubble.transform.localScale = originalScale;
+
+        TextMeshProUGUI tmp = currentWorldBubble.GetComponentInChildren<TextMeshProUGUI>();
+        if (tmp != null)
+            tmp.text = message;
+    }
+
     void SetCameraMovement(bool state)
     {
         if (cameraMovementScript != null)

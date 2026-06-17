@@ -18,6 +18,8 @@ public class LoadingScreen : MonoBehaviour
 
     public DeviceBenchmark deviceBenchmark;
 
+    private bool hasStuckAt67 = false;
+
     private void Start()
     {
         versionText.text = "version " + versionMajor + "." + versionMinor + "." + versionPatch;
@@ -44,6 +46,15 @@ public class LoadingScreen : MonoBehaviour
 
         while (progress < 1f)
         {
+            if (progress >= 0.67f && !hasStuckAt67)
+            {
+                progress = 0.67f;
+                loadingSlider.value = progress;
+                percentText.text = "67%";
+                hasStuckAt67 = true;
+                yield return new WaitForSeconds(2.0f);
+            }
+
             float step = Random.Range(0.01f, 0.08f);
 
             if (Random.value < 0.15f)

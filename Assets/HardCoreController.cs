@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class HardcoreToggleController : MonoBehaviour
 {
     [Header("UI Elements")]
@@ -22,11 +23,18 @@ public class HardcoreToggleController : MonoBehaviour
     public float duration = 0.2f;
     public Vector3 punchScale = new Vector3(1.15f, 0.85f, 1f);
 
+    [Header("Audio")]
+    public AudioClip toggleOnSound;
+    public AudioClip toggleOffSound;
+    [Range(0f, 1f)] public float volume = 1f;
+
     [Header("Debug / Test option")]
     public bool debugForceUnlock = false;
 
     private Coroutine animationCoroutine;
     private Vector3 originalScale;
+    private AudioSource audioSource;
+    private bool isInitialized = false;
 
     private bool IsHardcoreActiveReal
     {
@@ -41,6 +49,9 @@ public class HardcoreToggleController : MonoBehaviour
     void Start()
     {
         originalScale = transform.localScale;
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
 
         if (debugForceUnlock)
         {
@@ -55,6 +66,7 @@ public class HardcoreToggleController : MonoBehaviour
         }
 
         CheckVisibility();
+        isInitialized = true;
     }
 
     void OnEnable()
@@ -95,6 +107,15 @@ public class HardcoreToggleController : MonoBehaviour
         if (MainMenuController.Instance != null)
         {
             MainMenuController.Instance.SetHardcoreModeDirect(newState);
+        }
+
+        if (isInitialized)
+        {
+            AudioClip clipToPlay = newState ? toggleOnSound : toggleOffSound;
+            if (clipToPlay != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(clipToPlay, volume);
+            }
         }
 
         if (animationCoroutine != null)

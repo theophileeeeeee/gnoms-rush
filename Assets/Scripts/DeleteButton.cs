@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DeleteButton : MonoBehaviour
 {
-    void OnMouseDown()
+    public void ExecuteDelete()
     {
         Node node = BuildManager.instance.GetSelectedNode();
 

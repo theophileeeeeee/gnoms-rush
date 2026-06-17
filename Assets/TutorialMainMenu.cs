@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class MainMenuTutorial : MonoBehaviour
 {
     [System.Serializable]
@@ -25,6 +26,10 @@ public class MainMenuTutorial : MonoBehaviour
     [Header("Steps")]
     public List<TutorialStep> steps;
 
+    [Header("Audio")]
+    public AudioClip stepSound;
+    [Range(0f, 1f)] public float volume = 1f;
+
     [Header("Camera Control (Optional)")]
     public CameraController2D cameraMovementScript;
 
@@ -32,9 +37,14 @@ public class MainMenuTutorial : MonoBehaviour
     Transform lastTargetOriginalParent;
     int lastTargetOriginalIndex;
     RectTransform currentActiveTarget;
+    private AudioSource audioSource;
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+
         if (PlayerPrefs.GetInt("TutorialDone", 0) == 1)
         {
             if (tutorialPanel != null) tutorialPanel.SetActive(false);
@@ -69,7 +79,6 @@ public class MainMenuTutorial : MonoBehaviour
             bubbleText.fontSize = step.fontSize;
         }
 
-     
         if (progressText != null)
         {
             progressText.text = (index + 1) + "/" + steps.Count;
@@ -89,6 +98,11 @@ public class MainMenuTutorial : MonoBehaviour
             Vector3 worldPos = currentActiveTarget.position;
             currentActiveTarget.SetParent(tutorialPanel.transform, true);
             currentActiveTarget.position = worldPos;
+        }
+
+        if (stepSound != null && audioSource != null && index > 0)
+        {
+            audioSource.PlayOneShot(stepSound, volume);
         }
     }
 

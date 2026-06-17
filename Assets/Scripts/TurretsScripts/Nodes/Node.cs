@@ -1,15 +1,22 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
+public enum RoadPosition
+{
+    Haut,
+    Bas,
+    Droite,
+    Gauche
+}
 public class Node : MonoBehaviour
 {
-    public BuildManager buildManager;
     public UIManager uiManager;
     [Header("Turret")]
     public GameObject turret;
 
     public enum TurretType { None, Electric, Soldiers, Archer, Bomb }
     public TurretType turretType = TurretType.None;
-
     public int turretLevel = 0;
 
     [Header("UI Blocks")]
@@ -24,13 +31,36 @@ public class Node : MonoBehaviour
     [Header("Panel Spawn")]
     public bool spawnAbove = true;
 
-    void OnMouseDown()
+    void Update()
+    {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
+        if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
+        {
+            Vector2 clickPosition = Pointer.current.position.ReadValue();
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(clickPosition);
+            Vector2 rayOrigin = new Vector2(worldPos.x, worldPos.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.zero);
+
+            if (hit.collider != null)
+            {
+                if (hit.transform == transform)
+                {
+                    TriggerNodeSelection();
+                }
+            }
+        }
+    }
+
+    void TriggerNodeSelection()
     {
         if (TutorialManager.Instance != null && !TutorialManager.Instance.Phase1Done)
         {
             Debug.Log("Action impossible : le tuto n'est pas encore terminé!");
             return;
         }
+
         if (!pausePanel.activeSelf && !gameOverPanel.activeSelf && !victoryPanel.activeSelf)
         {
             BuildManager.instance.SelectNode(this);
@@ -90,12 +120,4 @@ public class Node : MonoBehaviour
 
         return Mathf.RoundToInt((baseCost + upgradeCost) * 0.7f);
     }
-}
-
-public enum RoadPosition
-{
-    Haut,
-    Bas,
-    Droite,
-    Gauche
 }
