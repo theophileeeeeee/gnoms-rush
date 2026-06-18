@@ -19,9 +19,13 @@ public class LoadingScreen : MonoBehaviour
     public DeviceBenchmark deviceBenchmark;
 
     private bool hasStuckAt67 = false;
+    private float originalAudioListenerVolume;
 
     private void Start()
     {
+        originalAudioListenerVolume = AudioListener.volume;
+        AudioListener.volume = 0f;
+
         versionText.text = "version " + versionMajor + "." + versionMinor + "." + versionPatch;
         StartCoroutine(Load());
         StartCoroutine(AnimateLoadingText());
@@ -52,7 +56,7 @@ public class LoadingScreen : MonoBehaviour
                 loadingSlider.value = progress;
                 percentText.text = "67%";
                 hasStuckAt67 = true;
-                yield return new WaitForSeconds(2.0f);
+                yield return new WaitForSeconds(1.0f);
             }
 
             float step = Random.Range(0.01f, 0.08f);
@@ -85,6 +89,8 @@ public class LoadingScreen : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.3f);
+
+        AudioListener.volume = originalAudioListenerVolume;
 
         Debug.Log("Chargement vers Menu");
         SceneManager.LoadScene("Menu");

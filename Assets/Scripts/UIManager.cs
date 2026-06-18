@@ -3,10 +3,15 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
 public class UIManager : MonoBehaviour
 {
+    [Header("Fade System (Direct UI)")]
+    public CanvasGroup fadeCanvasGroup;
+    public float fadeDuration = 0.2f;
+
     [Header("References")]
     public GameObject gameOverPanel;
     public MusicManager musicManager;
@@ -20,6 +25,11 @@ public class UIManager : MonoBehaviour
     public int victoryLevel;
     public int earnedMoneyWithThisLevel;
     public bool hasTookMoneyFromThisLevel;
+
+    [Header("Hardcore Reward UI")]
+    public GameObject hardcoreBonusContainer;
+    public Text hardcoreBonusText;
+    public int hardcoreBonusAmount = 300;
 
     [Header("Starting Values")]
     public int startMoney;
@@ -64,6 +74,13 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        // Check if an ad is currently playing right when the scene loads
+        if (AdsManager.Instance != null && AdsManager.Instance.IsShowingAd)
+        {
+            AudioListener.volume = 0f;
+            AudioListener.pause = true;
+        }
+
         CurrentMoney = startMoney;
         CurrentHearts = startHearts;
         UpdateUI();
@@ -72,6 +89,20 @@ public class UIManager : MonoBehaviour
         {
             waveText.text = currentWave + "/" + waveSpawner.waves.Count;
         }
+
+        if (fadeCanvasGroup != null)
+        {
+            fadeCanvasGroup.gameObject.SetActive(true);
+            fadeCanvasGroup.blocksRaycasts = true;
+            fadeCanvasGroup.alpha = 1f;
+            StartCoroutine(StartFadeInWithDelay());
+        }
+    }
+
+    private IEnumerator StartFadeInWithDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        StartCoroutine(FadeCoroutine(1f, 0f));
     }
 
     public void UpdateWaveUI(int current)
@@ -88,6 +119,13 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        // Maintain silence if an ad is running over the newly loaded scene
+        if (AdsManager.Instance != null && AdsManager.Instance.IsShowingAd)
+        {
+            AudioListener.volume = 0f;
+            AudioListener.pause = true;
+        }
+
         Vector2 boxCenter = (Vector2)transform.position + boxOffset;
         Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0f, ennemyLayer);
 
@@ -157,7 +195,7 @@ public class UIManager : MonoBehaviour
             OnGameOver();
     }
 
-private void OnGameOver()
+    private void OnGameOver()
     {
         if (defeatSound != null)
             audioSource.PlayOneShot(defeatSound, volume);
@@ -217,21 +255,43 @@ private void OnGameOver()
         int healthBonus = Mathf.RoundToInt(healthPercent * 150);
         earnedMoneyWithThisLevel = baseMoney + healthBonus;
 
+        bool isHardcoreMode = PlayerPrefs.GetInt("HardcoreMode", 0) == 1;
+        int totalGoldToGive = earnedMoneyWithThisLevel;
+
+        if (isHardcoreMode)
+        {
+            totalGoldToGive += hardcoreBonusAmount;
+
+            if (hardcoreBonusContainer != null) hardcoreBonusContainer.SetActive(true);
+            if (hardcoreBonusText != null) hardcoreBonusText.text = "+ " + hardcoreBonusAmount.ToString();
+        }
+        else
+        {
+            if (hardcoreBonusContainer != null) hardcoreBonusContainer.SetActive(false);
+        }
+
         if (victorySound != null)
             audioSource.PlayOneShot(victorySound, volume);
 
         earnedMoneyText.text = "+ " + earnedMoneyWithThisLevel.ToString();
-        PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + earnedMoneyWithThisLevel);
-        PlayerPrefs.Save();
+        
+        PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money", 0) + totalGoldToGive);
         
         hasTookMoneyFromThisLevel = true;
         string sceneName = SceneManager.GetActiveScene().name;
+        
+        if (isHardcoreMode)
+        {
+            PlayerPrefs.SetInt("Hardcore_Passed_" + sceneName, 1);
+        }
+
         int savedStars = PlayerPrefs.GetInt("Stars_" + sceneName, 0);
         if (victoryLevel > savedStars)
         {
             PlayerPrefs.SetInt("Stars_" + sceneName, victoryLevel);
-            PlayerPrefs.Save();
         }
+
+        PlayerPrefs.Save();
     }
 
     public void Retry()
@@ -242,19 +302,31 @@ private void OnGameOver()
 
     public void NextLevel()
     {
-        Time.timeScale = 1f;
         string currentSceneName = SceneManager.GetActiveScene().name;
         Match match = Regex.Match(currentSceneName, @"\d+");
+
+        string targetSceneName;
 
         if (match.Success)
         {
             string baseName = currentSceneName.Substring(0, match.Index);
             int nextNumber = int.Parse(match.Value) + 1;
-            SceneManager.LoadScene(baseName + nextNumber);
+            targetSceneName = baseName + nextNumber;
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
+            targetSceneName = NameFromIndex(nextIndex);
+        }
+
+        if (fadeCanvasGroup != null)
+        {
+            StartCoroutine(WaitForFadeAndLoadScene(targetSceneName));
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(targetSceneName);
         }
     }
 
@@ -282,7 +354,74 @@ private void OnGameOver()
 
     public void QuitToMenu()
     {
-        Time.timeScale = 1;
-        SceneManager.LoadScene("Menu");
+        string menuSceneName = "Menu"; 
+
+        if (fadeCanvasGroup != null)
+        {
+            StartCoroutine(WaitForFadeAndLoadScene(menuSceneName));
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(menuSceneName);
+        }
+    }
+
+    private IEnumerator WaitForFadeAndLoadScene(string sceneName)
+    {
+        if (fadeCanvasGroup != null)
+        {
+            fadeCanvasGroup.blocksRaycasts = true;
+            yield return StartCoroutine(FadeCoroutine(0f, 1f));
+        }
+        
+        Time.timeScale = 1f;
+
+        bool isRetry = (sceneName == SceneManager.GetActiveScene().name || sceneName == NameFromIndex(SceneManager.GetActiveScene().buildIndex));
+
+        if (AdsManager.Instance != null && !isRetry)
+        {
+            AdsManager.Instance.AttemptShowInterstitial();
+            
+            // CRITICAL STEP: Hold the coroutine right here until the ad is closed!
+            // This prevents the new scene from firing up its audio systems prematurely.
+            while (AdsManager.Instance.IsShowingAd)
+            {
+                yield return null;
+            }
+        }
+        
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
+    private IEnumerator FadeCoroutine(float startAlpha, float targetAlpha)
+    {
+        float elapsedTime = 0f;
+        fadeCanvasGroup.alpha = startAlpha;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Mathf.Min(Time.unscaledDeltaTime, 0.03f); 
+            fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
+            yield return null;
+        }
+
+        fadeCanvasGroup.alpha = targetAlpha;
+        if (targetAlpha == 0f)
+        {
+            fadeCanvasGroup.blocksRaycasts = false;
+        }
+    }
+
+    private string NameFromIndex(int BuildIndex)
+    {
+        string path = SceneUtility.GetScenePathByBuildIndex(BuildIndex);
+        int slash = path.LastIndexOf('/');
+        int dot = path.LastIndexOf('.');
+        return path.Substring(slash + 1, dot - slash - 1);
     }
 }

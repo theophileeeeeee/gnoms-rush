@@ -140,8 +140,6 @@ public class TutorialManager : MonoBehaviour
         if (nextButton != null) nextButton.gameObject.SetActive(false);
         if (bubblePhase1Object != null) bubblePhase1Object.gameObject.SetActive(false);
 
-        SetCameraMovement(true);
-
         ShowWorldBubble(tutorialNode.transform.position, "Construis ta première tour ici !", bubblePrefab);
     }
 

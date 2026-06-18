@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using TMPro;
+using System.Collections.Generic;
+using System.Collections;
 
 [System.Serializable]
 public struct Quest
@@ -29,12 +31,18 @@ public struct LevelData
     public Image starsImage;  
     public Image numberImage; 
     public GameObject lockOverlay;
+    public GameObject badgeIcon;
 }
 
 public class MainMenuController : MonoBehaviour
 {
     public static MainMenuController Instance { get; private set; }
 
+    [Header("Fade System (Direct UI)")]
+    public CanvasGroup fadeCanvasGroup;
+    public float fadeDuration = 0.4f;
+
+    [Header("Panels")]
     public GameObject settingsPanel;
     [Range(0f, 1f)]
     public float uiVolume = 1f;
@@ -49,6 +57,7 @@ public class MainMenuController : MonoBehaviour
     public Image levelPreviewImage;
     public Button launchButton;
     public LevelStarDisplay launchStarDisplay;
+    public GameObject launchHardcoreBadge;
 
     [Header("Progression Globale (Quêtes)")]
     public Slider completionSlider;
@@ -93,6 +102,7 @@ public class MainMenuController : MonoBehaviour
 
     private int devClickCount = 0;
     private float devClickTimer = 0f;
+    private bool isInitialized = false;
 
     void Awake()
     {
@@ -139,6 +149,22 @@ public class MainMenuController : MonoBehaviour
 
         RefreshLevelButtons();
         CheckGameCompletion();
+
+        if (fadeCanvasGroup != null)
+        {
+            fadeCanvasGroup.gameObject.SetActive(true);
+            fadeCanvasGroup.blocksRaycasts = true;
+            fadeCanvasGroup.alpha = 1f;
+            StartCoroutine(StartFadeInWithDelay());
+        }
+
+        isInitialized = true;
+    }
+
+    private IEnumerator StartFadeInWithDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        StartCoroutine(FadeCoroutine(1f, 0f));
     }
 
     void PlayUI(AudioClip clip)
@@ -177,6 +203,12 @@ public class MainMenuController : MonoBehaviour
 
             if (data.lockOverlay != null)
                 data.lockOverlay.SetActive(!unlocked);
+
+            if (data.badgeIcon != null)
+            {
+                bool hasPassedHardcore = PlayerPrefs.GetInt("Hardcore_Passed_" + data.sceneName, 0) == 1;
+                data.badgeIcon.SetActive(unlocked && hasPassedHardcore);
+            }
         }
     }
 
@@ -194,10 +226,16 @@ public class MainMenuController : MonoBehaviour
 
                 if (!totalVictoryShown && victoryPanel != null)
                 {
+                    bool wasAlreadyActive = victoryPanel.activeSelf;
+                    
                     victoryPanel.SetActive(true);
                     PlayerPrefs.SetInt("GameCompleted_Shown", 1);
                     PlayerPrefs.Save();
-                    PlayUI(panelOpenClip);
+                    
+                    if (!wasAlreadyActive)
+                    {
+                        PlayUI(panelOpenClip);
+                    }
                 }
             }
         }
@@ -252,6 +290,12 @@ public class MainMenuController : MonoBehaviour
             launchStarDisplay.Refresh();
         }
 
+        if (launchHardcoreBadge != null)
+        {
+            bool hasPassedHardcore = PlayerPrefs.GetInt("Hardcore_Passed_" + data.sceneName, 0) == 1;
+            launchHardcoreBadge.SetActive(hasPassedHardcore);
+        }
+
         if (levelLaunchWindow != null)
             levelLaunchWindow.SetActive(true);
 
@@ -270,12 +314,62 @@ public class MainMenuController : MonoBehaviour
     void LaunchPendingLevel()
     {
         if (!string.IsNullOrEmpty(pendingSceneName))
-            SceneManager.LoadScene(pendingSceneName);
+        {
+            if (fadeCanvasGroup != null)
+            {
+                StartCoroutine(WaitForFadeAndLoadScene(pendingSceneName));
+            }
+            else
+            {
+                SceneManager.LoadScene(pendingSceneName);
+            }
+        }
     }
 
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
+        if (fadeCanvasGroup != null)
+        {
+            StartCoroutine(WaitForFadeAndLoadScene(sceneName));
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+    }
+
+    private IEnumerator WaitForFadeAndLoadScene(string sceneName)
+    {
+        if (fadeCanvasGroup != null)
+        {
+            fadeCanvasGroup.blocksRaycasts = true;
+            yield return StartCoroutine(FadeCoroutine(0f, 1f));
+        }
+        
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
+    private IEnumerator FadeCoroutine(float startAlpha, float targetAlpha)
+    {
+        float elapsedTime = 0f;
+        fadeCanvasGroup.alpha = startAlpha;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Mathf.Min(Time.unscaledDeltaTime, 0.03f); 
+            fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
+            yield return null;
+        }
+
+        fadeCanvasGroup.alpha = targetAlpha;
+        if (targetAlpha == 0f)
+        {
+            fadeCanvasGroup.blocksRaycasts = false;
+        }
     }
 
     public void UpdateMoneyUI()
@@ -438,10 +532,21 @@ public class MainMenuController : MonoBehaviour
             PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
 
         foreach (LevelData l in levels)
+        {
             PlayerPrefs.DeleteKey("Stars_" + l.sceneName);
+            PlayerPrefs.DeleteKey("Hardcore_Passed_" + l.sceneName);
+        }
 
         PlayerPrefs.Save();
-        SceneManager.LoadScene("LoadingScene");
+
+        if (fadeCanvasGroup != null)
+        {
+            StartCoroutine(WaitForFadeAndLoadScene("LoadingScene"));
+        }
+        else
+        {
+            SceneManager.LoadScene("LoadingScene");
+        }
     }
 
     public void SetQuality(float qualityIndex)
@@ -455,6 +560,8 @@ public class MainMenuController : MonoBehaviour
 
     public void OnSliderChanged(float value)
     {
+        if (!isInitialized) return;
+
         PlayUI(sliderTickClip);
         SetQuality(value);
     }
@@ -517,6 +624,7 @@ public class MainMenuController : MonoBehaviour
             if (!string.IsNullOrEmpty(l.sceneName))
             {
                 PlayerPrefs.SetInt("Stars_" + l.sceneName, 3);
+                PlayerPrefs.SetInt("Hardcore_Passed_" + l.sceneName, 1);
             }
         }
 
@@ -532,6 +640,6 @@ public class MainMenuController : MonoBehaviour
             devScript.OnDevModeActivated();
         }
 
-        Debug.Log("[DevMode] 1M diamants ajoutés et tous les niveaux débloqués !");
+        Debug.Log("[DevMode] 1M diamants ajoutés, niveaux et modes hardcore validés !");
     }
 }

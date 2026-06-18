@@ -193,7 +193,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e6987758bd1fd5b4db3d94263721e453, type: 3}
   detectionRadius: 0.98
   attackRadius: 0.37
-  speed: 0.5
+  speed: 0.62
   damage: 2.25
   attackCooldown: 1.1
   idleTimeBeforeRegen: 5
@@ -404,6 +404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseOrder: 2000
+  yMultiplier: 100
 --- !u!1 &5194235674208614070
 GameObject:
   m_ObjectHideFlags: 0

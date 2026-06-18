@@ -6024,6 +6024,27 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+--- !u!1 &6301523393528026705 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6442709422161154352, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+  m_PrefabInstance: {fileID: 6301523393528026704}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6301523393528026706 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2331304225305380523, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+  m_PrefabInstance: {fileID: 6301523393528026704}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6301523393528026705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &6301523393528026707 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 2624836623941185011, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+  m_PrefabInstance: {fileID: 6301523393528026704}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7409154746271794103
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6034,7 +6055,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2546523051216254649, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: musicVolume
-      value: 0.197
+      value: 0.114
       objectReference: {fileID: 0}
     - target: {fileID: 2546523051216254649, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: backgroundMusic
@@ -8021,6 +8042,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: fadeDuration
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: victoryPanel
       value: 
       objectReference: {fileID: 1662945652}
@@ -8033,9 +8058,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2019418902}
     - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: fadeCanvasGroup
+      value: 
+      objectReference: {fileID: 6301523393528026707}
+    - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 519420033}
+    - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: hardcoreBonusText
+      value: 
+      objectReference: {fileID: 6301523393528026706}
+    - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: hardcoreBonusAmount
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 8339732782413726003, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: hardcoreBonusContainer
+      value: 
+      objectReference: {fileID: 6301523393528026705}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
