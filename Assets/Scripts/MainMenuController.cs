@@ -6,6 +6,21 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 
+public enum RewardResourceType { Gold, Dynamite, IceOrb }
+
+[System.Serializable]
+public struct DailyRewardVisuals
+{
+    public string dayName; 
+    public RewardResourceType resourceType;
+    public int amount;
+    
+    [Header("UI Components")]
+    public Button dayButton;       
+    public GameObject glowObject;  
+    public GameObject checkIcon;   
+}
+
 [System.Serializable]
 public struct Quest
 {
@@ -50,6 +65,12 @@ public class MainMenuController : MonoBehaviour
     public GameObject shopPanel;
     public GameObject statsPanel;
     public GameObject levelsPanel;
+
+    [Header("Récompenses Journalières")]
+    public GameObject dailyRewardsPanel;
+    public GameObject rewardAvailableBubble;
+    public GameObject rewardGlowObject;
+    public DailyRewardVisuals[] dailyRewardsList;
 
     [Header("Level Preview Panel")]
     public GameObject levelLaunchWindow;
@@ -149,6 +170,8 @@ public class MainMenuController : MonoBehaviour
 
         RefreshLevelButtons();
         CheckGameCompletion();
+
+        CheckDailyRewardsStreak(); 
 
         if (fadeCanvasGroup != null)
         {
@@ -401,6 +424,11 @@ public class MainMenuController : MonoBehaviour
         PlayUI(opening ? panelOpenClip : panelCloseClip);
     }
 
+    public void ToggleShopPanelDirect()
+    {
+        ToggleShop();
+    }
+
     public void ToggleStats()
     {
         bool opening = !statsPanel.activeSelf;
@@ -527,6 +555,17 @@ public class MainMenuController : MonoBehaviour
         PlayerPrefs.DeleteKey("GameCompleted_Shown");
         PlayerPrefs.DeleteKey("HardcoreMode");
         PlayerPrefs.DeleteKey("HardcoreUnlocked");
+        PlayerPrefs.DeleteKey("LastLoginDate");
+        PlayerPrefs.DeleteKey("LoginStreak");
+        PlayerPrefs.DeleteKey("RewardClaimedToday");
+
+        if (dailyRewardsList != null)
+        {
+            for (int i = 0; i < dailyRewardsList.Length; i++)
+            {
+                PlayerPrefs.DeleteKey($"DailyReward_Claimed_Day_{i + 1}");
+            }
+        }
 
         foreach (Quest q in quests)
             PlayerPrefs.DeleteKey($"Quest_{q.key}_{q.goal}_Claimed");
@@ -641,5 +680,192 @@ public class MainMenuController : MonoBehaviour
         }
 
         Debug.Log("[DevMode] 1M diamants ajoutés, niveaux et modes hardcore validés !");
+    }
+
+    void CheckDailyRewardsStreak()
+    {
+        string lastLoginStr = PlayerPrefs.GetString("LastLoginDate", "");
+        System.DateTime today = System.DateTime.Today;
+
+        int streak = PlayerPrefs.GetInt("LoginStreak", 1);
+        bool claimedToday = PlayerPrefs.GetInt("RewardClaimedToday", 0) == 1;
+
+        if (!string.IsNullOrEmpty(lastLoginStr))
+        {
+            System.DateTime lastLogin = System.DateTime.Parse(lastLoginStr);
+            System.TimeSpan timePassed = today - lastLogin.Date;
+
+            if (timePassed.Days == 1)
+            {
+                if (claimedToday)
+                {
+                    streak++;
+                    claimedToday = false;
+                }
+            }
+            else if (timePassed.Days > 1)
+            {
+                streak = 1;
+                claimedToday = false;
+            }
+        }
+        else
+        {
+            claimedToday = false;
+        }
+
+        if (dailyRewardsList != null && dailyRewardsList.Length > 0 && streak > dailyRewardsList.Length)
+        {
+            streak = 1;
+        }
+
+        PlayerPrefs.SetString("LastLoginDate", today.ToString());
+        PlayerPrefs.SetInt("LoginStreak", streak);
+        PlayerPrefs.SetInt("RewardClaimedToday", claimedToday ? 1 : 0);
+        PlayerPrefs.Save();
+
+        if (rewardAvailableBubble != null)
+        {
+            rewardAvailableBubble.SetActive(!claimedToday);
+        }
+
+        if (rewardGlowObject != null)
+        {
+            rewardGlowObject.SetActive(!claimedToday);
+        }
+
+        RefreshDailyRewardsUI();
+    }
+
+    public void ToggleDailyRewardsPanel()
+    {
+        bool opening = !dailyRewardsPanel.activeSelf;
+        dailyRewardsPanel.SetActive(opening);
+        PlayUI(opening ? panelOpenClip : panelCloseClip);
+
+        if (opening)
+        {
+            RefreshDailyRewardsUI();
+        }
+    }
+
+   public void RefreshDailyRewardsUI()
+    {
+        if (dailyRewardsList == null) return;
+
+        int currentStreak = PlayerPrefs.GetInt("LoginStreak", 1);
+        bool claimedToday = PlayerPrefs.GetInt("RewardClaimedToday", 0) == 1;
+
+        for (int i = 0; i < dailyRewardsList.Length; i++)
+        {
+            DailyRewardVisuals rewardVisual = dailyRewardsList[i];
+            if (rewardVisual.dayButton == null) continue;
+
+            int targetDayNumber = i + 1;
+            bool isAvailable = false;
+            bool isAlreadyClaimed = PlayerPrefs.GetInt($"DailyReward_Claimed_Day_{targetDayNumber}", 0) == 1;
+
+            if (targetDayNumber == currentStreak && !claimedToday && !isAlreadyClaimed)
+            {
+                isAvailable = true;
+            }
+            else if (targetDayNumber < currentStreak && !isAlreadyClaimed)
+            {
+                isAvailable = true; 
+            }
+
+            if (rewardVisual.checkIcon != null)
+            {
+                rewardVisual.checkIcon.SetActive(isAlreadyClaimed);
+            }
+
+            if (rewardVisual.glowObject != null)
+            {
+                rewardVisual.glowObject.SetActive(isAvailable);
+            }
+
+            rewardVisual.dayButton.interactable = isAvailable;
+
+            int dayIndex = i;
+            rewardVisual.dayButton.onClick.RemoveAllListeners();
+            if (isAvailable)
+            {
+                rewardVisual.dayButton.onClick.AddListener(() => ClaimSpecificDailyReward(dayIndex));
+            }
+
+            Color targetColor = (isAvailable || isAlreadyClaimed) ? Color.white : new Color(0.25f, 0.25f, 0.25f, 1f);
+
+            Image mainImg = rewardVisual.dayButton.GetComponent<Image>();
+            if (mainImg != null) mainImg.color = targetColor;
+
+            Image[] childImages = rewardVisual.dayButton.GetComponentsInChildren<Image>(true);
+            foreach (Image img in childImages)
+            {
+                if (rewardVisual.glowObject != null && (img.gameObject == rewardVisual.glowObject || img.transform.IsChildOf(rewardVisual.glowObject.transform))) continue;
+                if (rewardVisual.checkIcon != null && (img.gameObject == rewardVisual.checkIcon || img.transform.IsChildOf(rewardVisual.checkIcon.transform))) continue;
+                
+                img.color = targetColor;
+            }
+
+            TMP_Text[] childTexts = rewardVisual.dayButton.GetComponentsInChildren<TMP_Text>(true);
+            foreach (TMP_Text txt in childTexts)
+            {
+                if (rewardVisual.glowObject != null && txt.transform.IsChildOf(rewardVisual.glowObject.transform)) continue;
+                if (rewardVisual.checkIcon != null && txt.transform.IsChildOf(rewardVisual.checkIcon.transform)) continue;
+                
+                txt.color = targetColor;
+            }
+        }
+    }
+
+    public void ClaimSpecificDailyReward(int index)
+    {
+        if (dailyRewardsList == null || index < 0 || index >= dailyRewardsList.Length) return;
+
+        int targetDayNumber = index + 1;
+        string claimedKey = $"DailyReward_Claimed_Day_{targetDayNumber}";
+
+        if (PlayerPrefs.GetInt(claimedKey, 0) == 1) return;
+
+        DailyRewardVisuals currentReward = dailyRewardsList[index];
+
+        switch (currentReward.resourceType)
+        {
+            case RewardResourceType.Gold:
+                int currentMoney = PlayerPrefs.GetInt("Money", 0);
+                PlayerPrefs.SetInt("Money", currentMoney + currentReward.amount);
+                UpdateMoneyUI();
+                break;
+
+            case RewardResourceType.Dynamite:
+                ShopManager shopD = FindObjectOfType<ShopManager>();
+                if (shopD != null) shopD.AddItem("Dynamite", currentReward.amount);
+                break;
+
+            case RewardResourceType.IceOrb:
+                ShopManager shopI = FindObjectOfType<ShopManager>();
+                if (shopI != null) shopI.AddItem("IceOrb", currentReward.amount);
+                break;
+        }
+
+        PlayerPrefs.SetInt(claimedKey, 1);
+        
+        int currentStreak = PlayerPrefs.GetInt("LoginStreak", 1);
+        if (targetDayNumber == currentStreak)
+        {
+            PlayerPrefs.SetInt("RewardClaimedToday", 1);
+        }
+        
+        PlayerPrefs.Save();
+
+        PlayUI(questClaimClip);
+
+        if (rewardAvailableBubble != null)
+        {
+            rewardAvailableBubble.SetActive(false); 
+            rewardGlowObject.SetActive(false);
+        }
+
+        RefreshDailyRewardsUI();
     }
 }

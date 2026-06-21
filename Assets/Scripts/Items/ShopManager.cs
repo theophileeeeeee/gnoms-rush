@@ -203,4 +203,16 @@ public class ShopManager : MonoBehaviour
         if (amount >= 1000)    return $"{amount / 1000f:0.#}K";
         return amount.ToString();
     }
+
+    public void AddItem(string itemName, int amount)
+    {
+        if (!inventory.ContainsKey(itemName))
+        {
+            inventory[itemName] = 0;
+        }
+        
+        inventory[itemName] += amount;
+        SaveInventory();
+        RefreshUI();
+    }
 }

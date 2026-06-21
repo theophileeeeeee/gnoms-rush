@@ -14,30 +14,37 @@ public class SoldiersTurret : MonoBehaviour
 
     public KnightManager[] soldiers;
 
-    public void Init(RoadPosition roadPosition)
+public void Init(RoadPosition roadPosition)
+{
+    if (roadPosition == RoadPosition.Bas)
     {
-        Vector3[] offsets = roadPosition switch
-        {
-            RoadPosition.Haut   => offsetsHaut,
-            RoadPosition.Bas    => offsetsBas,
-            RoadPosition.Droite => offsetsDroite,
-            RoadPosition.Gauche => offsetsGauche,
-            _                   => offsetsHaut
-        };
-
-        soldiers = new KnightManager[offsets.Length];
-
-        for (int i = 0; i < offsets.Length; i++)
-        {
-            Vector3 worldPos = transform.position + offsets[i];
-
-            GameObject home = new GameObject($"HomePoint_{i}");
-            home.transform.position = worldPos;
-            home.transform.SetParent(transform);
-
-            SpawnSoldierAt(i, home.transform);
-        }
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+            sr.sortingOrder = 1000;
     }
+
+    Vector3[] offsets = roadPosition switch
+    {
+        RoadPosition.Haut   => offsetsHaut,
+        RoadPosition.Bas    => offsetsBas,
+        RoadPosition.Droite => offsetsDroite,
+        RoadPosition.Gauche => offsetsGauche,
+        _                   => offsetsHaut
+    };
+
+    soldiers = new KnightManager[offsets.Length];
+
+    for (int i = 0; i < offsets.Length; i++)
+    {
+        Vector3 worldPos = transform.position + offsets[i];
+
+        GameObject home = new GameObject($"HomePoint_{i}");
+        home.transform.position = worldPos;
+        home.transform.SetParent(transform);
+
+        SpawnSoldierAt(i, home.transform);
+    }
+}
 
 private void SpawnSoldierAt(int index, Transform homePoint)
 {
