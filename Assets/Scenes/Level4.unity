@@ -11725,6 +11725,10 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 8559041085529634317, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+      propertyPath: cooldown
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 8810372454992474139, guid: 72b837f313f23154081b19662ca96cab, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -11876,8 +11880,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: coinPopupPrefab
+      value: 
+      objectReference: {fileID: 7862509276412372217, guid: 3dda496f96ff05049b5ff64f91a0aa2a, type: 3}
+    - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.size
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: popupOffsetDistance
+      value: 717.7484
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: launchButtons.Array.data[0].image1

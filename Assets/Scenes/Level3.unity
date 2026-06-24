@@ -3474,7 +3474,7 @@ GameObject:
   - component: {fileID: 797823043}
   m_Layer: 5
   m_Name: fill
-  m_TagString: Untagged
+  m_TagString: Path
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3493,7 +3493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.508676, b: 0.5754717, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3592,7 +3592,7 @@ GameObject:
   - component: {fileID: 859472482}
   m_Layer: 0
   m_Name: Way1
-  m_TagString: Untagged
+  m_TagString: Path
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7646,6 +7646,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1132050456433774365, guid: 703441ae4a7d22f4c9c09bb36635a02d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2669799332489011260, guid: 703441ae4a7d22f4c9c09bb36635a02d, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.68753123
@@ -7674,10 +7678,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 93.13
       objectReference: {fileID: 0}
+    - target: {fileID: 3059366643328548896, guid: 703441ae4a7d22f4c9c09bb36635a02d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3108179199809108935, guid: 703441ae4a7d22f4c9c09bb36635a02d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1649448842}
+    - target: {fileID: 3139170278587745074, guid: 703441ae4a7d22f4c9c09bb36635a02d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5833700457226595140, guid: 703441ae4a7d22f4c9c09bb36635a02d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7946,6 +7958,10 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 8559041085529634317, guid: 72b837f313f23154081b19662ca96cab, type: 3}
+      propertyPath: cooldown
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 8810372454992474139, guid: 72b837f313f23154081b19662ca96cab, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -8089,8 +8105,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: coinPopupPrefab
+      value: 
+      objectReference: {fileID: 7862509276412372217, guid: 3dda496f96ff05049b5ff64f91a0aa2a, type: 3}
+    - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.size
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: popupOffsetDistance
+      value: 717.72
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: launchButtons.Array.size
@@ -8167,6 +8191,10 @@ PrefabInstance:
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[6].salves.Array.size
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
+      propertyPath: launchButtons.Array.data[0].popupDirection
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: 'launchButtons.Array.data[0].requiredPaths.Array.data[0]'
@@ -8338,7 +8366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[6].salves.Array.data[1].enemies.Array.size
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8128938060176041436, guid: 395bf3c8c6a044544b41cba9dbaf1601, type: 3}
       propertyPath: waves.Array.data[6].salves.Array.data[2].enemies.Array.size

@@ -2,15 +2,19 @@
     "items": [
         {
             "itemName": "dynamite",
-            "amount": 39
+            "amount": 11
         },
         {
             "itemName": "ice",
-            "amount": 75
+            "amount": 43
         },
         {
             "itemName": "Dynamite",
-            "amount": 2
+            "amount": 4
+        },
+        {
+            "itemName": "IceOrb",
+            "amount": 12
         }
     ]
 }

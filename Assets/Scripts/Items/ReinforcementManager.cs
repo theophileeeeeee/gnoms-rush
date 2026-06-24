@@ -103,7 +103,7 @@ public class ReinforcementManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit3D))
         {
-            if (hit3D.collider.CompareTag("Path"))
+            if (hit3D.collider.CompareTag("Path") || hit3D.collider.CompareTag("Ennemy"))
             {
                 center = hit3D.point;
                 hitValidPath = true;
@@ -112,7 +112,7 @@ public class ReinforcementManager : MonoBehaviour
         else
         {
             RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
-            if (hit2D.collider != null && hit2D.collider.CompareTag("Path"))
+            if (hit2D.collider != null && (hit2D.collider.CompareTag("Path") || hit2D.collider.CompareTag("Ennemy")))
             {
                 center = hit2D.point;
                 hitValidPath = true;

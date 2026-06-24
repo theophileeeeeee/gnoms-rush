@@ -2,9 +2,12 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
 
 public class WaveSpawnerAdvanced : MonoBehaviour
 {
+    public enum PopupDirection { Up, Down, Left, Right }
+
     [System.Serializable]
     public class SpawnInfo
     {
@@ -35,6 +38,7 @@ public class WaveSpawnerAdvanced : MonoBehaviour
         public Image image2;
         public Image fillImage;
         public List<Path> requiredPaths;
+        public PopupDirection popupDirection = PopupDirection.Up;
     }
 
     public List<Wave> waves = new List<Wave>();
@@ -42,10 +46,14 @@ public class WaveSpawnerAdvanced : MonoBehaviour
     public List<LaunchButton> launchButtons;
     public bool hasAllWavesEnded = false;
     public int enemiesRemainingToSpawn = 0;
+    public int coinsPerSecondEarly = 1;
+    public GameObject coinPopupPrefab;
+    public float popupOffsetDistance = 80f;
 
     bool waveReady = false;
     bool countdownActive = false;
     int currentWaveIndex = 0;
+    float countdownTimeRemaining = 0f;
 
     void Start()
     {
@@ -93,6 +101,7 @@ public class WaveSpawnerAdvanced : MonoBehaviour
 
         countdownActive = true;
         waveReady = false;
+        countdownTimeRemaining = 0f;
         yield return new WaitUntil(() => waveReady);
         countdownActive = false;
 
@@ -155,16 +164,20 @@ public class WaveSpawnerAdvanced : MonoBehaviour
         countdownActive = true;
         waveReady = false;
         float elapsed = 0f;
+        countdownTimeRemaining = duration;
 
         while (elapsed < duration && !waveReady)
         {
             elapsed += Time.deltaTime;
+            countdownTimeRemaining = duration - elapsed;
             float t = Mathf.Clamp01(elapsed / duration);
             foreach (var btn in launchButtons)
                 if (btn.fillImage != null && ButtonMatchesWave(btn, wave))
                     btn.fillImage.fillAmount = t;
             yield return null;
         }
+
+        countdownTimeRemaining = 0f;
 
         foreach (var btn in launchButtons)
             if (btn.fillImage != null && ButtonMatchesWave(btn, wave))
@@ -173,15 +186,97 @@ public class WaveSpawnerAdvanced : MonoBehaviour
 
     public void LaunchWave()
     {
+        LaunchButton fallback = null;
+        foreach (var btn in launchButtons)
+        {
+            if (btn.image1 != null && btn.image1.color.a > 0f)
+            {
+                fallback = btn;
+                break;
+            }
+        }
+        LaunchWaveInternal(fallback);
+    }
+
+    public void LaunchWave(int buttonIndex)
+    {
+        LaunchButton btn = null;
+        if (launchButtons != null && buttonIndex >= 0 && buttonIndex < launchButtons.Count)
+            btn = launchButtons[buttonIndex];
+        LaunchWaveInternal(btn);
+    }
+
+    void LaunchWaveInternal(LaunchButton btn)
+    {
         if (TutorialManager.Instance != null && !TutorialManager.Instance.ReinforcementsPlaced)
         {
         Debug.Log("Action impossible : Vous devez d'abord placer les renforts !");
         return; 
         }
         if (countdownActive && !waveReady)
+        {
+            int bonus = Mathf.FloorToInt(countdownTimeRemaining) * coinsPerSecondEarly;
+            if (bonus > 0)
+            {
+                if (uiManager != null)
+                    uiManager.EarnMoney(bonus);
+                SpawnCoinPopup(btn, bonus);
+            }
             waveReady = true;
+        }
     }
 
+void SpawnCoinPopup(LaunchButton btn, int amount)
+{
+    if (coinPopupPrefab == null || btn == null || btn.image1 == null)
+        return;
+
+    Transform buttonTransform = btn.image1.transform;
+
+    Transform canvasParent = buttonTransform;
+    while (canvasParent.parent != null && canvasParent.GetComponent<Canvas>() == null)
+        canvasParent = canvasParent.parent;
+
+    GameObject anchor = new GameObject("PopupAnchor");
+    anchor.transform.SetParent(canvasParent, false);
+
+    RectTransform anchorRect = anchor.AddComponent<RectTransform>();
+    RectTransform buttonRect = btn.image1.GetComponent<RectTransform>();
+
+    if (buttonRect != null)
+    {
+        Vector2 buttonAnchoredPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasParent as RectTransform,
+            RectTransformUtility.WorldToScreenPoint(null, buttonRect.position),
+            null,
+            out buttonAnchoredPos
+        );
+
+        Vector2 offset = Vector2.zero;
+        switch (btn.popupDirection)
+        {
+            case PopupDirection.Up:    offset = new Vector2(0f,  popupOffsetDistance); break;
+            case PopupDirection.Down:  offset = new Vector2(0f, -popupOffsetDistance); break;
+            case PopupDirection.Left:  offset = new Vector2(-popupOffsetDistance, 0f); break;
+            case PopupDirection.Right: offset = new Vector2( popupOffsetDistance, 0f); break;
+        }
+
+        anchorRect.anchoredPosition = buttonAnchoredPos + offset;
+    }
+
+    GameObject popup = Instantiate(coinPopupPrefab, anchor.transform);
+    RectTransform popupRect = popup.GetComponent<RectTransform>();
+    if (popupRect != null)
+    {
+        popupRect.anchoredPosition = Vector2.zero;
+        popupRect.localScale = Vector3.one;
+    }
+
+    TextMeshProUGUI popupText = popup.GetComponentInChildren<TextMeshProUGUI>();
+    if (popupText != null)
+        popupText.text = "+" + amount;
+}
     IEnumerator FadeButton(LaunchButton btn, float from, float to)
     {
         float duration = 0.5f;

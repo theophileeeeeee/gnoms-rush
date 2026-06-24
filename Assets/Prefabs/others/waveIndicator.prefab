@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3108179199809108935}
   m_Layer: 5
   m_Name: img
-  m_TagString: Untagged
+  m_TagString: Path
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 3139170278587745074}
   m_Layer: 5
   m_Name: arrow
-  m_TagString: Untagged
+  m_TagString: Path
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
